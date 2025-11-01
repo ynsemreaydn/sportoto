@@ -1362,8 +1362,22 @@
             // Tüm maçlar için filtreleri uygula
             matches.forEach((match, matchIndex) => {
                 const filterElement = document.getElementById(`matchFilter${matchIndex}`);
-                if (filterElement && filterElement.value !== '') {
-                    const result = parseInt(filterElement.value);
+                let result = null;
+                
+                // FT olan maçlar için otomatik skora göre filtreleme
+                if (match.status === 'FT' || match.status === 'FT ') {
+                    if (match.homeScore !== undefined && match.awayScore !== undefined) {
+                        if (match.homeScore > match.awayScore) result = 1;
+                        else if (match.homeScore < match.awayScore) result = 2;
+                        else result = 0;
+                    }
+                } else if (filterElement && filterElement.value !== '') {
+                    // Normal filtreleme (dropdown'dan seçilen değer)
+                    result = parseInt(filterElement.value);
+                }
+                
+                // Filtreleme uygula
+                if (result !== null) {
                     filteredCoupons = filteredCoupons.filter(coupon => 
                         coupon.predictions[matchIndex] === result
                     );
