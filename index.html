@@ -1137,7 +1137,6 @@
         </div>
 
         <div class="header">
-            <h1>Maç 1 (1-0)</h1>
             <h1>⚽ Spor Toto Kupon Takibi</h1>
             <div class="filter-section" id="matchFilters">
                 <label><strong>Maç Filtreleri:</strong></label>
@@ -1264,16 +1263,23 @@
         function renderMatchFilters() {
             const matchFiltersGrid = document.getElementById('matchFiltersGrid');
             matchFiltersGrid.innerHTML = matches.map((match, index) => {
-                // İlk maç için disabled
-                const isDisabled = index === 0 ? 'disabled' : '';
+                // FT (Fulltime) olan maçlar için disabled
+                const isDisabled = (match.status === 'FT' || match.status === 'FT ') ? 'disabled' : '';
+                // FT olan maçlar için seçili değeri otomatik ayarla
+                let selectedValue = '';
+                if (isDisabled && match.homeScore !== undefined && match.awayScore !== undefined) {
+                    if (match.homeScore > match.awayScore) selectedValue = '1';
+                    else if (match.homeScore < match.awayScore) selectedValue = '2';
+                    else selectedValue = '0';
+                }
                 return `
                 <div class="match-filter-item">
                     <label>Maç ${match.no}:</label>
                     <select id="matchFilter${index}" onchange="filterCoupons()" ${isDisabled}>
                         <option value="">Tümü</option>
-                        <option value="1">1</option>
-                        <option value="0">0</option>
-                        <option value="2">2</option>
+                        <option value="1" ${selectedValue === '1' ? 'selected' : ''}>1</option>
+                        <option value="0" ${selectedValue === '0' ? 'selected' : ''}>0</option>
+                        <option value="2" ${selectedValue === '2' ? 'selected' : ''}>2</option>
                     </select>
                 </div>
             `;
@@ -1708,6 +1714,34 @@
         // Sayfa yüklendiğinde popup göster
         window.addEventListener('DOMContentLoaded', () => {
             showPopup();
+        });
+        
+        // Tüm mouse click'lerde para emoji patlaması
+        document.addEventListener('click', (e) => {
+            // Popup overlay veya popup içindeki elementlere tıklamada patlama yapma
+            if (e.target.closest('#popupOverlay')) {
+                return;
+            }
+            
+            // Input, textarea, select gibi form elementlerine tıklamada patlama yapma (kullanıcı deneyimini bozmamak için)
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') {
+                return;
+            }
+            
+            // Tıklama pozisyonunda emoji patlaması oluştur
+            createEmojiExplosion(e.clientX, e.clientY);
+        });
+        
+        // Touch event'leri için de
+        document.addEventListener('touchstart', (e) => {
+            if (e.target.closest('#popupOverlay')) {
+                return;
+            }
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') {
+                return;
+            }
+            const touch = e.touches[0];
+            createEmojiExplosion(touch.clientX, touch.clientY);
         });
         
         // Enter tuşu ile filtreleme
