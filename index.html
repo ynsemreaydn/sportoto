@@ -197,7 +197,7 @@
 
         .marquee-content {
             display: inline-block;
-            animation: none; /* Başlangıçta durduruldu, popup kapandığında başlayacak */
+            animation: scroll 60s linear infinite; /* Yavaş ve devamlı akış */
             font-size: 1.5em;
             font-weight: bold;
             color: #1a1a1a;
@@ -1108,6 +1108,7 @@
 
         <div class="header">
             <h1>Maç 1 (1-0)</h1>
+            <h1>⚽ Spor Toto Kupon Takibi</h1>
             <div class="filter-section" id="matchFilters">
                 <label><strong>Maç Filtreleri:</strong></label>
                 <div class="match-filters-grid" id="matchFiltersGrid">
@@ -1232,17 +1233,21 @@
         // Maç filtrelerini render et
         function renderMatchFilters() {
             const matchFiltersGrid = document.getElementById('matchFiltersGrid');
-            matchFiltersGrid.innerHTML = matches.map((match, index) => `
+            matchFiltersGrid.innerHTML = matches.map((match, index) => {
+                // İlk maç için disabled
+                const isDisabled = index === 0 ? 'disabled' : '';
+                return `
                 <div class="match-filter-item">
                     <label>Maç ${match.no}:</label>
-                    <select id="matchFilter${index}" onchange="filterCoupons()">
+                    <select id="matchFilter${index}" onchange="filterCoupons()" ${isDisabled}>
                         <option value="">Tümü</option>
                         <option value="1">1</option>
                         <option value="0">0</option>
                         <option value="2">2</option>
                     </select>
                 </div>
-            `).join('');
+            `;
+            }).join('');
         }
 
         // Tüm maçlar için istatistikleri hesapla ve göster
@@ -1631,7 +1636,7 @@
         }
 
         // Son güncelleme tarihi (push tarihi)
-        const lastPushDate = "01.11.2025 18:00:00"; // Push edildiğinde güncellenecek
+        const lastPushDate = "01.11.2025 18:30:00"; // Push edildiğinde güncellenecek
 
         // Popup şifresini kontrol et
         function checkPassword() {
@@ -1653,7 +1658,7 @@
             // Marquee ve emoji animasyonlarını hemen başlat (popup kapandığı gibi)
             const marqueeContent = document.getElementById('marqueeContent');
             if (marqueeContent) {
-                marqueeContent.style.animation = 'scroll 30s linear infinite';
+                marqueeContent.style.animation = 'scroll 60s linear infinite'; // Yavaş ve devamlı
             }
             startFlyingEmojis(); // Uçan emojileri başlat
         }
