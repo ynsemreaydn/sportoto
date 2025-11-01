@@ -196,12 +196,13 @@
         }
 
         .marquee-content {
-            display: inline-block;
-            animation: scroll 60s linear infinite; /* Yavaş ve devamlı akış */
+            display: inline-flex;
+            animation: scroll 66s linear infinite; /* %10 daha yavaş (66s) */
             font-size: 1.5em;
             font-weight: bold;
             color: #1a1a1a;
             text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.5);
+            white-space: nowrap;
         }
 
         .marquee-content span {
@@ -210,6 +211,7 @@
             padding: 5px 20px;
             background: rgba(255, 255, 255, 0.3);
             border-radius: 20px;
+            white-space: nowrap;
         }
 
         @keyframes scroll {
@@ -219,6 +221,13 @@
             100% {
                 transform: translateX(-100%);
             }
+        }
+        
+        /* Marquee içeriğini çiftleyerek boşlukları önle */
+        .marquee-container::before,
+        .marquee-container::after {
+            content: '';
+            display: none;
         }
 
         .marquee-content:hover {
@@ -1073,6 +1082,27 @@
                     <span>💰 HAYDİ TOTTENHAM 💰</span>
                     <span>💵 15 MAÇ 15 KAZANÇ 💵</span>
                     <span>💎 BÜYÜK KAZANÇ TARAFTARLARI 💎</span>
+                    <!-- İçeriği tekrarla boşlukları önlemek için -->
+                    <span>💰 ÇOK PARA KAZANMALI 💰</span>
+                    <span>💵 HAYDİ FENERBAHÇE 💵</span>
+                    <span>💎 BÜYÜK KAZANÇ 💎</span>
+                    <span>💰 HAYDİ GALATASARAY 💰</span>
+                    <span>💵 HAYDİ BEŞİKTAŞ 💵</span>
+                    <span>💪 3 5 7 10 ORDUSPOR ŞAMPİYON 💪</span>
+                    <span>🔥 Çarşı'da 3-5 ibne 🔥</span>
+                    <span>💰 Beri gel kartal, beri gel 💰</span>
+                    <span>💎 Ormandan kestik çamı 💎</span>
+                    <span>💵 Kartal ananın amı 💵</span>
+                    <span>💰 HAYDİ TRABZONSPOR 💰</span>
+                    <span>💸 HAYDİ BAŞAKŞEHİR 💸</span>
+                    <span>💎 MİLYONER OLACAĞIZ 💎</span>
+                    <span>💵 ZENGİNLİK BİZİM HAKKIMIZ 💵</span>
+                    <span>💰 PARA KAZANMAK BİZİM İŞİMİZ 💰</span>
+                    <span>🔥 HAYDİ BAYERN MÜNİH 🔥</span>
+                    <span>💪 HAYDİ MANCHESTER CITY 💪</span>
+                    <span>💰 HAYDİ TOTTENHAM 💰</span>
+                    <span>💵 15 MAÇ 15 KAZANÇ 💵</span>
+                    <span>💎 BÜYÜK KAZANÇ TARAFTARLARI 💎</span>
                 </div>
             </div>
         </div>
@@ -1643,6 +1673,11 @@
             const answer = document.getElementById('passwordInput').value.toLowerCase().trim();
             if (answer === 'ordu') {
                 document.getElementById('popupOverlay').style.display = 'none';
+                // Marquee animasyonunu hemen başlat
+                const marqueeContent = document.getElementById('marqueeContent');
+                if (marqueeContent) {
+                    marqueeContent.style.animation = 'scroll 66s linear infinite';
+                }
                 initializeApp();
             } else {
                 alert('❌ Yanlış cevap! Lütfen tekrar deneyin.');
@@ -1658,7 +1693,7 @@
             // Marquee ve emoji animasyonlarını hemen başlat (popup kapandığı gibi)
             const marqueeContent = document.getElementById('marqueeContent');
             if (marqueeContent) {
-                marqueeContent.style.animation = 'scroll 60s linear infinite'; // Yavaş ve devamlı
+                marqueeContent.style.animation = 'scroll 66s linear infinite'; // %10 daha yavaş ve devamlı
             }
             startFlyingEmojis(); // Uçan emojileri başlat
         }
