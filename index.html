@@ -1,0 +1,1503 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Spor Toto Kupon Takibi</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            min-height: 100vh;
+            padding: 10px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Animated background particles */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255, 215, 0, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 20%, rgba(255, 165, 0, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+            animation: particleMove 20s ease-in-out infinite;
+        }
+
+        @keyframes particleMove {
+            0%, 100% { transform: translateY(0) translateX(0); }
+            50% { transform: translateY(-50px) translateX(30px); }
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+        }
+
+        .billboard-container {
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 30%, #FFD700 60%, #FF6347 100%);
+            background-size: 200% 200%;
+            animation: billboardGlow 8s ease infinite;
+            padding: 25px;
+            border-radius: 25px;
+            margin-bottom: 30px;
+            box-shadow: 
+                0 20px 60px rgba(0, 0, 0, 0.4),
+                0 0 40px rgba(255, 215, 0, 0.3),
+                inset 0 0 30px rgba(255, 255, 255, 0.2);
+            overflow: hidden;
+            position: relative;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        @keyframes billboardGlow {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .billboard-container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+
+        .flying-emoji {
+            position: absolute;
+            font-size: 2em;
+            pointer-events: none;
+            z-index: 10;
+            animation: flyUp 3s ease-out forwards;
+            opacity: 0;
+        }
+
+        @keyframes flyUp {
+            0% {
+                opacity: 1;
+                transform: translateY(0) translateX(0) rotate(0deg) scale(1);
+            }
+            25% {
+                opacity: 1;
+                transform: translateY(-50px) translateX(calc(var(--random-x, 0px) * 0.5)) rotate(90deg) scale(1.1);
+            }
+            50% {
+                opacity: 1;
+                transform: translateY(-100px) translateX(var(--random-x, 0px)) rotate(180deg) scale(1.2);
+            }
+            75% {
+                opacity: 0.7;
+                transform: translateY(-150px) translateX(calc(var(--random-x, 0px) * 1.2)) rotate(270deg) scale(0.8);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-200px) translateX(calc(var(--random-x, 0px) * 1.5)) rotate(360deg) scale(0.5);
+            }
+        }
+
+        .sparkle {
+            position: absolute;
+            font-size: 1.5em;
+            pointer-events: none;
+            z-index: 10;
+            animation: sparkleEffect 2s ease-out forwards;
+        }
+
+        @keyframes sparkleEffect {
+            0% {
+                opacity: 0;
+                transform: scale(0) rotate(0deg) translateY(0);
+            }
+            20% {
+                opacity: 1;
+                transform: scale(1) rotate(72deg) translateY(-10px);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1.5) rotate(180deg) translateY(-20px);
+            }
+            80% {
+                opacity: 0.8;
+                transform: scale(1.2) rotate(288deg) translateY(-30px);
+            }
+            100% {
+                opacity: 0;
+                transform: scale(0) rotate(360deg) translateY(-40px);
+            }
+        }
+
+        .billboard-title {
+            text-align: center;
+            font-size: clamp(2.5em, 8vw, 4em);
+            font-weight: 900;
+            background: linear-gradient(45deg, #1a1a1a, #ff4500, #1a1a1a);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 30px rgba(255, 69, 0, 0.5);
+            margin-bottom: 15px;
+            letter-spacing: 8px;
+            animation: titlePulse 3s ease-in-out infinite;
+            position: relative;
+            z-index: 2;
+        }
+
+        @keyframes titlePulse {
+            0%, 100% { 
+                filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.5));
+                transform: scale(1);
+            }
+            50% { 
+                filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.8));
+                transform: scale(1.02);
+            }
+        }
+
+        .marquee-container {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            padding: 15px 0;
+            overflow: hidden;
+            white-space: nowrap;
+            position: relative;
+        }
+
+        .marquee-content {
+            display: inline-block;
+            animation: scroll 30s linear infinite;
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #1a1a1a;
+            text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.5);
+        }
+
+        .marquee-content span {
+            display: inline-block;
+            margin: 0 50px;
+            padding: 5px 20px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 20px;
+        }
+
+        @keyframes scroll {
+            0% {
+                transform: translateX(100%);
+            }
+            100% {
+                transform: translateX(-100%);
+            }
+        }
+
+        .marquee-content:hover {
+            animation-play-state: paused;
+        }
+
+        @media (max-width: 768px) {
+            .billboard-title {
+                font-size: 2em;
+            }
+            
+            .marquee-content {
+                font-size: 1.2em;
+            }
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            position: relative;
+            z-index: 2;
+        }
+
+        .header h1 {
+            color: white;
+            font-size: clamp(2em, 6vw, 3em);
+            margin-bottom: 25px;
+            text-align: center;
+            text-shadow: 
+                0 0 20px rgba(255, 255, 255, 0.5),
+                2px 2px 8px rgba(0, 0, 0, 0.4);
+            font-weight: 800;
+            letter-spacing: 2px;
+            background: linear-gradient(45deg, #ffffff, #ffd700, #ffffff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: headerGlow 4s ease-in-out infinite;
+        }
+
+        @keyframes headerGlow {
+            0%, 100% { filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.5)); }
+            50% { filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.8)); }
+        }
+
+        .filter-section {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .filter-section label {
+            font-size: 1.2em;
+            color: #555;
+            font-weight: 600;
+        }
+
+        .filter-section select {
+            padding: 12px 20px;
+            font-size: 1.1em;
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            background: white;
+            color: #333;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .filter-section select:hover {
+            border-color: #764ba2;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .stats {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.9) 0%, rgba(118, 75, 162, 0.9) 100%);
+            backdrop-filter: blur(10px);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 15px;
+            font-size: 1.1em;
+            font-weight: 600;
+            box-shadow: 
+                0 5px 20px rgba(102, 126, 234, 0.3),
+                0 0 0 1px rgba(255, 255, 255, 0.2) inset;
+            transition: all 0.3s;
+        }
+
+        .stat-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 
+                0 8px 25px rgba(102, 126, 234, 0.4),
+                0 0 0 1px rgba(255, 255, 255, 0.3) inset;
+        }
+
+        .coupons-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .explosion-emoji {
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            font-size: 25px;
+            animation: explode 2s ease-out forwards;
+            user-select: none;
+        }
+
+        @keyframes explode {
+            0% {
+                opacity: 1;
+                transform: translate(0, 0) scale(1) rotate(0deg);
+            }
+            50% {
+                opacity: 1;
+                transform: translate(calc(var(--end-x, 0px) * 0.5), calc(var(--end-y, 0px) * 0.5)) scale(1.5) rotate(180deg);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(var(--end-x, 0px), var(--end-y, 0px)) scale(0.3) rotate(360deg);
+            }
+        }
+
+        .coupon-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.1),
+                0 0 0 1px rgba(255, 255, 255, 0.5) inset;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .coupon-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            transition: left 0.6s;
+        }
+
+        .coupon-card:hover::before,
+        .coupon-card:active::before {
+            left: 100%;
+        }
+
+        .coupon-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 
+                0 15px 40px rgba(102, 126, 234, 0.3),
+                0 0 0 1px rgba(102, 126, 234, 0.2) inset,
+                0 0 30px rgba(102, 126, 234, 0.2);
+            border-color: #667eea;
+        }
+
+        .coupon-card:active {
+            transform: translateY(-4px) scale(0.98);
+        }
+
+        .coupon-card.active {
+            border-color: #764ba2;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(248, 249, 255, 0.95) 100%);
+            box-shadow: 
+                0 12px 35px rgba(118, 75, 162, 0.25),
+                0 0 0 2px rgba(118, 75, 162, 0.3) inset;
+        }
+
+        .coupon-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #eee;
+        }
+
+        .coupon-number {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .coupon-status {
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 600;
+            background: #4caf50;
+            color: white;
+        }
+
+        .first-match-result {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            width: 35px;
+            height: 35px;
+            line-height: 35px;
+            text-align: center;
+            border-radius: 50%;
+            font-weight: bold;
+            font-size: 1.2em;
+            margin-right: 10px;
+        }
+
+        .first-match-label {
+            font-size: 0.95em;
+            color: #666;
+        }
+
+        .remaining-matches {
+            display: none;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid #eee;
+        }
+
+        .coupon-card.active .remaining-matches {
+            display: block;
+        }
+
+        .matches-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .match-box {
+            text-align: center;
+            padding: 10px 5px;
+            background: #f5f5f5;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .match-box:hover {
+            background: #e0e0e0;
+            transform: scale(1.1);
+        }
+
+        .match-number {
+            font-size: 0.75em;
+            color: #999;
+            margin-bottom: 5px;
+        }
+
+        .match-prediction {
+            font-size: 1.5em;
+            font-weight: bold;
+            width: 35px;
+            height: 35px;
+            line-height: 35px;
+            margin: 0 auto;
+            border-radius: 50%;
+        }
+
+        .prediction-1 {
+            background: #2196F3;
+            color: white;
+        }
+
+        .prediction-0 {
+            background: #FF9800;
+            color: white;
+        }
+
+        .prediction-2 {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .remaining-count {
+            color: #666;
+            font-size: 0.9em;
+            margin-top: 10px;
+        }
+
+        .no-coupons {
+            text-align: center;
+            padding: 60px 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .no-coupons h2 {
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .no-coupons p {
+            color: #999;
+        }
+
+        .toggle-icon {
+            transition: transform 0.3s;
+            font-size: 1.5em;
+            color: #667eea;
+        }
+
+        .coupon-card.active .toggle-icon {
+            transform: rotate(180deg);
+        }
+
+        .pagination-container {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin-top: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .pagination-info {
+            color: #666;
+            font-weight: 600;
+        }
+
+        .pagination-controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .page-btn {
+            padding: 10px 15px;
+            border: 2px solid #667eea;
+            background: white;
+            color: #667eea;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .page-btn:hover:not(:disabled) {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .page-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .page-btn.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .page-input {
+            width: 80px;
+            padding: 10px;
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 1em;
+        }
+
+        .row-filter-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+
+        .row-filter-section label {
+            font-size: 1.1em;
+            color: #555;
+            font-weight: 600;
+        }
+
+        .row-filter-section input {
+            padding: 10px;
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            font-size: 1em;
+            width: 120px;
+        }
+
+        .filter-btn {
+            padding: 10px 20px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .filter-btn:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+        }
+
+        .items-per-page {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .items-per-page select {
+            padding: 10px;
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            font-size: 1em;
+            cursor: pointer;
+        }
+
+        .matches-section {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .matches-section h2 {
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 1.8em;
+        }
+
+        .matches-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .match-item {
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+            transition: all 0.3s;
+        }
+
+        .match-item:hover {
+            background: #e9ecef;
+            transform: translateX(5px);
+        }
+
+        .match-list-number {
+            font-weight: bold;
+            color: #667eea;
+            font-size: 1.1em;
+            margin-bottom: 5px;
+        }
+
+        .match-date {
+            font-size: 0.85em;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .match-teams {
+            font-size: 0.95em;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .sportoto-image {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .sportoto-image img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .all-matches-stats {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 20px;
+        }
+
+        .all-matches-stats h3 {
+            margin-bottom: 15px;
+            text-align: center;
+            font-size: 1.5em;
+        }
+
+        .stats-table-container {
+            overflow-x: auto;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .stats-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .stats-table thead {
+            background: rgba(255, 255, 255, 0.2);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .stats-table th {
+            padding: 15px;
+            text-align: left;
+            font-weight: bold;
+            font-size: 1.1em;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .stats-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .stats-table tbody tr:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .stats-table .match-no {
+            font-weight: bold;
+            text-align: center;
+            width: 80px;
+        }
+
+        .stats-table .match-name {
+            font-weight: 500;
+            min-width: 250px;
+        }
+
+        .stats-table .percentage-cell {
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .stats-table .count-cell {
+            font-size: 0.85em;
+            opacity: 0.8;
+            margin-left: 5px;
+        }
+
+        .match-filters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .match-filter-item {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .match-filter-item label {
+            font-size: 0.9em;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .match-filter-item select {
+            padding: 8px;
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            font-size: 1em;
+            cursor: pointer;
+            background: white;
+        }
+
+        .match-filter-item select:focus {
+            outline: none;
+            border-color: #764ba2;
+        }
+
+        /* Glassmorphism for sections */
+        .matches-section,
+        .header {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px);
+            border-radius: 25px;
+            padding: 30px;
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.1),
+                0 0 0 1px rgba(255, 255, 255, 0.2) inset;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            margin-bottom: 25px;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 8px;
+            }
+
+            .coupons-container {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .matches-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 8px;
+            }
+
+            .header h1 {
+                font-size: 1.8em;
+                letter-spacing: 1px;
+            }
+
+            .pagination-container {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .pagination-controls {
+                flex-wrap: wrap;
+                gap: 5px;
+            }
+
+            .matches-list {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .first-match-stats h3 {
+                font-size: 1.2em;
+            }
+
+            .billboard-container {
+                padding: 15px;
+                border-radius: 20px;
+            }
+
+            .billboard-title {
+                font-size: 2em;
+                letter-spacing: 4px;
+            }
+
+            .matches-section,
+            .header {
+                padding: 20px;
+                border-radius: 20px;
+            }
+
+            .coupon-card {
+                padding: 18px;
+                border-radius: 18px;
+            }
+
+            .match-filters-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+            }
+
+            /* Better touch targets */
+            .coupon-card {
+                min-height: 80px;
+                -webkit-tap-highlight-color: rgba(102, 126, 234, 0.3);
+            }
+
+            .page-btn,
+            .filter-btn {
+                min-height: 44px;
+                min-width: 44px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="billboard-container">
+            <div class="billboard-title">15 HEDEF</div>
+            <div class="marquee-container">
+                <div class="marquee-content">
+                    <span>💰 ÇOK PARA KAZANMALI 💰</span>
+                    <span>💵 ZENGİN OLACAĞIZ 💵</span>
+                    <span>💎 BÜYÜK KAZANÇ 💎</span>
+                    <span>💰 MİLYONLAR KAZANMALI 💰</span>
+                    <span>💵 HEDEF BÜYÜK PARA 💵</span>
+                    <span>💪 KAZANÇ İÇİN ÇALIŞIYORUZ 💪</span>
+                    <span>🔥 PARA KAZANMAK ZORUNLU 🔥</span>
+                    <span>💰 MİLYONER OLACAĞIZ 💰</span>
+                    <span>💎 ZENGİNLİK BİZİM HAKKIMIZ 💎</span>
+                    <span>💵 PARA KAZANMAK BİZİM İŞİMİZ 💵</span>
+                    <span>💰 BÜYÜK KAZANÇ TARAFTARLARI 💰</span>
+                    <span>🔥 ZENGİN OLDUK 🔥</span>
+                    <span>💰 PARA KAZANMA YOLUNDA 💰</span>
+                    <span>💪 15 MAÇ 15 KAZANÇ 💪</span>
+                    <span>💵 PARA BÜYÜK GÜÇ 💵</span>
+                    <span>💰 PARA BİZİM HER ŞEYİMİZ 💰</span>
+                    <span>💎 ÇOK PARA KAZANMALI 💎</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="matches-section">
+            <h2>📅 Maç Listesi</h2>
+            <div class="sportoto-image">
+                <img src="https://webapi.sportoto.gov.tr/image/sportoto13-t3yhstmz.jpeg" alt="Spor Toto">
+            </div>
+            <div class="matches-list" id="matchesList">
+                <!-- Maçlar JavaScript ile eklenecek -->
+            </div>
+            <div class="all-matches-stats" id="allMatchesStats">
+                <h3>📊 Tüm Maçlar İçin Tahmin Dağılımı</h3>
+                <div class="stats-table-container">
+                    <table class="stats-table" id="statsTable">
+                        <thead>
+                            <tr>
+                                <th>Maç No</th>
+                                <th>Maç</th>
+                                <th>1 (Ev Sahibi)</th>
+                                <th>0 (Beraberlik)</th>
+                                <th>2 (Deplasman)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="statsTableBody">
+                            <!-- İstatistikler JavaScript ile eklenecek -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="header">
+            <h1>⚽ Spor Toto Kupon Takibi</h1>
+            <div class="filter-section" id="matchFilters">
+                <label><strong>Maç Filtreleri:</strong></label>
+                <div class="match-filters-grid" id="matchFiltersGrid">
+                    <!-- Tüm maçlar için filtreler JavaScript ile eklenecek -->
+                </div>
+            </div>
+            <div class="row-filter-section">
+                <label for="rowStart">Başlangıç Satırı:</label>
+                <input type="number" id="rowStart" min="1" value="1" placeholder="1">
+                <label for="rowEnd">Bitiş Satırı:</label>
+                <input type="number" id="rowEnd" min="1" placeholder="1450">
+                <button class="filter-btn" onclick="filterByRows()">Filtrele</button>
+            </div>
+            <div class="stats">
+                <div class="stat-item">
+                    <span id="totalCoupons">Toplam: 0</span>
+                </div>
+                <div class="stat-item">
+                    <span id="activeCoupons">Gösterilen: 0</span>
+                </div>
+                <div class="stat-item">
+                    <span id="currentPageInfo">Sayfa: 1</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="pagination-container">
+            <div class="pagination-info">
+                <span id="pageInfo">Sayfa 1 / 1</span>
+            </div>
+            <div class="items-per-page">
+                <label for="itemsPerPage">Sayfa Başına:</label>
+                <select id="itemsPerPage" onchange="changeItemsPerPage()">
+                    <option value="20" selected>20</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                    <option value="200">200</option>
+                    <option value="500">500</option>
+                </select>
+            </div>
+            <div class="pagination-controls">
+                <button class="page-btn" onclick="goToFirstPage()">««</button>
+                <button class="page-btn" onclick="goToPreviousPage()">«</button>
+                <input type="number" id="pageInput" class="page-input" min="1" value="1" onchange="goToPage()">
+                <button class="page-btn" onclick="goToNextPage()">»</button>
+                <button class="page-btn" onclick="goToLastPage()">»»</button>
+            </div>
+        </div>
+
+        <div id="couponsContainer" class="coupons-container">
+            <!-- Kuponlar buraya yüklenecek -->
+        </div>
+    </div>
+
+    <script>
+        let allCoupons = [];
+        let filteredCoupons = [];
+        let displayedCoupons = [];
+        let currentPage = 1;
+        let itemsPerPage = 20;
+        let rowStartFilter = null;
+        let rowEndFilter = null;
+
+        // Maç listesi
+        const matches = [
+            { no: 1, date: '31.10.2025 20:00', teams: 'Başakşehir FK - Kocaelispor' },
+            { no: 2, date: '01.11.2025 17:00', teams: 'Göztepe A.Ş. - Gençlerbirliği' },
+            { no: 3, date: '01.11.2025 20:00', teams: 'Galatasaray A.Ş. - Trabzonspor A.Ş.' },
+            { no: 4, date: '02.11.2025 14:30', teams: 'Konyaspor - Samsunspor A.Ş.' },
+            { no: 5, date: '02.11.2025 17:00', teams: 'Kayserispor - Kasımpaşa A.Ş.' },
+            { no: 6, date: '02.11.2025 20:00', teams: 'Beşiktaş A.Ş. - Fenerbahçe A.Ş.' },
+            { no: 7, date: '03.11.2025 20:00', teams: 'Alanyaspor - Gaziantep F.K. A.Ş.' },
+            { no: 8, date: '03.11.2025 20:00', teams: 'Eyüpspor - Antalyaspor' },
+            { no: 9, date: '03.11.2025 20:00', teams: 'Çaykur Rizespor A.Ş. - Fatih Karagümrük' },
+            { no: 10, date: '01.11.2025 17:30', teams: 'Leipzig - Stuttgart' },
+            { no: 11, date: '01.11.2025 20:30', teams: 'Bayern Münih - B. Leverkusen' },
+            { no: 12, date: '01.11.2025 20:30', teams: 'Tottenham - Chelsea' },
+            { no: 13, date: '02.11.2025 19:30', teams: 'Manchester City - Bournemouth' },
+            { no: 14, date: '01.11.2025 18:15', teams: 'Atletico Madrid - Sevilla' },
+            { no: 15, date: '02.11.2025 22:45', teams: 'AC Milan - AS Roma' }
+        ];
+
+        const csvDataCompact = ["1,1,1,2,0,2,1,2,1,1,0,2,1,1,0", "2,1,1,1,2,0,2,0,1,1,0,0,1,1,2", "1,1,1,2,0,2,1,2,1,1,1,0,1,2,1", "1,1,1,1,1,2,0,1,1,2,1,2,1,2,0", "2,1,1,0,0,2,0,0,1,2,1,2,1,1,1", "2,1,1,1,0,0,0,0,1,1,1,2,1,1,2", "1,1,1,0,0,2,0,0,0,2,1,2,1,1,1", "1,1,2,1,1,2,1,0,0,0,2,2,1,1,2", "2,1,0,1,1,0,1,2,0,1,1,0,1,1,2", "2,1,1,0,1,0,0,0,1,2,1,2,1,1,1", "1,1,1,0,0,2,0,1,0,2,0,2,1,1,1", "1,1,1,1,1,2,0,0,0,2,1,2,1,2,2", "1,1,1,0,1,2,0,1,1,0,1,2,1,2,1", "1,1,1,2,1,2,0,2,1,1,0,2,1,1,0", "2,1,0,0,2,2,1,1,1,1,1,0,1,2,0", "1,1,1,2,0,2,0,1,1,0,2,2,1,1,1", "2,1,1,2,1,0,1,1,0,1,1,0,1,1,2", "1,1,1,1,2,0,1,2,0,1,0,2,1,1,1", "1,1,1,1,0,2,2,0,0,2,1,2,1,1,2", "1,1,0,0,0,2,1,1,1,1,1,1,1,2,2", "1,1,1,2,1,2,0,0,1,1,0,2,1,1,0", "2,1,1,1,1,2,2,2,1,0,1,0,1,1,2", "1,1,0,2,1,2,2,0,0,1,2,2,1,1,0", "1,1,1,0,0,2,0,1,0,0,1,2,1,1,2", "1,1,2,2,2,0,1,1,1,0,1,0,1,2,0", "1,1,1,2,0,2,0,0,1,1,0,2,1,1,1", "1,1,1,2,1,2,0,2,1,0,2,0,1,1,2", "1,1,1,2,0,0,0,0,0,2,1,2,1,1,1", "1,1,0,2,0,0,1,2,0,1,0,2,1,1,1", "2,1,0,1,2,2,1,2,0,1,1,1,1,1,2", "1,1,1,2,0,2,2,1,1,0,1,2,1,2,2", "1,1,1,2,1,0,1,1,1,2,2,2,1,1,0", "1,1,1,1,1,2,0,0,1,1,2,2,1,1,0", "2,1,1,0,1,0,0,0,1,1,1,2,1,1,2", "1,1,1,2,1,2,0,1,1,0,2,2,1,1,1", "2,1,0,1,2,0,1,0,1,1,1,0,1,2,2", "1,1,1,0,0,2,2,1,0,1,1,2,1,2,2", "1,1,1,1,1,0,0,2,1,2,1,0,1,1,2", "2,1,1,1,0,2,2,1,1,1,2,0,1,1,0", "2,1,1,1,0,2,1,1,1,2,0,1,1,1,2", "2,1,1,2,0,0,1,1,0,1,1,2,1,1,2", "1,1,1,2,0,0,0,2,0,1,1,2,1,1,1", "1,1,1,1,0,2,1,0,1,1,1,2,1,2,0", "2,1,0,2,1,0,2,2,1,0,1,1,1,1,1", "1,1,0,2,2,0,2,2,0,0,1,2,1,1,1", "2,1,1,2,0,0,0,0,1,2,1,2,1,1,1", "1,1,1,2,1,2,1,1,1,0,2,0,1,1,0", "1,1,2,0,0,2,0,2,0,2,1,1,1,1,1", "1,1,0,2,0,2,0,2,0,1,1,1,1,1,2", "1,1,1,2,0,2,0,1,0,0,1,0,1,1,2", "1,1,0,1,1,2,0,2,1,0,1,2,1,2,2", "2,1,0,1,2,0,1,2,1,1,0,2,1,1,2", "2,1,0,2,1,2,0,1,0,2,1,0,1,1,1", "1,1,1,1,0,2,1,1,1,0,2,2,1,1,0", "1,1,1,2,1,2,1,0,1,1,0,2,1,1,2", "2,1,1,0,0,0,1,1,0,2,1,2,1,1,1", "2,1,0,0,1,2,2,1,1,1,2,2,1,1,2", "1,1,1,2,2,2,1,0,0,2,0,1,1,1,0", "2,1,1,1,1,2,1,0,0,1,1,0,1,1,2", "1,1,1,2,1,2,0,1,1,2,1,0,1,2,1", "1,1,1,0,1,2,1,0,0,2,1,0,1,1,2", "1,1,1,2,2,2,1,1,1,0,2,2,1,2,0", "1,1,1,1,0,2,0,1,1,2,2,1,1,1,2", "1,1,1,2,0,2,1,2,0,1,1,0,1,1,2", "2,1,1,2,0,2,0,0,1,2,1,2,1,1,1", "2,1,1,0,1,2,0,2,0,1,1,0,1,1,2", "2,1,1,0,2,0,1,1,1,1,2,0,1,1,2", "2,1,1,2,0,2,1,0,1,0,1,0,1,1,1", "1,1,2,2,1,2,0,1,0,2,2,1,1,1,0", "1,1,1,1,0,2,1,1,1,2,0,2,1,1,2", "1,1,1,2,1,0,1,2,0,2,1,2,1,1,0", "2,1,0,0,1,2,0,1,0,0,1,2,1,1,2", "1,1,1,2,1,2,0,1,0,1,0,2,1,1,1", "1,1,1,2,0,2,1,0,1,0,0,2,1,1,1", "1,1,1,2,1,2,0,0,0,2,1,2,1,1,0", "1,1,1,2,1,2,1,1,1,2,0,0,1,1,2", "2,1,1,2,0,2,0,0,0,1,1,2,1,1,0", "1,1,1,1,0,2,1,1,1,2,1,0,1,2,0", "1,1,1,2,1,0,0,0,0,2,1,2,1,1,0", "1,1,1,2,0,2,1,1,1,0,1,2,1,2,0", "1,1,0,2,1,2,0,0,0,1,2,2,1,1,2", "1,1,1,2,0,2,1,1,1,2,1,0,1,2,1", "1,1,1,0,0,2,0,1,1,1,2,2,1,1,1", "1,1,2,0,0,2,0,1,1,0,2,2,1,1,0", "1,1,1,2,1,2,0,0,1,2,0,2,1,1,0", "1,1,0,2,1,2,0,1,1,2,1,0,1,2,0", "2,1,1,2,1,2,1,0,1,0,1,0,1,1,0", "1,1,1,2,1,2,0,1,1,2,0,1,1,1,0", "2,1,1,1,1,2,1,0,0,2,1,2,1,1,0", "1,1,1,2,0,2,1,1,1,2,1,2,1,2,0", "2,1,1,1,2,0,0,2,1,2,0,2,1,1,0", "2,1,1,0,1,2,1,1,1,1,0,2,1,1,0", "2,1,0,1,1,2,1,0,1,1,1,2,1,2,1", "1,1,0,1,0,2,2,1,1,1,2,0,1,1,2", "1,1,1,0,0,2,0,1,1,1,1,2,1,2,2", "1,1,1,2,0,2,1,0,1,1,0,2,1,1,0", "1,1,1,0,2,0,1,0,0,2,1,2,1,1,2", "1,1,1,1,1,2,1,0,1,2,0,2,1,1,0", "2,1,2,1,1,0,0,1,0,1,0,2,1,1,2", "1,1,1,2,1,2,0,2,0,2,1,0,1,1,1", "1,1,1,2,0,2,0,0,0,2,1,2,1,1,1", "2,1,1,2,1,0,0,2,1,1,1,2,1,1,0", "1,1,0,1,1,0,2,2,1,0,2,2,1,1,1", "1,1,1,2,0,0,0,1,1,1,2,2,1,1,1", "2,1,1,2,1,2,0,1,1,1,0,0,1,1,1", "2,1,1,2,0,2,0,0,0,1,1,0,1,1,1", "2,1,1,2,0,0,2,0,1,0,1,2,1,1,2", "1,1,1,1,1,2,0,1,0,1,1,2,1,2,0", "1,1,0,1,0,2,2,1,1,2,1,0,1,2,1", "2,1,1,0,1,2,1,2,0,1,1,0,1,1,1", "1,1,2,2,1,2,1,0,0,1,2,1,1,1,2", "2,1,1,2,0,2,2,0,1,1,2,2,1,1,1", "2,1,1,0,1,0,2,2,1,1,1,2,1,1,0", "1,1,1,1,0,2,1,2,1,1,1,2,1,2,0", "1,1,2,0,0,2,2,1,1,0,1,2,1,2,1", "2,1,1,2,2,0,1,0,0,2,1,0,1,1,0", "1,1,1,2,0,2,1,1,1,0,0,2,1,1,2", "2,1,1,2,1,2,0,0,1,0,1,2,1,1,0", "1,1,1,2,1,0,0,2,1,0,1,2,1,1,2", "2,1,1,2,1,2,1,0,0,2,1,2,1,1,1", "2,1,0,2,1,2,0,1,1,0,1,2,1,2,0", "2,1,0,2,1,2,2,2,1,0,1,2,1,1,1", "2,1,1,2,0,2,1,0,1,0,1,0,1,1,0", "1,1,1,2,0,2,1,1,1,2,0,0,1,1,0", "2,1,1,2,1,0,0,0,1,2,1,0,1,1,1", "2,1,1,0,0,2,0,2,1,1,1,2,1,1,0", "1,1,1,1,0,2,2,1,1,2,1,0,1,2,0", "1,1,1,0,0,2,0,2,1,0,1,2,1,1,2", "1,1,1,2,0,2,0,1,1,1,0,2,1,1,2", "2,1,0,0,1,2,2,2,1,0,1,0,1,1,1", "1,1,1,2,0,2,1,1,1,2,0,2,1,1,0", "2,1,1,2,2,2,1,1,1,1,0,0,1,1,1", "1,1,1,2,0,2,1,1,1,1,1,0,1,2,0", "2,1,1,2,1,0,2,2,1,1,2,0,1,1,1", "1,1,1,2,1,2,1,0,1,0,0,2,1,1,1", "1,1,1,2,1,0,2,0,0,1,1,0,1,2,1", "2,1,1,0,1,0,1,1,0,2,0,2,1,1,0", "1,1,1,2,0,0,0,1,0,2,1,2,1,1,0", "1,1,2,0,2,2,1,0,1,0,2,0,1,1,1", "2,1,1,2,1,2,0,0,0,0,0,1,1,1,1", "1,1,2,2,2,0,0,1,1,0,1,2,1,2,2", "1,1,1,0,1,2,1,1,1,2,2,2,1,1,0", "1,1,1,1,0,2,0,0,0,2,1,2,1,1,0", "1,1,1,2,0,2,0,1,1,2,2,2,1,1,0", "1,1,2,1,1,0,1,2,1,0,2,0,1,1,1", "1,1,1,2,1,0,0,1,1,2,0,2,1,1,1", "1,1,1,2,1,0,1,2,0,0,1,2,1,1,0", "2,1,1,1,0,2,1,0,1,1,0,2,1,1,1", "2,1,1,2,1,2,1,0,1,1,0,2,1,1,1", "2,1,0,1,2,0,0,2,1,2,1,2,1,1,1", "1,1,0,2,1,2,0,1,1,1,2,0,1,1,1", "1,1,1,2,0,2,0,1,0,2,1,0,1,1,2", "1,1,1,2,0,0,1,1,1,2,2,2,1,1,1", "2,1,1,2,0,0,0,0,1,1,1,2,1,1,2", "2,1,1,2,0,2,0,2,1,2,1,2,1,1,1", "1,1,2,0,1,2,1,1,0,0,2,1,1,1,1", "1,1,1,0,1,2,0,1,1,1,1,2,1,2,2", "1,1,1,2,1,0,1,0,0,2,1,0,1,1,2", "1,1,1,2,1,2,1,0,1,1,1,2,1,2,0", "1,1,1,0,1,2,0,1,1,2,2,2,1,1,1", "2,1,1,1,0,0,1,2,1,0,1,2,1,1,1", "2,1,1,2,0,2,1,1,0,2,1,2,1,2,0", "1,1,1,1,0,2,1,0,1,1,2,2,1,1,0", "1,1,1,2,0,0,1,0,1,2,2,1,1,1,1", "2,1,1,2,0,0,0,1,1,2,1,2,1,1,0", "2,1,2,1,1,0,1,1,1,2,2,0,1,1,2", "2,1,0,1,1,0,0,1,0,0,1,2,1,2,1", "1,1,0,2,2,2,0,2,0,1,2,2,1,1,0", "1,1,1,1,0,2,1,0,1,1,0,2,1,1,2", "2,1,1,1,0,2,0,0,1,2,1,0,1,1,1", "1,1,2,1,1,2,2,0,0,2,1,2,1,2,1", "1,1,1,2,1,2,0,2,0,1,1,0,1,1,2", "2,1,1,2,0,2,1,1,0,0,1,2,1,1,0", "2,1,1,2,0,0,0,1,1,1,1,0,1,1,2", "2,1,1,2,0,2,0,1,1,0,1,0,1,1,2", "1,1,1,2,1,2,1,0,1,2,2,2,1,1,0", "1,1,1,0,0,2,0,2,0,1,1,2,1,1,0", "2,1,1,2,1,0,1,2,0,1,1,2,1,1,1", "1,1,1,0,1,2,0,0,1,1,1,2,1,2,1", "2,1,1,2,1,0,0,1,1,1,2,2,1,1,0", "2,1,1,2,2,2,2,0,1,1,0,1,1,1,2", "2,1,1,2,1,2,0,2,1,1,1,0,1,1,2", "1,1,0,2,0,2,0,2,0,1,1,0,1,1,1", "1,1,1,2,1,2,1,0,1,0,2,2,1,1,1", "2,1,0,1,0,2,1,1,1,2,2,0,1,1,0", "1,1,1,2,2,2,1,0,0,0,1,0,1,1,0", "2,1,2,0,1,2,1,1,0,2,1,0,1,2,1", "1,1,1,1,0,2,0,1,1,2,0,2,1,1,0", "1,1,1,2,1,2,1,0,0,2,1,0,1,1,2", "2,1,0,1,0,2,1,1,1,0,2,2,1,1,1", "2,1,1,2,0,0,1,1,1,2,1,0,1,1,2", "1,1,2,2,0,0,1,0,1,2,2,0,1,1,2", "2,1,1,2,0,2,1,1,0,0,1,0,1,1,1", "1,1,1,2,0,2,1,1,0,1,0,2,1,1,1", "2,1,0,1,2,0,2,1,0,2,1,2,1,1,1", "2,1,1,2,1,2,0,2,0,2,0,0,1,1,1", "1,1,1,1,0,2,1,2,0,0,1,2,1,1,2", "1,1,1,0,0,0,2,2,1,1,1,0,1,1,2", "2,1,1,2,0,0,0,1,1,2,1,2,1,1,2", "1,1,1,0,2,2,1,1,0,1,0,1,1,2,1", "2,1,0,0,2,2,1,0,1,2,1,0,1,1,0", "1,1,0,2,0,0,0,2,1,1,1,1,1,2,0", "1,1,1,2,0,2,0,2,0,2,1,0,1,2,0", "1,1,1,2,0,2,0,0,1,1,1,2,1,2,2", "1,1,1,2,0,2,0,2,1,2,1,0,1,1,0", "1,1,1,0,2,0,2,0,1,1,2,2,1,1,1", "1,1,2,2,1,2,1,0,1,2,0,1,1,1,0", "1,1,1,2,0,2,0,1,1,1,1,0,1,2,2", "1,1,0,2,1,2,0,1,0,1,1,0,1,2,1", "2,1,1,0,1,2,0,0,1,1,1,0,1,1,2", "1,1,1,2,1,2,0,2,1,1,0,2,1,1,1", "1,1,1,2,2,0,2,0,1,1,0,2,1,1,0", "2,1,1,1,0,2,0,0,1,2,1,2,1,1,0", "1,1,0,1,0,0,2,2,1,1,0,2,1,1,1", "1,1,1,2,1,2,1,1,0,2,0,2,1,1,1", "1,1,1,2,1,2,1,0,1,1,1,0,1,2,0", "1,1,1,2,0,2,0,1,1,0,1,2,1,2,1", "2,1,1,0,1,2,0,2,1,0,1,2,1,2,0", "2,1,1,2,1,0,0,0,1,2,1,2,1,1,0", "2,1,1,1,0,2,1,0,1,1,2,1,1,1,0", "1,1,1,2,0,0,0,1,0,0,1,2,1,1,2", "1,1,1,2,0,2,0,1,1,2,1,2,1,2,1", "1,1,1,1,0,0,0,2,1,0,1,2,1,1,2", "1,1,1,2,2,0,2,1,0,1,1,1,1,2,2", "1,1,1,2,0,2,0,1,1,2,0,2,1,1,1", "1,1,1,2,0,0,1,2,0,0,1,2,1,1,1", "1,1,0,1,0,2,1,1,1,0,1,0,1,2,2", "1,1,1,2,0,0,2,0,0,2,1,2,1,2,1", "1,1,1,2,1,2,1,0,1,1,2,2,1,1,0", "2,1,1,2,2,0,0,1,0,1,1,0,1,2,0", "1,1,1,1,1,2,0,2,1,1,0,2,1,1,0", "2,1,1,1,0,0,1,1,1,2,1,0,1,2,2", "1,1,1,2,0,0,0,1,0,2,1,2,1,1,2", "1,1,1,0,1,2,1,0,1,2,2,2,1,1,2", "1,1,1,2,0,0,1,1,1,1,1,2,1,2,2", "1,1,1,0,0,2,0,0,1,2,1,0,1,1,2", "1,1,0,2,1,2,2,2,0,0,1,2,1,1,1", "2,1,1,0,0,2,0,0,1,0,1,2,1,1,1", "1,1,1,2,1,2,0,1,1,0,1,0,1,2,1", "1,1,0,2,1,2,2,1,0,0,1,2,1,2,0", "1,1,1,1,0,2,0,0,1,1,2,2,1,1,1", "2,1,1,2,1,2,0,0,1,1,1,1,1,2,2", "2,1,2,2,1,2,1,1,0,2,0,2,1,1,1", "2,1,2,0,1,2,2,1,1,1,0,2,1,1,2", "2,1,2,0,0,2,1,0,1,1,0,0,1,1,1", "1,1,1,2,0,0,1,1,1,1,2,2,1,1,0", "2,1,1,0,1,2,2,2,1,1,1,0,1,2,0", "2,1,1,0,2,2,0,1,1,2,1,0,1,2,2", "2,1,1,2,1,0,1,1,0,1,0,2,1,1,1", "1,1,1,2,1,2,1,0,0,1,1,2,1,2,1", "1,1,2,0,1,2,1,0,0,0,1,2,1,2,0", "1,1,1,0,1,2,0,2,1,1,0,2,1,1,1", "1,1,1,1,0,2,0,1,1,2,1,0,1,2,1", "1,1,2,1,1,0,1,2,1,0,2,0,1,1,2", "1,1,1,2,0,2,1,2,1,1,0,0,1,1,1", "1,1,2,2,1,2,0,0,0,0,1,2,1,2,0", "1,1,1,2,0,2,0,2,0,0,1,2,1,1,1", "1,1,2,0,1,2,0,1,0,1,1,2,1,2,2", "2,1,2,1,2,0,1,0,1,1,0,2,1,1,2", "1,1,1,2,0,2,0,1,1,1,2,2,1,1,2", "1,1,1,1,0,2,0,2,1,1,0,2,1,1,1", "1,1,1,2,0,2,1,0,1,1,2,0,1,1,1", "1,1,1,2,0,0,2,2,0,1,1,0,1,1,1", "1,1,0,1,1,0,2,0,1,2,0,2,1,1,0", "1,1,0,0,2,2,0,2,0,1,0,2,1,1,1", "1,1,0,0,1,0,1,2,1,2,1,0,1,1,2", "2,1,1,1,0,2,0,2,0,0,1,2,1,1,2", "2,1,1,2,1,0,0,1,1,0,1,0,1,1,2", "1,1,0,1,1,2,0,0,1,0,2,1,1,1,2", "2,1,1,0,0,2,0,1,1,2,1,0,1,1,0", "2,1,0,0,2,2,2,2,1,0,1,0,1,1,1", "2,1,1,2,0,0,0,1,1,0,1,2,1,1,0", "1,1,2,2,0,2,1,2,1,1,0,2,1,2,1", "1,1,2,2,0,0,2,0,1,2,0,0,1,1,1", "2,1,0,0,2,2,1,1,0,0,0,2,1,1,1", "1,1,1,2,1,0,1,1,0,2,2,1,1,1,0", "1,1,1,1,2,0,0,2,1,2,2,1,1,1,0", "1,1,1,2,1,2,0,1,1,2,0,0,1,1,1", "2,1,1,1,1,0,0,2,1,2,1,2,1,1,1", "1,1,1,0,1,0,2,0,1,2,2,1,1,1,1", "1,1,1,1,0,2,0,1,1,1,1,0,1,2,2", "1,1,1,2,1,0,1,0,1,1,2,2,1,1,0", "2,1,1,2,2,2,1,0,0,1,1,0,1,1,2", "1,1,1,1,2,0,0,0,1,2,1,2,1,2,0", "2,1,1,2,1,2,2,0,1,0,1,2,1,1,0", "1,1,1,1,1,2,1,0,1,2,0,2,1,2,2", "1,1,1,2,2,2,1,2,0,0,0,0,1,1,1", "1,1,1,2,1,0,0,1,1,1,1,2,1,2,0", "2,1,1,2,0,2,1,0,1,0,1,2,1,1,2", "2,1,1,1,2,0,1,1,0,2,2,2,1,1,0", "1,1,1,2,1,2,1,2,0,0,2,0,1,1,1", "1,1,1,2,2,0,2,1,0,0,2,2,1,1,1", "1,1,1,2,1,2,0,0,1,1,1,0,1,2,1", "2,1,1,2,2,2,0,1,0,1,0,0,1,1,2", "2,1,1,0,1,0,2,1,0,1,1,2,1,2,1", "2,1,1,1,0,2,1,1,1,0,0,2,1,2,1", "1,1,1,1,1,2,0,1,1,2,0,2,1,1,2", "2,1,2,1,0,2,0,0,1,2,1,0,1,2,1", "1,1,1,0,2,2,1,1,1,2,0,1,1,2,1", "2,1,1,2,0,2,1,0,0,1,1,0,1,1,1", "2,1,0,2,1,0,1,0,1,2,1,1,1,1,0", "2,1,1,0,0,2,1,1,1,1,0,2,1,1,1", "1,1,1,1,0,2,1,1,1,2,2,2,1,1,0", "1,1,1,2,1,2,0,1,0,1,1,0,1,2,1", "1,1,1,1,0,2,2,1,0,2,2,1,1,1,1", "2,1,1,2,1,0,0,1,0,2,1,2,1,1,1", "1,1,1,0,0,2,2,1,0,1,2,2,1,1,2", "1,1,1,2,0,0,0,1,1,1,2,2,1,1,0", "1,1,1,0,2,0,2,0,1,1,0,2,1,1,0", "1,1,1,0,2,0,2,1,1,1,1,2,1,2,0", "1,1,1,2,1,2,1,2,0,2,1,0,1,1,0", "1,1,1,1,0,2,0,1,0,1,1,2,1,2,1", "1,1,1,1,1,2,1,0,1,2,1,2,1,2,0", "1,1,1,2,1,2,0,0,1,0,0,2,1,1,1", "2,1,1,2,1,2,0,1,0,1,1,0,1,1,2", "1,1,1,2,1,2,1,1,1,0,1,0,1,2,0", "2,1,1,2,0,2,0,0,0,1,1,2,1,1,1", "2,1,0,1,0,0,1,1,1,2,2,2,1,1,0", "1,1,1,2,2,0,0,2,1,0,1,1,1,2,1", "2,1,1,2,0,2,1,0,0,1,1,2,1,1,2", "1,1,1,1,0,2,2,1,0,2,0,0,1,1,0", "2,1,1,2,1,0,0,0,1,1,1,2,1,1,2", "1,1,1,0,2,2,2,1,0,2,0,2,1,1,2", "2,1,1,0,1,2,2,0,1,1,2,0,1,1,2", "2,1,1,0,2,0,1,0,0,1,1,2,1,1,0", "1,1,2,1,1,2,1,2,0,2,2,0,1,1,1", "1,1,1,2,1,0,1,2,1,0,0,2,1,2,1", "1,1,1,1,0,2,1,1,0,0,2,0,1,1,2", "1,1,1,2,2,0,0,1,1,1,2,2,1,1,1", "1,1,2,2,1,0,0,2,1,1,2,2,1,1,0", "1,1,1,2,2,0,1,0,0,2,1,1,1,1,0", "1,1,0,2,0,0,1,1,1,2,2,2,1,1,1", "1,1,0,0,0,2,0,1,0,2,1,2,1,2,2", "2,1,0,2,1,2,1,0,0,1,2,2,1,1,1", "2,1,1,2,0,2,0,2,1,1,1,0,1,1,0", "2,1,1,1,1,0,2,2,1,1,1,0,1,2,1", "2,1,1,2,0,2,0,0,1,2,1,2,1,1,2", "1,1,1,0,1,2,1,2,1,2,0,1,1,1,2", "2,1,0,2,1,0,1,1,1,2,2,1,1,1,1", "1,1,1,2,0,2,0,0,0,2,1,0,1,1,1", "2,1,1,1,0,2,1,2,0,1,1,0,1,1,1", "1,1,0,2,1,0,0,1,0,1,1,0,1,2,2", "1,1,0,2,0,2,0,1,0,0,1,1,1,2,1", "1,1,0,0,2,2,1,1,1,0,0,2,1,2,1", "1,1,1,0,0,2,1,1,1,0,2,2,1,1,1", "1,1,2,1,0,0,1,2,0,1,2,0,1,1,1", "1,1,1,2,2,2,0,0,0,1,1,0,1,1,2", "2,1,1,0,1,0,0,2,1,1,1,2,1,1,0", "1,1,1,2,1,2,0,1,1,1,2,0,1,1,0", "1,1,1,0,0,2,1,0,1,1,1,2,1,2,0", "1,1,0,2,1,0,1,0,1,2,2,0,1,1,2", "1,1,2,0,1,2,1,0,0,2,0,2,1,1,1", "1,1,2,1,1,0,1,0,1,1,2,0,1,2,1", "2,1,2,0,0,2,1,2,1,0,0,2,1,1,1", "2,1,1,1,1,0,2,0,0,0,1,1,1,1,2", "2,1,1,2,1,0,0,0,1,2,0,0,1,1,2", "2,1,2,2,1,2,1,0,0,1,1,0,1,2,0", "1,1,1,2,2,2,1,2,0,0,2,2,1,1,0", "2,1,2,1,0,2,1,2,0,0,1,2,1,1,2", "2,1,1,1,2,2,0,1,0,0,1,0,1,1,2", "2,1,0,2,1,2,2,0,0,0,1,2,1,1,2", "1,1,0,2,1,0,0,0,0,1,1,2,1,1,2", "1,1,1,2,0,2,1,1,1,0,0,2,1,1,0", "2,1,1,0,1,2,1,0,0,2,0,2,1,1,0", "1,1,0,1,1,0,0,2,0,2,1,0,1,1,2", "1,1,2,1,0,0,2,1,1,0,1,2,1,2,1", "1,1,1,2,0,2,2,1,1,2,0,2,1,1,2", "2,1,1,2,0,2,0,1,1,1,0,2,1,1,1", "1,1,2,0,1,2,2,1,0,0,0,2,1,1,1", "2,1,1,2,1,0,2,1,0,1,0,0,1,1,1", "1,1,1,2,1,2,0,0,1,2,0,2,1,1,1", "1,1,1,2,0,2,0,0,0,0,1,2,1,1,1", "2,1,1,2,1,2,0,2,0,1,2,2,1,1,0", "2,1,1,2,0,0,1,2,1,1,1,0,1,1,0", "1,1,2,1,1,0,1,0,1,2,1,2,1,2,0", "2,1,1,2,0,2,0,1,0,1,1,0,1,1,0", "1,1,1,1,2,0,1,2,1,0,2,1,1,1,0", "1,1,1,0,0,2,2,2,1,0,2,1,1,1,1", "1,1,1,1,0,2,2,0,0,1,2,0,1,1,1", "2,1,1,0,0,2,0,0,1,2,1,2,1,1,0", "2,1,2,1,1,2,1,1,1,0,1,1,1,2,0", "1,1,1,2,0,2,0,2,1,1,0,2,1,1,0", "1,1,1,2,0,0,1,1,1,2,0,2,1,1,1", "1,1,1,2,1,0,1,2,0,2,1,0,1,1,1", "1,1,1,0,2,0,1,0,1,2,0,2,1,1,2", "1,1,2,0,0,2,2,1,1,0,2,2,1,1,1", "1,1,0,1,1,2,1,2,0,2,0,1,1,1,1", "1,1,1,2,0,0,0,2,1,2,1,2,1,1,0", "1,1,0,1,1,2,1,2,1,0,0,2,1,1,2", "2,1,1,2,2,0,2,0,0,1,1,2,1,1,1", "2,1,1,1,1,0,1,2,0,1,1,2,1,1,0", "1,1,1,1,0,2,1,0,1,1,2,2,1,1,2", "1,1,1,1,1,2,2,2,1,0,1,0,1,2,0", "1,1,1,2,1,2,0,0,1,1,2,2,1,1,0", "2,1,2,1,0,0,0,1,0,1,1,0,1,2,1", "1,1,2,0,2,0,0,0,1,1,1,2,1,2,0", "1,1,1,2,1,0,0,1,0,2,1,0,1,1,2", "1,1,1,2,0,2,1,1,1,1,2,0,1,1,0", "2,1,0,1,1,2,1,1,0,2,1,0,1,1,2", "2,1,1,2,0,2,1,0,1,2,1,0,1,1,0", "1,1,1,2,1,0,0,1,1,2,2,2,1,1,1", "2,1,1,2,0,2,0,1,1,1,1,2,1,2,1", "2,1,1,2,0,0,0,1,0,1,1,2,1,1,1", "2,1,1,1,1,0,1,1,0,2,1,0,1,2,1", "1,1,1,2,0,0,2,0,1,0,1,1,1,2,1", "1,1,1,2,1,2,1,2,1,1,0,0,1,1,0", "1,1,1,2,0,2,1,1,1,0,1,2,1,2,1", "2,1,0,0,1,2,1,1,0,1,1,1,1,2,1", "2,1,1,0,1,0,1,1,0,2,0,1,1,1,2", "1,1,1,1,0,2,2,2,1,1,2,1,1,1,0", "1,1,0,1,2,2,1,0,1,2,2,2,1,1,1", "2,1,1,2,1,2,0,1,0,2,1,2,1,1,0", "2,1,1,0,2,0,1,2,1,1,0,0,1,1,1", "1,1,1,0,1,0,2,0,1,0,1,2,1,2,2", "2,1,2,1,1,2,1,1,0,1,0,0,1,1,0", "1,1,1,2,1,0,2,2,1,2,1,0,1,2,2", "1,1,1,2,0,2,0,0,1,1,2,2,1,1,0", "2,1,1,2,1,0,1,1,0,2,2,1,1,1,0", "1,1,1,2,0,2,0,0,1,0,1,0,1,1,2", "1,1,1,2,0,0,1,2,1,2,2,2,1,1,0", "1,1,1,2,0,2,1,1,0,1,0,2,1,1,0", "1,1,1,2,2,0,1,1,1,0,1,2,1,2,1", "2,1,1,2,1,0,1,1,1,0,0,2,1,1,1", "2,1,1,2,1,0,0,0,1,1,1,0,1,1,2", "1,1,1,2,1,2,1,2,0,0,1,0,1,1,0", "1,1,1,2,1,0,0,0,1,1,1,2,1,2,1", "2,1,1,2,1,2,0,1,0,0,1,0,1,1,1", "1,1,1,0,1,2,0,1,1,1,2,2,1,1,2", "2,1,1,2,0,0,0,2,1,1,1,2,1,1,1", "2,1,1,0,2,2,1,1,0,1,2,0,1,1,2", "1,1,1,1,1,2,0,1,1,0,1,2,1,2,0", "1,1,1,2,2,2,0,2,1,0,0,1,1,1,1", "2,1,2,2,0,2,0,0,1,1,2,0,1,1,0", "1,1,1,2,0,0,1,1,0,2,1,0,1,1,2", "2,1,1,2,0,2,1,2,1,2,1,2,1,1,0", "1,1,2,1,1,2,1,0,0,2,2,2,1,1,1", "1,1,2,0,2,2,1,0,0,0,2,2,1,1,1", "1,1,1,0,0,2,0,1,1,1,1,2,1,2,0", "1,1,1,0,0,0,1,1,1,1,1,2,1,2,2", "2,1,1,1,0,0,1,2,1,2,1,0,1,1,1", "1,1,2,1,2,2,0,1,0,1,0,1,1,1,0", "1,1,1,2,0,0,0,2,1,1,1,0,1,1,2", "2,1,1,2,0,2,0,0,0,1,1,2,1,1,2", "1,1,1,0,1,2,1,1,1,2,0,2,1,1,2", "1,1,1,2,2,2,0,0,1,1,0,2,1,1,1", "1,1,2,1,0,2,2,2,1,1,0,2,1,1,2", "2,1,1,0,1,2,0,2,1,1,1,0,1,1,0", "1,1,1,2,0,2,0,2,0,1,1,2,1,1,2", "1,1,0,2,2,2,1,1,1,0,1,1,1,2,0", "1,1,1,1,1,2,0,0,0,0,1,2,1,1,2", "2,1,2,2,1,2,2,2,0,1,1,0,1,1,0", "1,1,1,0,0,0,0,0,1,2,1,2,1,1,2", "2,1,1,0,1,2,1,1,1,2,2,2,1,1,0", "2,1,1,0,0,2,1,0,1,0,1,2,1,1,0", "2,1,1,1,1,2,1,0,1,1,0,0,1,2,0", "1,1,1,2,0,2,0,2,1,0,1,0,1,1,2", "1,1,1,1,0,2,1,1,1,0,1,2,1,2,0", "1,1,1,0,0,2,0,1,1,1,0,2,1,1,2", "1,1,1,0,2,0,1,2,1,1,2,1,1,1,0", "1,1,1,2,2,2,1,0,1,1,1,0,1,2,1", "2,1,1,0,0,2,1,0,1,2,1,0,1,1,1", "1,1,1,2,2,2,1,1,0,1,0,0,1,1,1", "1,1,1,2,1,2,0,2,1,1,0,0,1,1,1", "1,1,1,1,0,0,1,2,1,2,2,0,1,1,0", "2,1,0,1,1,2,1,1,0,1,1,2,1,2,0", "2,1,2,1,2,2,0,0,0,2,1,2,1,1,1", "2,1,1,1,1,2,1,0,0,2,1,0,1,1,1", "2,1,1,2,1,2,0,2,1,1,1,0,1,2,2", "1,1,1,2,0,0,1,1,1,1,0,2,1,1,2", "2,1,0,2,1,2,0,1,1,0,2,2,1,1,2", "1,1,1,2,0,0,1,1,1,2,0,2,1,1,0", "2,1,1,2,0,2,1,2,0,1,1,2,1,1,1", "1,1,1,2,0,2,0,1,1,1,1,2,1,2,2", "1,1,1,2,0,2,0,2,0,2,1,2,1,1,0", "1,1,2,2,1,2,0,1,0,2,0,0,1,1,1", "1,1,1,0,2,2,1,1,0,2,1,2,1,2,0", "2,1,1,2,0,2,1,2,1,1,1,0,1,1,2", "1,1,0,1,2,2,0,2,0,2,1,1,1,1,0", "2,1,1,2,0,2,0,0,0,2,1,2,1,2,1", "2,1,0,2,2,2,0,0,1,1,1,2,1,2,1", "1,1,1,2,0,2,0,0,1,2,1,2,1,2,1", "1,1,2,1,0,0,0,2,0,1,0,2,1,1,1", "1,1,2,1,2,0,1,0,1,1,0,2,1,2,1", "1,1,0,1,1,2,2,0,1,2,2,2,1,1,0", "1,1,0,1,0,2,1,2,1,2,0,0,1,1,0", "2,1,1,1,1,2,0,2,1,0,1,0,1,1,1", "1,1,2,0,2,2,0,1,1,0,2,2,1,1,2", "1,1,1,2,1,2,1,1,1,1,0,0,1,2,0", "2,1,2,0,0,2,1,1,0,0,1,1,1,1,2", "1,1,2,2,1,2,0,2,1,1,0,2,1,1,2", "2,1,0,0,0,2,1,0,0,2,1,2,1,1,2", "2,1,1,1,1,2,2,2,0,2,1,1,1,1,0", "1,1,1,2,1,2,1,0,1,0,1,2,1,2,1", "1,1,1,2,2,0,1,0,1,1,1,2,1,2,1", "1,1,1,2,0,0,1,2,0,1,1,2,1,1,2", "1,1,2,2,0,2,0,1,1,2,0,1,1,1,0", "1,1,1,2,0,2,1,0,1,1,1,2,1,2,0", "1,1,1,2,0,2,1,2,0,2,1,0,1,1,1", "1,1,1,2,1,0,1,0,0,2,2,1,1,1,2", "2,1,1,2,2,0,0,2,1,1,0,2,1,1,1", "2,1,1,2,1,2,1,1,1,1,0,2,1,1,0", "1,1,0,2,1,0,2,1,1,2,0,0,1,1,2", "1,1,1,2,0,2,0,1,1,1,2,0,1,1,1", "1,1,1,2,1,2,0,1,1,0,1,2,1,2,0", "2,1,0,0,1,2,0,1,1,0,2,1,1,1,1", "1,1,2,2,1,0,0,1,0,1,2,1,1,1,2", "1,1,1,1,2,2,1,1,0,1,0,0,1,2,0", "2,1,1,0,1,2,0,1,1,0,1,0,1,1,2", "2,1,1,0,1,2,2,2,0,0,1,2,1,1,1", "2,1,0,0,2,0,2,0,1,2,1,0,1,1,1", "1,1,0,2,1,0,2,2,0,2,1,2,1,1,1", "2,1,1,0,1,2,0,0,1,2,1,2,1,1,0", "1,1,2,1,0,2,1,2,1,0,0,2,1,1,0", "2,1,0,1,2,0,2,2,1,0,1,2,1,1,1", "2,1,1,2,1,0,1,1,1,1,1,0,1,2,2", "1,1,2,1,1,2,0,1,0,2,2,2,1,1,0", "1,1,1,2,0,2,1,0,1,2,0,2,1,1,0", "2,1,1,0,1,2,2,0,0,2,1,2,1,1,2", "1,1,2,1,0,2,0,1,1,2,1,2,1,2,0", "2,1,1,0,1,2,1,0,0,2,1,2,1,1,1", "2,1,1,1,1,2,0,2,0,0,1,1,1,1,0", "1,1,1,2,1,0,0,1,1,1,2,2,1,1,0", "1,1,1,1,1,2,0,0,1,2,1,2,1,2,1", "2,1,1,0,0,2,0,2,1,2,1,2,1,1,1", "2,1,1,2,0,2,1,1,1,1,0,2,1,1,1", "1,1,0,1,2,2,1,2,1,1,0,0,1,2,1", "2,1,1,2,1,0,0,2,1,1,1,0,1,1,0", "1,1,1,2,0,2,1,0,1,1,2,2,1,1,0", "2,1,0,1,2,0,1,0,1,2,0,0,1,1,1", "1,1,1,0,1,2,1,1,1,0,0,2,1,1,2", "2,1,1,0,1,2,0,0,1,0,1,2,1,1,0", "1,1,1,2,1,2,1,1,0,1,2,2,1,1,0", "2,1,1,2,0,2,1,0,1,0,1,2,1,1,0", "2,1,2,0,1,2,1,1,0,1,0,0,1,1,1", "2,1,1,1,1,2,0,0,0,1,0,0,1,1,2", "2,1,1,2,1,2,1,1,0,0,1,2,1,1,2", "1,1,2,2,0,0,1,0,1,1,0,2,1,1,2", "1,1,1,2,1,2,1,1,0,0,0,2,1,1,1", "1,1,2,0,1,0,1,0,0,0,1,2,1,2,1", "1,1,1,2,0,2,0,1,1,1,2,0,1,1,0", "2,1,0,2,0,2,0,2,1,0,1,2,1,1,1", "1,1,1,1,1,2,0,1,1,0,2,2,1,1,0", "2,1,1,2,0,0,0,2,1,1,1,2,1,1,0", "2,1,1,2,0,0,0,1,1,2,1,0,1,1,1", "1,1,1,1,1,2,0,0,1,1,1,2,1,2,2", "1,1,1,1,0,2,1,0,1,2,0,2,1,1,1", "1,1,1,1,0,0,2,1,0,2,1,0,1,2,1", "1,1,2,1,1,2,0,2,1,2,2,1,1,1,0", "2,1,1,1,0,0,0,2,1,1,1,2,1,1,0", "2,1,1,2,1,2,1,1,0,1,0,0,1,1,2", "1,1,1,2,2,0,2,0,1,2,0,0,1,1,1", "2,1,1,2,1,0,0,1,1,0,1,2,1,1,2", "2,1,1,0,0,2,2,1,1,1,1,1,1,2,2", "1,1,1,2,0,2,1,1,0,1,1,2,1,2,0", "1,1,2,0,1,2,1,1,0,0,1,1,1,2,2", "1,1,1,0,0,2,0,1,1,2,0,2,1,1,1", "1,1,1,2,1,0,0,1,1,1,2,2,1,1,2", "1,1,1,2,1,2,1,2,1,1,0,2,1,1,0", "2,1,1,2,0,0,1,1,1,1,0,2,1,1,1", "1,1,1,2,0,2,2,1,0,1,0,1,1,1,0", "1,1,1,2,1,0,0,1,0,0,1,2,1,1,2", "2,1,0,1,1,0,2,2,1,2,1,0,1,1,2", "1,1,1,1,0,2,1,0,1,0,1,2,1,2,1", "1,1,2,2,2,0,1,1,1,1,2,0,1,1,2", "1,1,1,2,0,0,1,0,1,1,2,2,1,1,1", "1,1,1,2,0,2,1,1,1,2,2,2,1,1,0", "2,1,0,2,0,0,0,0,1,1,1,2,1,1,1", "1,1,1,2,0,0,1,1,1,1,1,2,1,2,0", "2,1,0,2,2,2,1,1,1,0,2,0,1,1,1", "1,1,1,2,1,2,0,0,0,0,1,2,1,1,0", "1,1,1,1,0,0,1,2,0,1,2,2,1,1,0", "2,1,1,2,2,2,0,1,0,0,1,0,1,1,0", "1,1,0,1,2,0,1,0,1,0,1,2,1,2,0", "2,1,1,2,0,2,0,0,1,0,1,2,1,1,0", "1,1,1,2,1,2,0,0,0,2,1,0,1,1,2", "1,1,1,1,1,0,2,2,1,0,0,2,1,1,1", "2,1,1,2,1,2,1,0,0,1,1,2,1,1,2", "1,1,0,2,1,2,2,1,1,1,2,2,1,1,0", "1,1,1,2,0,2,2,1,0,1,0,2,1,1,0", "1,1,1,2,1,0,1,0,0,2,1,2,1,1,2", "2,1,1,2,1,2,1,2,1,0,2,2,1,1,0", "2,1,0,1,2,2,0,1,0,0,1,0,1,1,1", "2,1,1,0,2,2,0,1,0,0,1,2,1,1,1", "1,1,1,2,1,0,0,0,1,1,2,2,1,2,0", "1,1,1,1,1,0,1,1,0,2,2,2,1,1,0", "1,1,0,1,1,2,0,0,1,1,1,2,1,2,1", "1,1,0,1,2,2,1,1,0,1,1,2,1,2,2", "1,1,1,1,2,2,0,2,1,1,0,2,1,1,2", "2,1,0,2,1,2,1,1,0,0,1,2,1,2,1", "2,1,1,1,0,2,0,2,1,1,1,0,1,1,0", "1,1,1,2,0,2,0,2,0,2,1,2,1,1,1", "1,1,0,2,2,2,0,1,1,0,0,1,1,1,0", "1,1,1,2,0,2,2,0,1,0,1,0,1,1,2", "2,1,1,0,0,2,0,2,1,1,1,0,1,1,1", "2,1,0,2,2,0,0,1,0,1,2,2,1,1,1", "1,1,1,0,0,2,0,2,1,2,1,0,1,1,0", "2,1,0,1,1,0,1,0,1,1,2,2,1,1,0", "1,1,1,0,1,2,1,0,1,1,2,2,1,1,0", "1,1,1,2,0,2,0,0,1,1,0,2,1,1,0", "2,1,1,2,0,2,0,2,1,1,1,2,1,1,2", "2,1,1,2,0,2,1,1,0,2,1,0,1,1,1", "2,1,1,1,0,2,0,0,0,1,1,2,1,1,1", "1,1,1,0,0,0,0,2,0,2,1,1,1,1,2", "1,1,1,2,0,0,1,0,0,2,1,2,1,1,0", "2,1,0,0,0,0,2,2,1,1,1,2,1,1,1", "2,1,1,2,1,0,0,2,1,1,1,2,1,1,2", "1,1,1,1,0,2,2,0,1,1,0,2,1,2,1", "1,1,0,2,2,2,1,1,0,1,0,1,1,1,2", "1,1,2,0,1,2,0,0,1,1,1,2,1,2,1", "1,1,1,0,0,2,1,1,1,2,0,2,1,1,0", "2,1,1,1,2,2,1,2,1,0,1,0,1,2,0", "2,1,1,1,0,0,0,1,1,0,1,2,1,1,2", "1,1,1,0,2,2,0,2,1,2,1,2,1,2,0", "1,1,1,2,0,2,0,1,1,2,1,2,1,2,0", "2,1,1,1,1,2,0,0,1,2,1,0,1,1,0", "2,1,1,1,1,0,2,1,1,2,2,0,1,1,0", "2,1,1,2,0,2,1,1,0,2,1,2,1,1,2", "1,1,1,2,0,0,1,1,1,1,1,0,1,2,2", "2,1,1,2,2,0,1,1,0,1,0,2,1,1,1", "2,1,1,2,0,2,0,1,1,0,1,2,1,1,2", "1,1,1,2,2,0,0,1,1,1,0,2,1,1,0", "2,1,0,0,1,2,1,0,1,2,2,2,1,1,0", "1,1,1,1,0,2,0,2,0,1,1,0,1,1,2", "1,1,1,2,0,2,1,1,0,1,1,2,1,2,1", "1,1,1,2,2,0,1,1,1,1,1,0,1,2,0", "1,1,1,0,2,0,1,1,1,1,1,2,1,2,2", "2,1,0,0,1,0,1,2,1,0,1,2,1,1,1", "1,1,1,2,1,2,1,0,1,2,1,2,1,2,0", "1,1,1,2,1,0,0,1,1,2,1,2,1,2,1", "2,1,1,0,0,2,0,0,1,1,1,2,1,1,2", "2,1,1,1,1,2,2,0,0,2,1,2,1,1,1", "1,1,1,1,1,2,1,0,1,2,0,2,1,1,2", "2,1,1,0,2,0,2,2,1,0,1,2,1,1,1", "1,1,1,2,2,2,1,0,1,1,2,0,1,1,1", "1,1,1,2,0,0,0,0,1,0,1,2,1,1,2", "2,1,1,2,1,0,0,1,1,2,1,0,1,1,2", "2,1,1,0,1,2,0,2,1,2,1,2,1,1,1", "2,1,1,2,1,0,1,1,1,2,1,0,1,2,1", "1,1,1,1,2,2,1,1,0,2,0,0,1,1,1", "1,1,1,2,0,2,0,2,1,0,1,2,1,1,2", "1,1,1,2,0,0,0,1,1,2,0,2,1,2,1", "2,1,1,2,0,2,0,2,1,1,1,0,1,1,1", "1,1,1,2,1,2,0,1,1,2,0,2,1,1,2", "2,1,1,2,2,0,1,1,0,2,0,2,1,1,2", "1,1,1,0,2,2,0,2,0,2,1,1,1,1,1", "1,1,1,2,1,2,1,0,1,2,0,2,1,1,0", "2,1,1,2,1,2,1,1,1,1,0,0,1,1,0", "1,1,1,2,0,0,2,0,1,1,1,2,1,2,0", "2,1,1,2,0,0,1,1,0,0,1,2,1,1,1", "1,1,1,1,1,2,0,0,1,2,0,1,1,1,2", "2,1,1,1,2,0,1,1,0,0,1,0,1,1,2", "1,1,1,2,1,2,0,1,1,2,0,0,1,1,0", "2,1,1,1,1,0,1,1,0,0,2,2,1,1,2", "1,1,1,2,1,0,1,1,1,2,0,2,1,1,2", "2,1,1,1,1,2,1,2,0,1,0,0,1,1,1", "1,1,0,1,1,2,2,2,1,0,2,0,1,1,1", "2,1,1,2,0,2,0,2,1,2,1,2,1,1,0", "2,1,1,2,0,2,1,1,1,2,1,1,1,2,0", "2,1,1,1,0,2,0,1,1,1,0,2,1,1,1", "1,1,1,2,0,2,1,1,1,2,0,1,1,1,0", "2,1,1,2,1,2,0,0,0,1,1,2,1,1,1", "2,1,1,2,0,0,0,0,1,2,0,1,1,1,1", "2,1,1,2,1,2,0,1,1,0,1,0,1,1,2", "1,1,0,0,2,2,1,2,1,1,2,2,1,1,0", "1,1,1,0,0,2,1,1,1,2,1,0,1,2,1", "2,1,2,1,2,0,1,0,1,2,1,2,1,2,1", "1,1,1,1,0,2,1,1,1,2,0,0,1,1,2", "2,1,1,2,1,2,0,1,1,1,0,2,1,1,0", "1,1,1,2,2,2,0,2,1,1,1,0,1,2,2", "1,1,1,2,1,2,0,0,1,1,2,2,1,1,2", "1,1,1,2,0,2,0,1,1,2,0,2,1,1,0", "2,1,2,1,2,2,0,0,1,1,2,0,1,1,1", "1,1,1,2,1,0,0,0,1,1,2,2,1,1,1", "2,1,1,1,0,2,1,1,1,1,0,2,1,1,0", "2,1,1,2,0,2,1,2,1,0,1,2,1,1,0", "1,1,1,2,1,2,1,1,1,0,0,0,1,1,2", "2,1,1,1,1,0,2,0,0,1,2,2,1,1,1", "1,1,1,2,2,2,1,0,0,2,1,1,1,2,2", "2,1,1,2,1,0,0,2,1,1,1,0,1,1,1", "1,1,1,0,2,2,0,2,1,1,0,0,1,1,1", "1,1,1,2,0,2,1,1,1,0,2,0,1,1,1", "1,1,0,0,2,0,0,0,1,1,1,2,1,2,2", "2,1,0,2,2,2,0,1,1,1,1,0,1,2,1", "1,1,2,0,2,0,0,2,1,2,0,2,1,1,1", "2,1,1,2,0,2,0,0,1,0,1,0,1,1,1", "1,1,2,2,0,0,1,1,1,2,1,2,1,2,2", "1,1,1,2,1,0,1,1,0,2,1,1,1,2,0", "1,1,1,0,0,2,1,1,1,1,1,0,1,2,2", "2,1,2,1,1,2,0,1,0,0,1,2,1,2,1", "1,1,2,2,1,0,0,1,1,2,1,0,1,2,0", "1,1,2,1,2,0,0,2,1,0,1,2,1,2,1", "1,1,1,0,1,0,2,2,0,2,0,2,1,1,1", "2,1,1,2,1,0,1,0,1,2,1,2,1,1,2", "1,1,0,2,0,2,0,2,1,1,1,2,1,2,2", "1,1,1,2,1,2,0,2,0,0,1,0,1,1,1", "2,1,1,0,2,0,2,1,1,1,0,0,1,1,0", "1,1,0,0,0,0,0,1,1,1,2,2,1,1,2", "2,1,1,0,1,2,2,2,0,2,1,2,1,1,0", "2,1,1,0,1,2,1,0,0,1,1,2,1,2,1", "1,1,0,2,1,0,2,0,1,1,2,2,1,1,0", "2,1,1,2,0,2,1,0,0,1,1,0,1,1,0", "2,1,2,0,0,2,0,0,0,1,1,1,1,1,1", "2,1,2,0,1,2,1,0,1,2,2,2,1,1,1", "2,1,0,2,1,0,2,0,0,1,1,1,1,1,0", "1,1,1,2,0,2,0,1,1,2,1,2,1,2,2", "1,1,2,1,0,2,0,0,0,1,1,2,1,2,0", "2,1,1,2,0,2,0,0,1,0,1,2,1,1,1", "2,1,1,2,1,0,1,1,1,1,0,2,1,1,0", "1,1,1,0,0,0,0,2,1,2,1,2,1,1,0", "1,1,1,2,0,2,0,2,0,1,1,0,1,1,1", "1,1,1,2,0,2,0,2,1,2,1,0,1,1,2", "2,1,1,2,2,0,2,0,1,2,1,2,1,1,1", "1,1,1,2,0,2,1,0,1,1,1,2,1,2,1", "1,1,1,2,0,2,1,0,1,2,0,2,1,1,1", "2,1,1,1,1,2,1,2,0,1,1,0,1,1,0", "1,1,1,1,2,2,0,0,0,2,1,2,1,2,1", "2,1,1,2,2,2,0,0,0,2,1,0,1,1,1", "2,1,0,2,0,0,0,2,0,2,1,2,1,1,1", "2,1,0,2,2,0,2,1,0,1,1,2,1,1,2", "1,1,1,2,2,0,1,1,1,0,2,1,1,1,0", "2,1,0,1,1,0,1,1,1,2,1,2,1,2,0", "2,1,1,2,1,2,0,0,1,2,1,2,1,1,0", "1,1,1,2,1,0,1,0,1,0,2,1,1,1,2", "1,1,1,2,0,2,1,1,1,1,0,0,1,1,2", "1,1,1,2,2,0,1,1,0,1,0,2,1,1,1", "1,1,1,0,2,2,2,0,1,0,2,1,1,1,1", "1,1,1,2,1,0,0,2,0,1,1,2,1,1,2", "1,1,1,2,0,0,1,2,1,0,1,0,1,1,2", "1,1,1,2,0,2,1,0,1,2,1,2,1,2,1", "1,1,1,2,0,0,0,0,1,2,1,0,1,1,2", "1,1,1,2,0,2,1,0,1,1,2,2,1,1,2", "1,1,2,0,0,2,2,2,1,1,0,0,1,1,0", "1,1,1,2,0,2,0,0,1,2,2,2,1,1,0", "2,1,2,2,0,0,1,0,1,0,1,2,1,1,0", "2,1,0,0,2,0,1,2,1,1,1,0,1,1,2", "1,1,1,2,0,0,0,1,1,1,1,2,1,2,0", "2,1,1,0,2,2,0,1,1,1,1,1,1,2,0", "1,1,1,1,2,2,0,1,1,0,1,0,1,2,1", "1,1,1,1,1,2,0,0,1,0,1,2,1,2,1", "2,1,1,2,1,2,0,0,1,0,1,0,1,1,1", "1,1,1,2,0,2,0,1,1,1,0,0,1,1,2", "1,1,1,2,0,2,1,0,1,1,0,0,1,1,2", "1,1,0,1,2,2,0,1,0,1,2,0,1,1,0", "1,1,1,2,1,2,0,0,0,2,1,0,1,1,0", "1,1,1,2,0,2,0,0,0,1,1,2,1,1,2", "2,1,1,1,2,0,0,0,1,1,1,1,1,2,0", "2,1,2,2,0,0,2,1,1,1,1,0,1,2,1", "1,1,1,2,0,2,0,1,1,1,1,2,1,2,0", "1,1,0,2,1,0,1,2,0,1,0,0,1,1,2", "1,1,1,2,0,2,0,2,0,1,1,0,1,1,0", "1,1,1,2,1,2,1,1,1,2,0,0,1,1,0", "1,1,2,2,1,2,1,2,0,1,0,0,1,1,1", "2,1,1,0,0,2,1,1,0,2,0,1,1,1,1", "1,1,1,1,1,2,1,0,1,0,2,2,1,1,2", "2,1,1,2,0,0,1,2,1,1,1,2,1,1,2", "1,1,1,0,1,2,1,1,1,0,2,2,1,1,0", "1,1,1,0,1,2,0,2,1,0,1,0,1,1,2", "1,1,1,1,0,2,2,2,1,0,1,0,1,2,0", "1,1,0,2,2,2,2,1,1,0,0,2,1,1,1", "2,1,1,1,0,2,1,0,1,2,1,0,1,1,2", "1,1,1,2,0,2,0,1,1,2,2,2,1,1,1", "2,1,1,2,0,2,1,1,1,1,1,0,1,2,1", "2,1,1,2,0,2,0,0,1,2,1,0,1,1,0", "2,1,1,2,0,2,0,0,1,1,1,0,1,1,0", "1,1,1,2,1,0,0,0,0,2,2,1,1,1,0", "2,1,2,1,0,2,1,1,1,0,1,0,1,2,0", "2,1,1,2,0,2,1,2,1,2,1,0,1,1,1", "2,1,1,1,2,0,1,0,1,2,1,0,1,1,0", "2,1,2,1,0,2,1,0,1,1,2,2,1,1,0", "1,1,1,0,1,2,1,0,1,2,1,2,1,2,1", "1,1,1,2,0,0,1,2,1,1,0,2,1,1,1", "2,1,1,0,1,2,2,0,1,2,2,2,1,1,1", "2,1,1,2,1,2,1,2,1,2,1,0,1,1,0", "1,1,1,0,1,2,1,2,1,1,0,2,1,1,0", "2,1,1,0,0,2,0,0,0,1,1,2,1,2,1", "1,1,1,2,0,0,2,1,1,1,0,2,1,1,1", "1,1,1,2,1,2,0,1,1,1,0,0,1,1,2", "2,1,0,2,1,2,2,0,0,2,1,2,1,1,0", "1,1,1,0,1,2,1,0,1,1,0,2,1,1,2", "1,1,0,0,1,2,1,2,0,0,1,0,1,2,1", "1,1,1,1,0,2,1,2,1,1,0,2,1,1,0", "1,1,1,2,0,2,0,0,1,1,1,2,1,2,1", "1,1,1,2,1,2,0,1,1,1,1,0,1,2,0", "2,1,1,1,1,0,2,1,1,2,1,1,1,2,0", "2,1,1,1,1,0,0,2,1,0,1,2,1,1,1", "2,1,1,1,1,0,0,0,0,2,1,2,1,1,2", "1,1,1,2,0,2,1,0,1,1,1,0,1,2,0", "1,1,1,2,0,2,1,2,0,0,1,0,1,1,1", "1,1,1,2,0,2,0,1,1,1,1,0,1,2,0", "2,1,1,1,0,2,0,0,1,0,1,2,1,1,0", "1,1,1,2,0,2,1,0,0,0,1,2,1,1,0", "1,1,1,1,2,2,2,1,1,0,2,1,1,1,0", "2,1,1,0,1,2,0,1,0,0,1,2,1,1,1", "1,1,2,0,0,0,2,1,1,1,2,0,1,1,2", "1,1,1,2,0,2,0,0,0,2,1,2,1,1,0", "2,1,1,2,0,0,1,1,1,0,1,0,1,1,2", "2,1,1,2,0,0,1,0,1,2,1,2,1,1,1", "1,1,0,1,0,2,2,0,0,2,1,2,1,1,0", "1,1,1,2,0,2,0,2,1,1,0,2,1,1,1", "1,1,1,2,1,2,1,1,0,1,0,0,1,1,2", "2,1,0,2,0,0,1,0,1,1,2,2,1,1,0", "1,1,1,2,0,2,0,0,1,2,0,2,1,1,0", "2,1,1,0,1,2,0,0,0,1,1,2,1,1,1", "2,1,1,1,0,2,1,0,0,1,1,2,1,1,2", "2,1,1,0,1,0,1,1,1,1,2,0,1,2,1", "1,1,1,2,0,0,0,2,1,1,2,0,1,1,1", "1,1,1,0,1,0,0,2,1,2,1,2,1,1,2", "1,1,0,2,1,2,0,2,0,1,0,1,1,1,0", "1,1,1,2,0,2,1,1,1,2,0,0,1,1,1", "1,1,1,0,1,2,0,1,1,2,1,2,1,2,1", "2,1,2,1,0,2,0,0,0,1,1,0,1,1,2", "1,1,1,2,0,0,1,0,1,1,1,2,1,2,1", "1,1,1,2,1,2,1,1,1,0,0,2,1,1,2", "1,1,2,2,2,2,2,0,0,0,1,0,1,1,0", "2,1,0,2,2,2,1,2,0,1,0,2,1,1,1", "1,1,1,2,0,2,1,1,1,2,2,0,1,1,1", "2,1,1,1,0,0,0,1,0,1,1,2,1,1,2", "1,1,1,0,0,2,1,1,1,1,2,2,1,1,2", "1,1,0,1,1,2,0,2,1,2,2,2,1,1,1", "1,1,1,2,0,2,1,2,0,0,1,0,1,2,0", "1,1,1,2,0,2,0,1,0,2,1,0,1,1,0", "1,1,1,2,1,2,0,1,0,1,1,2,1,2,1", "2,1,1,2,0,2,0,0,1,2,1,0,1,1,2", "1,1,1,2,1,2,0,0,1,1,1,2,1,2,0", "1,1,1,2,1,2,1,1,1,2,1,0,1,2,0", "2,1,1,1,0,2,0,0,1,1,1,0,1,1,2", "1,1,0,2,0,2,0,2,1,0,0,1,1,1,1", "1,1,1,2,2,2,0,1,0,1,0,0,1,1,2", "1,1,2,0,1,2,1,2,0,0,1,0,1,2,1", "1,1,1,1,2,0,2,1,1,1,2,2,1,2,0", "2,1,1,1,0,0,1,2,1,2,1,1,1,1,0", "1,1,1,1,0,2,1,0,1,1,1,2,1,2,2", "1,1,1,2,1,2,1,0,1,2,1,0,1,2,1", "1,1,1,0,1,2,1,1,0,2,2,0,1,2,1", "2,1,1,1,1,2,0,0,1,2,2,1,1,1,2", "1,1,1,2,0,0,0,2,1,0,1,2,1,1,0", "2,1,1,1,2,2,0,0,0,0,1,2,1,1,0", "1,1,1,2,2,2,2,0,0,0,0,2,1,1,1", "2,1,1,0,1,2,1,0,0,1,1,2,1,1,2", "1,1,0,1,0,0,1,2,1,2,2,1,1,1,1", "1,1,0,0,1,0,1,0,1,0,2,2,1,1,2", "2,1,1,2,1,2,2,0,1,2,0,0,1,1,0", "2,1,2,2,2,0,0,1,1,1,0,2,1,1,2", "2,1,1,2,0,2,0,0,1,2,1,0,1,1,1", "1,1,0,2,0,0,2,0,1,2,1,1,1,1,0", "1,1,1,2,2,0,2,1,0,1,1,2,1,2,1", "1,1,1,2,0,2,1,0,1,1,2,2,1,1,1", "2,1,1,2,1,2,1,2,0,1,1,0,1,1,1", "2,1,1,2,0,2,1,1,0,1,1,0,1,1,2", "1,1,1,2,1,2,0,1,0,1,2,2,1,1,1", "1,1,1,2,1,0,1,1,1,0,0,2,1,1,2", "1,1,1,2,1,2,0,0,0,2,1,0,1,1,1", "1,1,1,0,1,2,0,1,1,2,0,2,1,1,0", "1,1,1,2,0,2,1,2,1,1,0,2,1,1,1", "1,1,1,1,1,2,0,1,1,0,0,2,1,1,2", "1,1,1,2,1,2,0,0,1,1,1,2,1,2,2", "1,1,1,2,1,2,1,1,1,2,2,0,1,1,0", "2,1,1,1,1,2,1,1,0,0,0,1,1,1,2", "1,1,1,2,0,2,0,0,1,2,0,2,1,1,1", "2,1,1,2,0,2,0,1,0,1,1,2,1,1,2", "2,1,1,2,1,2,2,0,0,1,1,2,1,1,2", "2,1,2,2,0,0,2,0,0,2,1,2,1,1,1", "1,1,1,2,0,2,1,1,0,1,2,2,1,1,1", "1,1,0,0,1,2,1,1,1,1,0,0,1,2,2", "1,1,1,0,0,2,1,2,0,1,1,0,1,1,2", "2,1,1,2,0,2,2,0,1,2,1,0,1,1,0", "1,1,1,2,0,2,0,0,0,0,1,2,1,1,2", "2,1,2,2,0,2,0,1,0,0,1,1,1,1,0", "1,1,0,2,1,2,2,1,1,2,2,0,1,1,2", "2,1,0,1,1,0,2,0,1,1,2,2,1,1,0", "1,1,1,2,1,2,0,1,1,2,2,2,1,1,0", "1,1,1,2,1,2,0,2,0,0,1,2,1,1,1", "1,1,1,2,1,2,1,0,1,2,0,2,1,1,2", "1,1,1,0,0,2,1,0,1,1,2,2,1,1,1", "2,1,1,0,1,2,0,1,1,1,0,2,1,1,1", "1,1,0,0,1,2,1,0,1,1,2,2,1,1,0", "1,1,1,2,0,2,1,1,1,0,1,0,1,2,1", "1,1,1,2,0,0,0,1,1,1,0,2,1,1,2", "1,1,1,2,0,2,1,0,1,1,1,2,1,2,2", "1,1,1,2,2,0,1,0,0,2,1,0,1,1,1", "1,1,0,0,0,2,0,2,1,2,1,1,1,1,2", "1,1,1,2,1,2,1,0,1,1,2,0,1,1,0", "2,1,1,2,0,2,1,0,1,2,1,0,1,1,2", "1,1,1,2,0,2,0,0,1,2,2,2,1,1,1", "2,1,0,0,0,2,2,0,1,2,1,2,1,1,0", "1,1,2,2,2,2,0,0,1,1,2,0,1,1,2", "1,1,1,0,0,2,1,2,1,1,1,0,1,2,1", "2,1,1,1,1,2,0,0,1,1,2,1,1,1,2", "2,1,1,2,1,2,0,0,1,0,1,2,1,1,2", "1,1,1,2,0,0,0,2,1,1,0,2,1,1,1", "1,1,1,2,1,2,0,1,1,0,0,2,1,1,1", "1,1,1,0,1,2,0,1,1,1,1,0,1,2,2", "1,1,1,2,1,2,0,0,1,2,2,2,1,1,1", "1,1,0,2,0,2,2,1,1,1,0,0,1,1,1", "2,1,1,1,0,2,0,1,1,0,1,0,1,1,2", "1,1,2,0,0,0,2,1,0,0,1,2,1,1,2", "1,1,1,2,2,2,0,1,1,1,0,0,1,1,0", "1,1,1,2,1,0,1,0,1,1,0,2,1,1,2", "1,1,0,2,1,0,2,2,0,1,1,2,1,2,1", "1,1,1,1,0,2,0,1,1,1,2,2,1,1,2", "1,1,0,0,1,2,0,1,1,1,0,2,1,1,2", "1,1,1,0,0,2,1,2,1,1,0,2,1,1,1", "1,1,0,1,1,2,0,1,0,0,1,2,1,2,2", "1,1,0,2,1,2,1,1,1,2,1,0,1,2,1", "2,1,1,2,0,2,0,1,0,2,1,2,1,1,0", "2,1,1,2,2,2,1,2,0,2,0,0,1,1,1", "1,1,2,2,0,2,1,0,1,1,2,1,1,1,2", "1,1,2,0,1,2,2,2,1,1,0,0,1,1,1", "1,1,1,2,2,2,1,1,1,1,0,2,1,2,0", "1,1,0,2,0,2,0,1,1,1,1,1,1,2,1", "2,1,2,0,1,2,1,1,0,0,1,2,1,2,1", "2,1,2,2,0,2,1,0,1,1,1,0,1,2,0", "2,1,1,0,0,0,2,2,1,0,1,1,1,1,0", "2,1,1,2,1,0,1,2,1,1,1,0,1,1,2", "1,1,1,0,2,0,1,0,1,0,1,2,1,2,1", "1,1,1,2,0,2,0,1,1,2,0,2,1,1,2", "1,1,1,1,0,2,1,0,1,2,1,2,1,2,1", "2,1,1,0,0,0,1,1,0,1,1,2,1,1,2", "1,1,1,0,2,2,1,0,1,1,1,1,1,2,0", "1,1,1,2,1,2,1,2,0,0,1,2,1,1,2", "2,1,0,2,2,0,1,2,0,1,1,2,1,1,1", "1,1,1,2,0,2,1,1,1,2,0,1,1,2,2", "1,1,1,2,1,2,0,0,1,1,1,2,1,2,1", "1,1,0,2,0,2,0,2,0,0,1,2,1,1,2", "2,1,1,1,2,2,1,1,1,0,0,2,1,1,2", "1,1,1,0,1,2,0,0,0,2,1,2,1,1,0", "2,1,2,1,0,2,1,0,1,0,1,2,1,2,1", "2,1,2,2,0,2,0,1,1,1,1,1,1,2,1", "1,1,2,0,1,0,2,2,1,1,0,2,1,1,0", "2,1,1,0,0,0,0,1,0,2,1,2,1,1,2", "1,1,1,1,0,2,1,1,0,1,1,2,1,2,0", "1,1,1,1,0,0,1,0,0,2,1,2,1,1,2", "2,1,1,1,1,2,2,2,1,1,0,0,1,1,1", "2,1,1,0,0,0,0,2,1,1,1,2,1,1,1", "2,1,1,1,1,2,1,1,0,0,1,0,1,1,2", "2,1,1,1,2,2,0,0,0,1,1,2,1,1,0", "1,1,2,2,0,2,1,2,0,0,1,0,1,2,1", "1,1,1,2,2,0,2,1,0,1,1,1,1,2,0", "2,1,1,1,1,2,0,0,0,1,1,2,1,1,2", "1,1,1,0,2,2,0,1,1,1,2,0,1,1,1", "1,1,1,2,0,2,0,0,0,2,2,2,1,1,0", "2,1,0,2,1,2,2,1,1,1,2,2,1,1,0", "2,1,1,2,1,2,1,1,1,1,0,1,1,2,0", "1,1,0,2,0,2,0,1,0,1,2,2,1,1,1", "2,1,1,1,1,0,0,0,1,0,2,2,1,1,2", "2,1,0,2,1,2,1,2,0,2,1,1,1,1,2", "1,1,1,0,1,2,1,0,1,1,1,2,1,2,2", "2,1,1,0,2,2,2,1,1,1,1,0,1,2,1", "1,1,1,1,1,2,2,0,1,0,1,0,1,2,1", "1,1,1,1,1,2,1,2,0,0,1,0,1,1,2", "2,1,1,0,2,0,2,0,0,0,1,2,1,1,1", "2,1,1,2,0,2,0,0,1,0,1,2,1,1,2", "2,1,1,2,0,0,1,2,0,1,1,1,1,1,1", "1,1,1,2,1,0,1,0,1,1,1,2,1,2,0", "1,1,1,2,1,0,0,0,0,2,2,0,1,1,1", "1,1,1,2,0,0,1,2,1,2,1,0,1,1,2", "2,1,1,2,1,2,0,0,1,2,1,0,1,1,1", "1,1,2,2,1,0,2,1,1,1,2,0,1,1,0", "1,1,1,2,0,2,0,1,0,1,0,2,1,1,1", "1,1,1,2,1,0,0,0,0,1,1,2,1,1,2", "1,1,1,1,2,0,0,1,0,1,1,2,1,2,0", "2,1,1,1,0,0,1,0,1,1,1,2,1,2,1", "2,1,0,2,1,0,1,1,1,2,1,1,1,2,2", "1,1,1,1,2,2,0,0,0,0,1,2,1,2,0", "2,1,2,0,2,2,1,1,1,1,2,0,1,1,0", "2,1,1,0,0,0,1,0,1,2,1,2,1,1,1", "1,1,1,2,1,2,0,0,1,1,2,0,1,1,1", "1,1,1,2,2,2,1,0,0,1,1,2,1,2,2", "1,1,0,0,0,2,1,2,0,1,1,2,1,2,2", "2,1,1,0,2,2,1,0,0,2,2,2,1,1,1", "1,1,2,0,2,2,1,2,0,1,0,2,1,1,1", "1,1,1,1,1,0,1,0,1,2,2,2,1,1,0", "2,1,1,2,0,2,1,1,0,2,1,2,1,1,0", "2,1,1,2,0,2,1,0,0,1,1,2,1,1,0", "1,1,1,1,1,2,0,2,0,0,1,2,1,1,0", "1,1,1,2,1,2,2,1,0,1,0,0,1,1,2", "1,1,1,2,1,0,0,2,1,2,1,0,1,1,0", "2,1,1,2,1,2,1,0,0,1,1,0,1,1,2", "1,1,1,2,1,2,0,1,1,2,1,2,1,2,0", "2,1,1,0,0,2,0,1,1,0,1,2,1,1,2", "1,1,2,1,0,0,1,2,1,2,2,2,1,1,0", "2,1,0,0,0,2,1,1,0,1,1,0,1,2,2", "2,1,1,1,1,2,0,1,1,1,0,2,1,1,2", "1,1,2,1,1,0,0,2,0,2,1,0,1,1,0", "1,1,1,0,0,2,0,1,1,1,0,2,1,2,1", "1,1,1,0,0,2,0,2,1,2,1,2,1,1,2", "1,1,0,2,1,2,1,1,0,0,2,0,1,1,2", "2,1,0,1,2,2,0,2,0,1,1,2,1,1,0", "1,1,1,2,1,2,1,0,1,2,0,0,1,1,1", "1,1,2,2,1,0,1,0,1,0,1,1,1,2,1", "1,1,1,2,0,0,0,2,1,2,1,2,1,1,2", "1,1,1,2,1,0,0,2,0,0,1,1,1,2,1", "1,1,1,1,1,2,0,1,1,2,2,0,1,2,1", "1,1,1,2,1,2,0,1,1,0,0,2,1,1,0", "1,1,0,2,1,2,0,2,0,0,1,2,1,2,1", "1,1,0,2,2,2,2,0,0,0,1,0,1,1,1", "2,1,1,1,0,2,0,1,0,0,1,2,1,1,1", "2,1,1,0,0,2,1,1,0,1,1,0,1,1,2", "1,1,1,2,1,0,1,2,0,1,1,0,1,1,2", "1,1,1,2,0,2,0,0,1,1,0,2,1,1,2", "1,1,0,2,1,2,1,0,1,1,1,0,1,2,1", "2,1,0,0,1,0,2,0,1,1,1,0,1,1,2", "1,1,0,2,0,0,1,2,1,2,1,0,1,1,2", "1,1,1,0,0,2,1,0,0,2,1,2,1,1,2", "1,1,1,0,0,2,1,2,0,0,2,0,1,1,1", "2,1,1,2,1,2,0,0,1,0,1,0,1,1,0", "1,1,0,1,1,0,1,2,1,1,2,2,1,2,1", "1,1,0,0,2,2,1,1,0,2,2,2,1,1,0", "2,1,2,2,1,0,0,1,0,0,1,0,1,1,2", "2,1,2,2,0,2,1,2,0,2,1,1,1,1,0", "1,1,1,2,1,0,0,0,1,2,0,2,1,1,1", "1,1,1,2,0,2,1,1,0,1,1,0,1,2,1", "1,1,1,1,0,2,0,2,0,0,1,2,1,1,1", "1,1,1,0,0,2,1,2,0,1,0,2,1,1,2", "2,1,1,1,1,2,0,1,0,2,2,0,1,1,0", "1,1,1,0,0,0,1,2,1,0,1,2,1,1,2", "2,1,2,2,0,2,0,1,1,0,1,0,1,2,0", "1,1,1,0,2,0,2,2,0,1,1,1,1,1,2", "1,1,1,2,1,2,0,1,1,1,1,0,1,2,2", "2,1,1,1,1,2,0,0,0,1,1,2,1,1,0", "1,1,2,0,1,0,0,0,1,2,2,1,1,1,1", "2,1,2,0,2,2,1,1,0,1,2,0,1,1,1", "1,1,1,2,0,2,1,0,0,0,1,2,1,1,2", "1,1,2,0,1,0,1,1,1,2,2,0,1,1,2", "1,1,1,2,1,2,0,1,0,1,0,2,1,1,0", "1,1,2,1,2,0,1,2,1,0,1,2,1,2,1", "2,1,0,2,1,2,1,1,0,1,0,0,1,1,2", "2,1,1,1,1,2,0,1,1,1,0,2,1,1,0", "2,1,2,2,0,2,0,0,1,1,2,2,1,1,1", "1,1,1,1,0,2,0,0,1,2,1,0,1,2,2", "1,1,1,1,2,2,1,0,0,1,0,2,1,1,1", "2,1,1,2,1,2,1,0,1,0,2,1,1,1,0", "2,1,2,1,1,2,1,2,1,1,0,2,1,1,0", "2,1,1,2,0,0,0,2,1,1,1,0,1,1,1", "1,1,2,1,0,2,0,1,1,1,2,2,1,2,1", "2,1,1,2,2,0,1,0,1,1,0,0,1,1,2", "1,1,0,2,2,0,0,1,1,2,2,2,1,1,1", "1,1,1,2,1,2,1,0,1,1,0,0,1,1,2", "2,1,1,2,0,2,0,1,0,0,1,2,1,1,1", "1,1,1,2,0,0,2,0,1,1,2,1,1,1,1", "2,1,2,1,1,2,2,0,1,0,1,0,1,1,2", "1,1,1,2,0,2,1,0,1,2,2,2,1,1,1", "1,1,1,2,0,0,0,0,1,2,1,2,1,1,2", "1,1,1,2,1,2,0,1,1,0,1,2,1,2,1", "1,1,1,1,0,2,0,0,1,1,0,2,1,1,2", "2,1,1,2,0,0,0,0,1,1,1,1,1,2,2", "2,1,2,0,2,0,1,2,0,1,1,0,1,1,0", "1,1,1,1,1,0,1,2,0,2,1,2,1,1,2", "2,1,2,2,0,2,1,1,1,1,0,0,1,1,2", "2,1,1,2,1,2,0,1,1,1,0,2,1,1,1", "1,1,1,1,0,2,1,0,0,2,1,0,1,1,2", "2,1,1,2,0,2,0,1,1,1,0,2,1,1,0", "1,1,1,0,0,2,1,0,1,1,1,2,1,2,1", "2,1,1,0,0,2,1,0,0,1,2,2,1,1,0", "2,1,1,2,0,0,0,0,1,2,1,2,1,1,0", "1,1,1,2,0,0,1,1,1,0,1,2,1,2,1", "2,1,1,0,0,2,0,1,0,2,2,2,1,1,0", "2,1,1,2,0,2,0,2,1,1,1,2,1,1,0", "1,1,1,2,1,2,2,2,0,1,2,0,1,1,0", "2,1,0,2,2,2,0,2,1,2,1,1,1,1,0", "1,1,2,0,1,0,1,0,0,1,2,2,1,1,0", "2,1,1,2,0,2,1,1,1,1,1,2,1,2,0", "1,1,1,2,1,0,0,0,0,2,1,2,1,1,1", "2,1,1,1,2,0,1,2,0,1,1,2,1,2,0", "2,1,2,2,0,2,1,1,1,2,0,1,1,1,2", "2,1,1,2,0,0,0,1,0,1,1,2,1,2,0", "2,1,1,1,1,2,0,0,1,1,0,0,1,1,2", "2,1,1,1,0,2,2,1,1,0,1,0,1,2,2", "2,1,0,2,0,2,1,1,1,1,0,0,1,1,1", "1,1,1,0,0,2,1,2,0,1,1,0,1,2,2", "1,1,0,2,0,0,0,1,1,0,2,2,1,1,1", "1,1,1,2,0,2,0,0,1,1,1,2,1,2,0", "1,1,0,2,2,2,1,1,0,1,0,2,1,1,0", "1,1,1,2,1,2,0,0,1,2,1,2,1,2,1", "1,1,1,2,0,2,0,0,1,1,1,0,1,2,1", "1,1,1,0,0,2,1,1,1,2,2,2,1,1,1", "1,1,1,0,1,2,1,2,0,0,1,1,1,1,2", "2,1,1,2,0,2,2,1,1,2,0,0,1,1,1", "2,1,2,1,1,0,2,1,1,1,0,0,1,1,0", "1,1,2,2,0,0,1,1,1,2,1,1,1,2,0", "1,1,1,0,0,2,0,0,0,1,1,2,1,1,2", "2,1,1,1,0,2,0,2,1,1,1,2,1,2,0", "1,1,1,1,0,2,0,1,1,1,1,2,1,2,2", "2,1,1,0,1,0,1,0,1,2,1,2,1,1,0", "1,1,1,2,1,2,0,1,1,2,2,0,1,1,1", "2,1,2,1,2,2,0,1,1,0,2,2,1,1,1", "2,1,1,1,1,2,0,0,1,0,1,2,1,1,2", "1,1,1,1,1,0,2,0,1,0,2,0,1,1,2", "2,1,1,0,2,0,0,0,1,1,1,1,1,2,1", "1,1,1,2,2,2,1,1,0,2,0,1,1,1,1", "1,1,1,2,1,2,0,2,0,2,1,2,1,1,0", "2,1,1,0,2,2,1,1,1,0,0,2,1,2,1", "2,1,1,2,0,2,0,0,1,1,1,0,1,1,2", "1,1,0,2,0,2,1,2,0,0,1,2,1,1,2", "1,1,1,0,1,2,1,1,1,0,1,2,1,2,0", "2,1,1,2,1,2,1,2,1,2,1,0,1,2,0", "2,1,1,0,2,0,0,1,1,0,2,2,1,1,2", "1,1,1,2,2,2,1,1,0,2,1,0,1,2,1", "2,1,1,2,0,0,1,0,1,2,1,0,1,1,1", "2,1,0,1,0,0,0,1,1,1,1,2,1,2,0", "1,1,0,2,1,2,1,1,1,0,0,1,1,2,1", "1,1,1,2,0,2,0,1,1,2,2,2,1,1,2", "2,1,0,0,2,0,0,2,0,2,1,2,1,1,1", "2,1,0,1,1,0,2,2,0,2,1,0,1,1,1", "2,1,1,2,1,0,0,1,0,1,1,2,1,1,2", "2,1,1,1,1,0,0,1,1,0,2,2,1,1,1", "1,1,1,2,1,2,2,2,0,1,0,2,1,1,1", "2,1,1,2,0,2,1,0,1,2,1,2,1,1,2", "2,1,1,1,2,2,0,1,1,1,0,2,1,1,0", "1,1,1,1,0,2,1,0,1,0,1,0,1,2,2", "2,1,1,1,1,0,0,0,1,2,1,2,1,1,0", "2,1,1,2,0,2,1,2,1,0,1,0,1,1,1", "1,1,1,1,1,2,1,2,1,2,0,0,1,2,1", "1,1,1,2,0,2,1,2,0,2,1,2,1,1,0", "2,1,1,2,1,2,0,2,1,2,1,2,1,1,0", "2,1,1,2,0,2,0,0,1,2,1,2,1,1,0", "2,1,1,2,0,0,0,0,1,1,1,2,1,1,0", "2,1,1,2,1,2,0,0,0,1,1,2,1,1,2", "1,1,1,2,2,2,1,0,1,1,1,2,1,2,0", "1,1,0,2,2,2,0,2,1,1,0,2,1,1,2", "2,1,2,0,2,2,1,1,1,0,1,2,1,2,1", "1,1,2,2,1,0,0,1,0,0,0,2,1,1,1", "2,1,1,2,1,2,1,1,0,2,1,0,1,1,0", "1,1,1,2,0,2,1,1,1,1,1,0,1,2,2", "2,1,0,2,0,2,1,2,1,1,2,1,1,1,1", "2,1,1,2,1,2,0,0,0,1,1,0,1,1,1", "1,1,1,2,1,2,1,1,0,1,0,2,1,1,2", "2,1,1,2,1,0,0,0,0,1,1,2,1,1,1", "1,1,0,1,1,0,1,2,1,0,2,2,1,1,1", "2,1,0,1,0,2,1,1,1,1,2,2,1,1,2", "2,1,0,1,0,2,1,1,1,1,0,1,1,1,2", "2,1,0,0,1,0,1,1,1,2,1,0,1,2,1", "2,1,2,2,1,0,1,2,1,1,0,0,1,1,0", "1,1,1,2,0,2,0,0,0,2,1,2,1,1,2", "1,1,2,0,1,2,0,2,0,1,0,2,1,1,2", "2,1,1,1,1,2,0,0,0,1,2,2,1,1,0", "1,1,1,1,1,2,1,2,0,1,2,0,1,1,2", "1,1,1,2,0,0,0,2,0,1,1,2,1,1,0", "1,1,1,0,0,2,0,0,1,1,1,2,1,2,1", "1,1,2,0,1,0,1,1,1,0,2,1,1,1,2", "1,1,0,2,1,2,1,1,0,0,2,0,1,1,1", "1,1,1,2,1,2,1,0,1,2,0,2,1,1,1", "1,1,1,2,1,2,0,1,1,0,0,2,1,1,2", "1,1,1,1,2,0,2,1,1,1,2,0,1,2,1", "1,1,1,2,0,2,1,2,0,0,1,2,1,1,0", "2,1,1,0,2,2,0,1,0,1,2,2,1,1,0", "1,1,1,2,2,0,1,0,0,2,1,2,1,2,2", "2,1,1,2,1,0,2,0,1,1,1,0,1,2,0", "1,1,1,2,1,0,1,1,1,0,1,2,1,2,0", "1,1,0,0,2,0,0,1,1,1,1,1,1,2,2", "1,1,1,2,0,2,0,1,1,1,1,0,1,2,1", "2,1,1,2,2,2,2,0,1,0,0,2,1,1,1", "2,1,1,2,1,0,1,0,1,2,1,0,1,1,0", "2,1,1,1,1,0,2,0,1,0,2,2,1,1,1", "2,1,1,0,0,0,0,1,1,2,1,2,1,1,0", "1,1,0,1,2,2,1,1,0,0,1,2,1,2,1", "2,1,1,2,2,2,0,1,0,2,1,2,1,1,0", "1,1,1,2,1,2,1,1,1,0,1,2,1,2,0", "1,1,1,0,1,2,1,0,1,2,0,2,1,1,1", "1,1,1,2,2,2,1,1,0,1,0,2,1,1,0", "2,1,1,2,0,2,0,1,1,2,1,0,1,1,0", "2,1,1,2,1,2,0,1,0,2,1,0,1,1,1", "2,1,1,2,2,0,0,1,0,1,1,0,1,1,1", "2,1,0,1,2,0,0,2,1,1,0,2,1,1,1", "1,1,2,2,2,0,0,0,1,2,1,0,1,2,0", "1,1,1,1,0,2,0,2,1,0,1,0,1,2,1", "1,1,0,2,1,2,0,2,0,1,0,2,1,1,0", "1,1,1,2,1,2,1,1,0,1,1,0,1,2,0", "1,1,1,0,1,2,1,1,1,2,1,0,1,2,0", "2,1,1,2,0,0,1,0,1,1,1,0,1,1,2", "2,1,1,2,1,2,1,1,1,1,2,0,1,1,0", "2,1,1,2,1,0,1,0,0,1,1,2,1,1,0", "1,1,0,2,0,2,0,1,1,1,0,2,1,1,0", "2,1,0,0,1,2,1,0,1,1,0,1,1,1,2", "1,1,1,0,0,2,1,1,1,2,1,2,1,2,1", "2,1,1,0,0,2,0,2,1,1,1,0,1,2,1", "2,1,1,2,1,2,0,2,1,0,1,2,1,1,0", "1,1,2,0,0,0,0,2,1,0,1,1,1,1,2", "1,1,1,2,0,2,1,0,0,2,1,2,1,1,2", "2,1,2,1,0,0,0,2,1,1,0,2,1,1,1", "2,1,1,1,0,0,2,0,1,1,1,2,1,2,1", "1,1,1,1,0,2,1,2,0,2,1,0,1,1,0", "2,1,2,2,0,0,2,0,1,0,1,2,1,1,0", "1,1,1,2,0,0,0,0,0,1,1,2,1,1,2", "1,1,0,1,2,2,2,1,1,2,2,2,1,1,0", "2,1,1,2,0,0,1,1,0,2,1,2,1,1,1", "1,1,1,1,2,2,0,1,1,1,2,0,1,1,0", "1,1,2,2,2,2,0,1,0,1,0,1,1,1,1", "1,1,2,0,2,0,1,0,1,2,1,0,1,2,0", "2,1,0,1,1,0,2,1,1,2,2,2,1,1,1", "2,1,2,1,1,2,1,2,0,2,1,0,1,1,1", "2,1,0,1,0,2,2,0,1,2,1,0,1,1,0", "1,1,2,0,0,0,2,1,1,1,1,0,1,2,0", "2,1,1,2,1,0,1,0,1,0,2,1,1,1,1", "1,1,2,1,1,2,0,2,0,2,2,2,1,1,1", "1,1,1,1,0,2,2,0,1,1,1,1,1,2,2", "2,1,2,2,1,0,0,1,0,1,1,0,1,2,0", "2,1,1,2,0,0,1,0,1,2,1,2,1,1,0", "2,1,1,1,2,2,0,0,1,1,2,2,1,1,0", "2,1,0,2,1,2,0,1,1,0,0,0,1,1,2", "2,1,1,2,1,0,0,1,1,2,1,0,1,1,0", "1,1,1,1,2,2,2,2,0,1,2,2,1,1,0", "2,1,1,0,0,2,1,0,0,1,1,2,1,1,0", "2,1,1,1,0,2,1,0,1,0,2,1,1,1,2", "2,1,0,1,0,2,2,2,1,1,1,1,1,1,2", "1,1,1,2,0,2,1,0,1,1,1,0,1,2,1", "1,1,0,1,2,2,0,0,1,2,0,0,1,1,2", "1,1,1,1,2,0,1,0,1,1,2,0,1,2,0", "1,1,0,2,1,2,1,0,1,2,0,0,1,2,1", "1,1,0,2,0,0,0,2,1,1,2,0,1,1,2", "1,1,1,2,0,2,1,1,1,2,0,2,1,1,2", "2,1,1,0,1,0,0,1,1,2,1,2,1,1,2", "1,1,0,2,2,0,1,1,1,0,2,2,1,1,2", "2,1,1,0,1,2,1,1,0,0,1,2,1,2,2", "1,1,1,2,1,2,0,2,1,1,0,0,1,2,2", "1,1,1,1,0,2,1,1,0,1,0,2,1,1,2", "1,1,0,1,0,2,2,1,1,0,1,2,1,2,2", "1,1,1,1,1,2,2,2,1,2,0,0,1,1,0", "2,1,1,2,2,0,1,0,1,0,1,1,1,2,1", "2,1,1,2,1,2,0,2,0,1,1,2,1,1,1", "2,1,2,0,0,2,0,1,1,1,0,2,1,1,2", "2,1,1,2,1,2,0,2,1,2,1,0,1,1,1", "1,1,1,2,0,2,0,0,1,2,1,0,1,1,2", "1,1,0,0,2,2,0,1,0,1,2,1,1,1,1", "2,1,2,2,0,0,0,1,1,1,1,2,1,2,0", "1,1,1,2,1,0,0,1,1,1,1,2,1,2,2", "2,1,0,2,0,2,2,2,1,0,1,0,1,1,1", "1,1,0,2,1,2,0,2,1,1,1,1,1,2,2", "2,1,1,0,0,0,2,2,1,0,1,0,1,1,1", "2,1,0,1,0,0,1,0,1,2,0,2,1,1,2", "1,1,0,0,2,2,2,2,1,1,1,0,1,2,1", "1,1,1,0,0,2,1,1,1,0,1,2,1,2,1", "1,1,2,0,2,2,1,2,1,0,1,2,1,2,0", "1,1,1,0,1,0,1,2,1,2,0,2,1,2,1", "2,1,1,0,0,0,1,1,0,1,2,2,1,1,0", "1,1,1,2,0,2,0,0,1,1,2,2,1,1,1", "1,1,2,2,2,0,1,1,1,0,2,0,1,1,1", "1,1,1,0,1,2,1,1,0,1,1,2,1,2,0", "2,1,1,2,1,0,0,0,1,2,1,2,1,1,1", "1,1,1,2,0,2,1,1,1,0,2,2,1,1,0", "2,1,1,2,1,2,0,0,1,1,1,0,1,1,2", "1,1,1,0,1,2,0,0,1,1,2,2,1,1,1", "1,1,1,2,2,2,2,0,1,2,0,0,1,1,0", "2,1,0,2,1,2,0,1,1,2,1,2,1,2,0", "1,1,1,0,1,0,1,0,0,2,1,2,1,1,2", "2,1,0,2,1,2,0,1,1,0,2,1,1,1,1", "2,1,1,0,0,0,1,1,1,2,1,0,1,1,2", "1,1,1,1,0,0,1,2,1,1,2,2,1,1,0", "1,1,1,2,1,0,0,2,1,1,2,2,1,1,0", "1,1,1,2,0,0,0,2,1,2,1,0,1,1,1", "2,1,2,2,1,0,0,0,0,1,0,2,1,1,1", "1,1,1,2,0,2,0,1,1,0,0,2,1,1,0", "1,1,1,2,1,2,2,1,1,1,1,0,1,2,0", "1,1,2,2,0,0,1,1,1,1,0,2,1,2,0", "1,1,2,0,1,2,0,1,1,0,1,0,1,2,0", "1,1,1,0,1,2,0,2,0,0,1,2,1,1,1", "1,1,1,2,1,2,1,0,0,0,1,0,1,1,2", "2,1,1,2,1,2,0,1,0,2,1,2,1,1,2", "1,1,1,2,1,2,0,1,1,2,0,2,1,1,0", "1,1,1,1,0,2,0,0,1,1,1,2,1,2,1", "2,1,1,2,0,2,0,1,1,2,1,0,1,1,2", "1,1,1,2,2,2,1,1,1,2,0,0,1,1,0", "1,1,1,1,1,2,0,1,1,2,2,2,1,1,0", "1,1,2,0,0,0,2,1,1,0,1,0,1,2,1", "2,1,1,2,1,2,1,1,0,0,1,0,1,1,0", "2,1,1,2,0,2,0,0,1,1,1,2,1,1,2", "2,1,2,2,2,2,1,1,0,1,0,0,1,1,0", "2,1,1,2,0,0,1,2,1,2,1,2,1,1,1", "2,1,1,2,1,2,0,0,1,2,1,0,1,1,0", "1,1,1,1,2,2,1,0,1,2,0,2,1,2,1", "1,1,0,1,1,0,2,2,1,0,1,0,1,1,2", "1,1,2,1,1,0,0,1,0,1,1,2,1,2,1", "2,1,1,0,1,2,0,0,1,2,1,0,1,1,1", "2,1,1,2,1,0,0,0,1,0,1,2,1,1,1", "1,1,2,2,0,0,2,1,0,2,1,0,1,1,0", "1,1,1,1,0,2,0,1,1,0,1,2,1,2,1", "1,1,1,2,1,0,0,1,1,1,0,2,1,1,2", "1,1,1,1,0,2,1,1,1,0,0,2,1,1,2", "2,1,1,2,1,2,1,0,1,0,1,0,1,1,2", "1,1,1,0,1,0,1,2,1,1,2,0,1,2,1", "2,1,1,1,1,0,2,0,0,2,1,0,1,1,2", "2,1,1,2,0,2,1,0,0,2,1,2,1,1,1", "1,1,1,1,2,0,2,2,1,1,2,2,1,1,0", "2,1,1,2,1,2,0,0,0,1,1,2,1,1,0", "1,1,1,1,1,2,0,0,0,0,2,0,1,1,2", "1,1,1,2,2,2,0,1,1,1,2,0,1,1,1", "2,1,1,1,1,2,1,0,0,2,0,2,1,1,1", "1,1,2,2,2,0,2,0,1,1,2,2,1,1,0", "1,1,1,2,0,2,1,0,0,2,1,0,1,1,2", "2,1,1,0,0,2,1,2,1,1,1,0,1,1,2", "1,1,2,0,1,2,1,1,0,0,2,2,1,1,0", "1,1,2,0,1,2,1,2,0,0,1,0,1,1,2", "1,1,0,2,1,0,1,2,1,0,0,1,1,1,2", "1,1,1,0,2,2,2,0,0,0,0,2,1,1,1", "2,1,1,0,1,0,1,2,1,1,1,0,1,1,2", "2,1,0,1,1,2,1,1,0,0,2,1,1,1,1", "1,1,1,1,1,2,0,0,1,2,0,2,1,1,1", "1,1,1,1,1,2,0,0,1,1,0,2,1,1,2", "2,1,1,1,0,2,0,1,1,2,1,0,1,2,0", "1,1,1,2,0,2,1,0,0,2,1,0,1,1,0", "2,1,1,2,0,0,1,0,0,1,1,2,1,1,1", "1,1,1,2,1,2,0,0,1,1,0,2,1,1,2", "2,1,1,2,0,2,1,1,1,1,0,2,1,1,0", "2,1,2,1,1,2,0,1,1,1,2,1,1,1,0", "2,1,1,2,1,0,1,0,1,0,1,2,1,1,0", "1,1,1,2,1,0,1,1,1,2,1,2,1,2,0", "2,1,1,1,0,0,1,0,1,2,1,2,1,1,0", "1,1,1,0,2,2,1,1,0,1,2,2,1,2,0", "1,1,1,1,2,0,1,2,0,2,1,2,1,2,0", "1,1,2,1,1,2,0,1,0,2,2,0,1,1,0", "1,1,1,2,1,2,1,2,0,1,0,0,1,2,1", "1,1,1,2,1,2,0,0,1,1,2,2,1,1,1", "2,1,0,2,0,2,2,2,0,1,1,0,1,1,0", "2,1,2,1,0,2,1,1,1,1,0,1,1,1,2", "1,1,2,1,1,0,1,0,1,2,1,1,1,2,0", "1,1,2,1,0,2,2,0,1,0,1,2,1,2,1", "1,1,1,1,1,2,0,0,0,2,1,0,1,1,2", "1,1,1,0,1,2,2,2,0,2,0,0,1,1,1", "2,1,1,2,0,0,1,0,1,0,1,2,1,1,1", "2,1,1,1,1,0,1,0,0,1,1,2,1,1,2", "2,1,1,1,1,2,0,1,1,0,2,2,1,1,1", "2,1,1,2,2,2,0,2,1,2,1,0,1,1,1", "1,1,0,2,2,0,1,1,0,2,2,0,1,1,1", "2,1,2,1,0,2,0,1,1,1,0,2,1,1,2", "1,1,0,1,1,2,2,1,1,1,2,0,1,1,0", "1,1,2,0,1,2,2,0,0,1,0,2,1,1,0", "2,1,1,2,1,0,2,1,0,0,1,1,1,1,2", "1,1,0,0,0,2,1,2,1,0,0,2,1,1,1", "2,1,1,0,0,2,1,0,1,2,1,2,1,1,2", "1,1,2,1,2,0,1,0,1,1,2,1,1,1,0", "2,1,1,0,0,0,1,0,1,1,1,2,1,1,2", "2,1,1,2,1,0,1,1,0,2,1,0,1,1,1", "1,1,1,2,0,0,1,1,1,1,2,2,1,1,2", "1,1,1,2,0,2,0,0,1,1,2,2,1,1,2", "2,1,1,2,1,2,0,2,1,0,1,2,1,1,1", "2,1,1,2,0,0,2,0,1,1,0,0,1,1,2", "2,1,1,2,1,0,1,1,0,2,1,2,1,1,0", "2,1,1,2,0,2,0,2,1,0,1,2,1,1,1", "1,1,1,2,0,2,0,2,1,0,1,0,1,1,0", "1,1,1,2,1,0,1,0,0,0,1,2,1,1,2", "2,1,1,2,1,2,2,0,1,0,2,2,1,1,0", "1,1,1,2,1,0,0,2,1,2,1,0,1,1,2", "1,1,1,2,0,0,2,1,1,0,2,2,1,1,1", "1,1,1,2,1,2,1,0,1,0,0,2,1,1,0", "1,1,0,2,1,0,1,0,0,2,1,1,1,2,1", "1,1,2,1,1,2,1,2,0,1,0,0,1,1,0", "1,1,1,1,0,2,0,1,1,2,1,2,1,2,1", "2,1,1,1,0,2,2,2,1,0,1,2,1,1,1", "1,1,1,0,1,2,1,0,0,2,0,2,1,1,2", "1,1,1,2,0,2,1,2,0,2,1,2,1,1,2", "2,1,0,2,1,0,1,2,1,1,2,2,1,1,2", "1,1,1,2,0,2,1,1,1,0,2,2,1,1,1", "2,1,1,2,1,2,1,0,0,1,1,0,1,1,0", "1,1,1,2,0,2,1,1,1,1,2,0,1,1,2", "1,1,0,0,0,0,2,1,1,1,1,2,1,2,2", "1,1,1,2,1,2,0,0,1,1,0,2,1,1,1", "1,1,2,2,2,0,1,1,1,0,1,1,1,2,0", "1,1,1,2,0,0,1,1,1,2,1,2,1,2,1", "2,1,1,2,1,2,0,0,1,2,1,0,1,1,2", "1,1,0,1,0,2,2,1,0,0,1,0,1,1,2", "1,1,1,1,0,2,0,2,1,0,1,0,1,1,2", "2,1,1,0,0,2,0,1,0,1,1,2,1,1,0", "2,1,1,2,0,2,0,0,1,2,2,2,1,1,0", "1,1,1,0,0,2,1,1,0,1,1,2,1,2,1", "2,1,1,2,1,0,1,2,1,2,1,0,1,1,1", "1,1,1,2,1,0,1,0,1,2,0,2,1,1,1", "1,1,0,0,2,2,2,1,0,1,1,2,1,2,1", "1,1,1,2,1,2,0,0,0,0,1,2,1,1,2", "2,1,1,0,1,0,2,1,0,1,1,0,1,1,2", "1,1,1,2,1,0,1,1,1,2,0,2,1,1,0", "2,1,1,2,0,0,0,1,0,1,1,2,1,1,0", "1,1,1,2,2,2,1,1,1,0,1,0,1,2,1", "2,1,0,1,0,2,2,1,1,2,0,2,1,1,1", "1,1,1,1,1,2,0,0,1,1,1,2,1,2,0", "2,1,1,0,1,2,2,0,1,2,0,0,1,1,1", "1,1,2,0,2,2,0,0,1,0,2,0,1,1,1", "1,1,1,2,1,2,0,1,1,1,2,0,1,1,2", "1,1,1,2,1,2,0,2,1,0,1,0,1,1,2", "1,1,0,0,1,0,1,0,1,2,1,2,1,2,1", "1,1,1,2,1,0,0,2,1,1,0,0,1,2,1", "1,1,1,2,1,2,0,0,0,2,1,2,1,1,2", "1,1,1,2,0,2,0,0,0,1,1,0,1,1,2", "1,1,1,0,0,2,0,1,1,1,2,2,1,1,0", "2,1,1,1,0,2,0,1,0,1,1,0,1,1,2", "1,1,1,1,0,0,2,0,1,1,1,2,1,2,0", "1,1,1,0,1,2,1,2,1,0,1,2,1,2,0", "1,1,1,1,0,2,0,1,1,2,2,2,1,1,1", "1,1,1,0,1,2,0,1,1,1,2,2,1,1,0", "1,1,1,2,0,0,0,1,1,1,1,2,1,2,1", "2,1,1,2,1,2,1,0,0,0,1,2,1,1,1", "1,1,1,2,0,0,0,2,1,0,1,2,1,2,0", "1,1,1,2,1,0,0,0,1,2,1,0,1,1,2", "2,1,0,2,0,2,0,1,1,1,1,1,1,2,2", "2,1,1,2,0,2,0,1,0,2,1,2,1,1,1", "1,1,1,2,2,2,2,1,0,1,2,0,1,1,1", "2,1,0,1,2,2,1,2,1,1,0,2,1,1,1", "1,1,1,2,0,0,0,2,1,2,1,0,1,1,0", "1,1,1,1,2,2,0,0,1,1,0,2,1,1,0", "1,1,1,2,1,0,1,2,0,2,1,2,1,2,1", "1,1,1,2,0,0,1,2,0,0,1,1,1,1,2", "2,1,0,2,1,2,0,2,1,0,1,2,1,1,1", "2,1,0,2,0,0,1,1,0,1,1,2,1,1,2", "2,1,1,2,0,0,0,1,1,2,1,0,1,1,0", "1,1,1,2,1,2,1,1,0,1,1,2,1,2,0", "1,1,1,0,0,2,2,2,0,0,1,2,1,1,1", "1,1,1,2,1,0,0,2,0,1,1,2,1,1,0", "2,1,1,2,0,2,1,1,1,1,0,0,1,1,1", "2,1,2,1,1,2,0,1,1,2,0,1,1,1,0", "2,1,1,0,0,2,1,0,1,2,1,2,1,1,0", "1,1,1,1,1,2,2,0,1,2,2,0,1,1,0", "2,1,1,1,0,0,0,0,1,2,1,2,1,1,1", "1,1,1,2,1,2,1,0,1,1,1,0,1,2,2", "1,1,1,0,1,2,0,1,0,1,1,2,1,2,1", "2,1,0,2,1,2,1,2,1,0,0,0,1,1,0", "1,1,1,2,0,0,1,2,0,2,1,2,1,1,1", "1,1,1,2,0,2,1,0,1,1,0,2,1,1,2", "1,1,1,2,1,0,1,2,1,1,0,2,1,1,0", "1,1,0,2,0,2,1,0,1,1,0,2,1,1,1", "2,1,2,0,1,0,1,1,0,1,0,2,1,1,1", "1,1,1,0,1,2,2,1,0,2,1,0,1,2,0", "2,1,1,2,1,2,1,0,1,2,1,0,1,1,2", "1,1,1,2,1,2,1,0,0,1,0,2,1,1,1", "1,1,1,2,0,2,2,1,0,2,2,2,1,1,1", "1,1,0,2,1,2,0,0,1,0,1,2,1,2,1", "1,1,1,2,0,2,0,1,1,1,2,2,1,1,0", "1,1,0,2,2,0,2,1,1,1,2,0,1,1,2", "2,1,1,1,0,2,1,0,0,1,0,2,1,1,0", "1,1,0,0,1,0,2,2,1,1,2,2,1,1,0", "1,1,0,0,2,0,1,1,1,2,1,0,1,2,1", "1,1,1,2,0,2,1,0,1,2,1,2,1,2,0", "1,1,0,0,0,2,1,2,1,0,2,0,1,1,1", "1,1,0,2,0,2,2,2,0,2,1,0,1,1,0", "2,1,1,2,0,2,0,1,1,0,1,0,1,1,0", "1,1,1,0,1,2,1,0,1,1,1,2,1,2,0", "2,1,1,2,0,2,0,2,1,1,0,2,1,1,2", "1,1,0,2,2,0,1,0,1,1,0,2,1,1,2", "2,1,2,2,1,0,0,1,1,0,1,0,1,2,1", "2,1,2,1,2,0,0,2,0,1,1,0,1,1,0", "2,1,2,0,0,2,1,1,1,2,1,0,1,2,1", "1,1,2,1,1,0,0,2,1,2,0,1,1,1,1", "1,1,2,1,0,0,0,1,0,2,2,2,1,1,0", "1,1,1,2,1,2,1,1,1,0,2,2,1,1,0", "2,1,1,1,1,0,1,2,0,2,1,2,1,1,1", "1,1,1,2,0,2,0,1,1,0,0,2,1,1,1", "1,1,1,2,0,2,0,1,1,2,0,0,1,1,1", "1,1,1,2,0,2,0,0,1,2,0,2,1,1,2", "2,1,1,2,1,2,1,2,0,1,1,2,1,1,0", "1,1,2,2,0,2,0,0,0,0,1,1,1,1,2", "1,1,1,1,0,0,0,2,1,2,1,2,1,1,2", "2,1,1,2,1,2,0,0,1,2,1,2,1,1,2"];
+
+        // Maç listesini render et
+        function renderMatches() {
+            const matchesList = document.getElementById('matchesList');
+            matchesList.innerHTML = matches.map(match => `
+                <div class="match-item">
+                    <div class="match-list-number">Maç ${match.no}</div>
+                    <div class="match-date">${match.date}</div>
+                    <div class="match-teams">${match.teams}</div>
+                </div>
+            `).join('');
+        }
+
+        // Maç filtrelerini render et
+        function renderMatchFilters() {
+            const matchFiltersGrid = document.getElementById('matchFiltersGrid');
+            matchFiltersGrid.innerHTML = matches.map((match, index) => `
+                <div class="match-filter-item">
+                    <label>Maç ${match.no}:</label>
+                    <select id="matchFilter${index}" onchange="filterCoupons()">
+                        <option value="">Tümü</option>
+                        <option value="1">1</option>
+                        <option value="0">0</option>
+                        <option value="2">2</option>
+                    </select>
+                </div>
+            `).join('');
+        }
+
+        // Tüm maçlar için istatistikleri hesapla ve göster
+        function calculateAllMatchesStats() {
+            if (allCoupons.length === 0) return;
+            
+            const statsTableBody = document.getElementById('statsTableBody');
+            const total = allCoupons.length;
+            
+            statsTableBody.innerHTML = matches.map((match, matchIndex) => {
+                let count1 = 0;
+                let count0 = 0;
+                let count2 = 0;
+                
+                allCoupons.forEach(coupon => {
+                    const result = coupon.predictions[matchIndex];
+                    if (result === 1) count1++;
+                    else if (result === 0) count0++;
+                    else if (result === 2) count2++;
+                });
+                
+                const percentage1 = ((count1 / total) * 100).toFixed(1);
+                const percentage0 = ((count0 / total) * 100).toFixed(1);
+                const percentage2 = ((count2 / total) * 100).toFixed(1);
+                
+                return `
+                    <tr>
+                        <td class="match-no">${match.no}</td>
+                        <td class="match-name">${match.teams}</td>
+                        <td class="percentage-cell">${percentage1}%<span class="count-cell">(${count1})</span></td>
+                        <td class="percentage-cell">${percentage0}%<span class="count-cell">(${count0})</span></td>
+                        <td class="percentage-cell">${percentage2}%<span class="count-cell">(${count2})</span></td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // CSV dosyasını yükle (inline data)
+        function loadCoupons() {
+            try {
+                // CSV verilerini inline array'den parse et
+                for (let i = 0; i < csvDataCompact.length; i++) {
+                    const predictions = csvDataCompact[i].split(',');
+                    if (predictions.length === 15) {
+                        allCoupons.push({
+                            id: i + 1,
+                            rowNumber: i + 1, // CSV'deki satır numarası (1'den başlar)
+                            predictions: predictions.map(p => parseInt(p))
+                        });
+                    }
+                }
+                
+                // İlk yüklemede tüm kuponları göster
+                filteredCoupons = allCoupons;
+                renderMatchFilters(); // Maç filtrelerini render et
+                calculateAllMatchesStats(); // Tüm maçlar için istatistikleri hesapla
+                updatePagination();
+                updateDisplayedCoupons();
+                updateStats();
+                renderCoupons();
+            } catch (error) {
+                console.error('CSV yükleme hatası:', error);
+                document.getElementById('couponsContainer').innerHTML = 
+                    '<div class="no-coupons"><h2>⚠️ Hata</h2><p>CSV verileri yüklenemedi.</p></div>';
+            }
+        }
+
+        // Kuponları filtrele
+        function filterCoupons() {
+            filteredCoupons = allCoupons;
+            
+            // Tüm maçlar için filtreleri uygula
+            matches.forEach((match, matchIndex) => {
+                const filterElement = document.getElementById(`matchFilter${matchIndex}`);
+                if (filterElement && filterElement.value !== '') {
+                    const result = parseInt(filterElement.value);
+                    filteredCoupons = filteredCoupons.filter(coupon => 
+                        coupon.predictions[matchIndex] === result
+                    );
+                }
+            });
+            
+            // Satır numarası filtresini uygula
+            if (rowStartFilter !== null || rowEndFilter !== null) {
+                filteredCoupons = filteredCoupons.filter(coupon => {
+                    const matchesStart = rowStartFilter === null || coupon.rowNumber >= rowStartFilter;
+                    const matchesEnd = rowEndFilter === null || coupon.rowNumber <= rowEndFilter;
+                    return matchesStart && matchesEnd;
+                });
+            }
+            
+            currentPage = 1; // Filtre değiştiğinde ilk sayfaya dön
+            updatePagination();
+            updateDisplayedCoupons();
+            updateStats();
+            renderCoupons();
+        }
+
+        // Satır numarasına göre filtrele
+        function filterByRows() {
+            const start = document.getElementById('rowStart').value;
+            const end = document.getElementById('rowEnd').value;
+            
+            rowStartFilter = start ? parseInt(start) : null;
+            rowEndFilter = end ? parseInt(end) : null;
+            
+            filterCoupons();
+        }
+
+        // Sayfalama güncellemeleri
+        function updatePagination() {
+            const totalPages = Math.ceil(filteredCoupons.length / itemsPerPage);
+            document.getElementById('pageInfo').textContent = `Sayfa ${currentPage} / ${totalPages || 1}`;
+            document.getElementById('pageInput').value = currentPage;
+            document.getElementById('pageInput').max = totalPages || 1;
+            
+            // Butonları güncelle
+            document.querySelector('.page-btn[onclick="goToFirstPage()"]').disabled = currentPage === 1;
+            document.querySelector('.page-btn[onclick="goToPreviousPage()"]').disabled = currentPage === 1;
+            document.querySelector('.page-btn[onclick="goToNextPage()"]').disabled = currentPage >= totalPages;
+            document.querySelector('.page-btn[onclick="goToLastPage()"]').disabled = currentPage >= totalPages;
+        }
+
+        // Gösterilecek kuponları güncelle
+        function updateDisplayedCoupons() {
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            displayedCoupons = filteredCoupons.slice(startIndex, endIndex);
+        }
+
+        // Sayfa değiştirme fonksiyonları
+        function goToFirstPage() {
+            currentPage = 1;
+            updatePagination();
+            updateDisplayedCoupons();
+            renderCoupons();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function goToPreviousPage() {
+            if (currentPage > 1) {
+                currentPage--;
+                updatePagination();
+                updateDisplayedCoupons();
+                renderCoupons();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        function goToNextPage() {
+            const totalPages = Math.ceil(filteredCoupons.length / itemsPerPage);
+            if (currentPage < totalPages) {
+                currentPage++;
+                updatePagination();
+                updateDisplayedCoupons();
+                renderCoupons();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        function goToLastPage() {
+            const totalPages = Math.ceil(filteredCoupons.length / itemsPerPage);
+            currentPage = totalPages || 1;
+            updatePagination();
+            updateDisplayedCoupons();
+            renderCoupons();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function goToPage() {
+            const pageInput = document.getElementById('pageInput');
+            const page = parseInt(pageInput.value);
+            const totalPages = Math.ceil(filteredCoupons.length / itemsPerPage);
+            
+            if (page >= 1 && page <= totalPages) {
+                currentPage = page;
+                updatePagination();
+                updateDisplayedCoupons();
+                renderCoupons();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            } else {
+                pageInput.value = currentPage;
+            }
+        }
+
+        function changeItemsPerPage() {
+            itemsPerPage = parseInt(document.getElementById('itemsPerPage').value);
+            currentPage = 1;
+            updatePagination();
+            updateDisplayedCoupons();
+            updateStats();
+            renderCoupons();
+        }
+
+        // İstatistikleri güncelle
+        function updateStats() {
+            const totalPages = Math.ceil(filteredCoupons.length / itemsPerPage);
+            document.getElementById('totalCoupons').textContent = `Toplam: ${allCoupons.length}`;
+            document.getElementById('activeCoupons').textContent = `Gösterilen: ${filteredCoupons.length}`;
+            document.getElementById('currentPageInfo').textContent = `Sayfa: ${currentPage}/${totalPages || 1}`;
+        }
+
+        // Kuponları render et
+        function renderCoupons() {
+            const container = document.getElementById('couponsContainer');
+            
+            if (displayedCoupons.length === 0) {
+                container.innerHTML = '<div class="no-coupons"><h2>📋 Kupon Bulunamadı</h2><p>Seçilen kriterlere uygun kupon yok.</p></div>';
+                return;
+            }
+            
+            container.innerHTML = displayedCoupons.map((coupon, index) => {
+                const firstMatch = coupon.predictions[0];
+                const remainingMatches = coupon.predictions.slice(1);
+                
+                const matchBoxes = remainingMatches.map((pred, idx) => {
+                    const matchNum = idx + 2; // Maç numarası (2-15)
+                    let predictionClass = '';
+                    if (pred === 1) predictionClass = 'prediction-1';
+                    else if (pred === 0) predictionClass = 'prediction-0';
+                    else if (pred === 2) predictionClass = 'prediction-2';
+                    
+                    return `
+                        <div class="match-box">
+                            <div class="match-number">Maç ${matchNum}</div>
+                            <div class="match-prediction ${predictionClass}">${pred}</div>
+                        </div>
+                    `;
+                }).join('');
+                
+                return `
+                    <div class="coupon-card" onclick="toggleCoupon(${index}, event)" ontouchstart="toggleCoupon(${index}, event)">
+                        <div class="coupon-header">
+                            <div>
+                                <span class="coupon-number">Kupon #${coupon.rowNumber}</span>
+                                <div style="font-size: 0.85em; color: #999; margin-top: 5px;">Satır: ${coupon.rowNumber}</div>
+                                <div style="margin-top: 8px;">
+                                    <span class="first-match-result">${firstMatch}</span>
+                                    <span class="first-match-label">İlk Maç Sonucu</span>
+                                </div>
+                            </div>
+                            <div style="text-align: right;">
+                                <div class="coupon-status">Devam Ediyor</div>
+                                <div class="toggle-icon" style="margin-top: 10px;">▼</div>
+                            </div>
+                        </div>
+                        <div class="remaining-count">Kalan Maçlar: 14</div>
+                        <div class="remaining-matches">
+                            <div style="margin-bottom: 10px; font-weight: 600; color: #333;">Kalan Maç Tahminleri:</div>
+                            <div class="matches-grid">
+                                ${matchBoxes}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Emoji patlaması efekti oluştur
+        function createEmojiExplosion(x, y) {
+            const container = document.body;
+            const emojis = ['💰', '💎', '💵', '💴', '💶', '💷', '💸', '✨', '🎆', '🎇', '⭐', '🌟', '💫', '🏆', '🎊', '🎉', '💍', '💎', '💎', '💎'];
+            const count = 30; // Patlamada oluşacak emoji sayısı
+            
+            for (let i = 0; i < count; i++) {
+                const emoji = emojis[Math.floor(Math.random() * emojis.length)];
+                const explosionEmoji = document.createElement('div');
+                explosionEmoji.className = 'explosion-emoji';
+                explosionEmoji.textContent = emoji;
+                explosionEmoji.style.left = x + 'px';
+                explosionEmoji.style.top = y + 'px';
+                
+                // Rastgele açı ve mesafe
+                const angle = (Math.PI * 2 * i) / count + Math.random() * 0.5;
+                const distance = 100 + Math.random() * 150;
+                const endX = x + Math.cos(angle) * distance;
+                const endY = y + Math.sin(angle) * distance - Math.random() * 100;
+                
+                explosionEmoji.style.setProperty('--end-x', endX + 'px');
+                explosionEmoji.style.setProperty('--end-y', endY + 'px');
+                explosionEmoji.style.fontSize = (20 + Math.random() * 30) + 'px';
+                
+                container.appendChild(explosionEmoji);
+                
+                // Animasyon bittiğinde kaldır
+                setTimeout(() => {
+                    if (explosionEmoji.parentNode) {
+                        explosionEmoji.remove();
+                    }
+                }, 2000);
+            }
+        }
+
+        // Kupon kartını aç/kapat
+        function toggleCoupon(index, event) {
+            const cards = document.querySelectorAll('.coupon-card');
+            const card = cards[index];
+            card.classList.toggle('active');
+            
+            // Dokunma pozisyonunu al
+            let x, y;
+            if (event && event.touches && event.touches.length > 0) {
+                x = event.touches[0].clientX;
+                y = event.touches[0].clientY;
+            } else if (event) {
+                x = event.clientX || (event.pageX ? event.pageX : 0);
+                y = event.clientY || (event.pageY ? event.pageY : 0);
+            } else {
+                const rect = card.getBoundingClientRect();
+                x = rect.left + rect.width / 2;
+                y = rect.top + rect.height / 2;
+            }
+            
+            // Emoji patlaması oluştur
+            createEmojiExplosion(x, y);
+        }
+
+        // İlk maç sonucu değiştiğinde
+        // Event listener artık gerekli değil, çünkü onchange direkt HTML'de
+
+        // Uçan emoji oluştur
+        function createFlyingEmoji() {
+            const container = document.querySelector('.billboard-container');
+            const emojis = ['💰', '💎', '💵', '💴', '💶', '💷', '💸', '✨', '🎆', '🎇', '⭐', '🌟', '💫', '💍'];
+            const emoji = emojis[Math.floor(Math.random() * emojis.length)];
+            
+            const flyingEmoji = document.createElement('div');
+            flyingEmoji.className = 'flying-emoji';
+            flyingEmoji.textContent = emoji;
+            
+            // Rastgele başlangıç pozisyonu (billboard içinde)
+            const startX = Math.random() * (container.offsetWidth - 50);
+            const startY = container.offsetHeight - 20;
+            
+            flyingEmoji.style.left = startX + 'px';
+            flyingEmoji.style.top = startY + 'px';
+            
+            // Rastgele yatay hareket
+            const randomX = (Math.random() - 0.5) * 200;
+            flyingEmoji.style.setProperty('--random-x', randomX + 'px');
+            
+            container.appendChild(flyingEmoji);
+            
+            // Animasyon bittiğinde kaldır
+            setTimeout(() => {
+                flyingEmoji.remove();
+            }, 3000);
+        }
+
+        // Havai fişek efekti oluştur
+        function createSparkle() {
+            const container = document.querySelector('.billboard-container');
+            const sparkles = ['✨', '⭐', '🌟', '💫', '🎆', '🎇'];
+            const sparkle = sparkles[Math.floor(Math.random() * sparkles.length)];
+            
+            const sparkleElement = document.createElement('div');
+            sparkleElement.className = 'sparkle';
+            sparkleElement.textContent = sparkle;
+            
+            // Rastgele pozisyon
+            const x = Math.random() * container.offsetWidth;
+            const y = Math.random() * container.offsetHeight;
+            
+            sparkleElement.style.left = x + 'px';
+            sparkleElement.style.top = y + 'px';
+            
+            container.appendChild(sparkleElement);
+            
+            // Animasyon bittiğinde kaldır
+            setTimeout(() => {
+                sparkleElement.remove();
+            }, 2000);
+        }
+
+        // Sürekli uçan emoji oluştur
+        function startFlyingEmojis() {
+            // Her 300ms'de bir uçan emoji
+            setInterval(createFlyingEmoji, 300);
+            
+            // Her 500ms'de bir havai fişek
+            setInterval(createSparkle, 500);
+        }
+
+        // Sayfa yüklendiğinde
+        window.addEventListener('DOMContentLoaded', () => {
+            renderMatches(); // Maç listesini render et
+            loadCoupons();
+            // Uçan emojileri başlat
+            setTimeout(startFlyingEmojis, 500);
+        });
+        
+        // Enter tuşu ile filtreleme
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('rowStart').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') filterByRows();
+            });
+            document.getElementById('rowEnd').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') filterByRows();
+            });
+        });
+    </script>
+</body>
+</html>
