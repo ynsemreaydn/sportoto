@@ -1,0 +1,9 @@
+# Ignore all files
+*
+
+# But allow index.html
+!index.html
+
+# Allow .gitignore itself
+!.gitignore
+
