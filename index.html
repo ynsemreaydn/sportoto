@@ -1348,17 +1348,19 @@
                 for (let i = 0; i < csvDataCompact.length; i++) {
                     const predictions = csvDataCompact[i].split(',');
                     if (predictions.length === 15) {
-                        // Başakşehir FK - Kocaelispor maçı (ilk maç, index 0) sonucu kalıcı olarak 1 olmalı
-                        const firstMatchResult = parseInt(predictions[0]);
-                        if (firstMatchResult === 1) {
-                            allCoupons.push({
-                                id: i + 1,
-                                rowNumber: i + 1, // CSV'deki satır numarası (1'den başlar)
-                                predictions: predictions.map(p => parseInt(p))
-                            });
-                        }
+                        // Tüm kuponları yükle (1450 kupon)
+                        // Filtreleme işlemi filterCoupons fonksiyonunda yapılacak
+                        allCoupons.push({
+                            id: i + 1,
+                            rowNumber: i + 1, // CSV'deki satır numarası (1'den başlar)
+                            predictions: predictions.map(p => parseInt(p))
+                        });
                     }
                 }
+                
+                // Başakşehir FK - Kocaelispor (Maç 1) sonucu kalıcı olarak 1 olmalı
+                // Bu filtreleme, yükleme sırasında uygulanır ve değiştirilemez.
+                allCoupons = allCoupons.filter(coupon => coupon.predictions[0] === 1);
                 
                 // İlk yüklemede tüm kuponları göster
                 filteredCoupons = allCoupons;
@@ -1544,8 +1546,21 @@
                 return null;
             }).filter(item => item !== null);
             
+            // TÜM kuponları (1450) parse et ve hesapla (filtrelemeden önce)
+            const allPossibleCoupons = [];
+            for (let i = 0; i < csvDataCompact.length; i++) {
+                const predictions = csvDataCompact[i].split(',');
+                if (predictions.length === 15) {
+                    allPossibleCoupons.push({
+                        id: i + 1,
+                        rowNumber: i + 1,
+                        predictions: predictions.map(p => parseInt(p))
+                    });
+                }
+            }
+            
             // Her kupon için potansiyel maksimum doğru sayısını hesapla
-            allCoupons.forEach(coupon => {
+            allPossibleCoupons.forEach(coupon => {
                 let correctSoFar = 0; // Şu ana kadar doğru tahmin sayısı
                 let remainingMatches = 15; // Toplam maç sayısı
                 
