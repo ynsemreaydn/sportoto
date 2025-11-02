@@ -260,6 +260,113 @@
             animation: pulse 2s ease-in-out infinite;
         }
 
+        .target14-coupons-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .target14-coupon-card {
+            background: linear-gradient(135deg, rgba(33, 150, 243, 0.2), rgba(25, 118, 210, 0.2));
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: 2px solid rgba(33, 150, 243, 0.5);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .target14-coupon-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(33, 150, 243, 0.5);
+        }
+
+        .target14-coupon-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid rgba(33, 150, 243, 0.3);
+        }
+
+        .target14-coupon-label {
+            font-size: clamp(1.1em, 2.5vw, 1.5em);
+            font-weight: bold;
+            color: #2196F3;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+        }
+
+        .target14-coupon-status {
+            font-size: clamp(0.9em, 2vw, 1.2em);
+            color: #4CAF50;
+            font-weight: bold;
+            padding: 6px 12px;
+            background: rgba(76, 175, 80, 0.2);
+            border-radius: 12px;
+            border: 1px solid rgba(76, 175, 80, 0.5);
+        }
+
+        .target14-coupon-predictions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(40px, 1fr));
+            gap: 8px;
+            margin-top: 15px;
+        }
+
+        .target14-prediction-item {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 8px 4px;
+            text-align: center;
+            font-size: 0.9em;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            position: relative;
+        }
+
+        .target14-prediction-item.ft-correct {
+            background: linear-gradient(135deg, rgba(76, 175, 80, 0.4), rgba(255, 215, 0, 0.4));
+            border: 2px solid #4CAF50;
+            box-shadow: 0 0 10px rgba(76, 175, 80, 0.6);
+        }
+
+        .target14-prediction-item.ft-incorrect {
+            background: rgba(244, 67, 54, 0.3);
+            border: 2px solid #f44336;
+        }
+
+        .target14-prediction-item.pending {
+            background: rgba(33, 150, 243, 0.2);
+            border: 2px solid rgba(33, 150, 243, 0.5);
+        }
+
+        .target14-prediction-item.prediction-1 {
+            color: #2196F3;
+        }
+
+        .target14-prediction-item.prediction-0 {
+            color: #FF9800;
+        }
+
+        .target14-prediction-item.prediction-2 {
+            color: #4CAF50;
+        }
+
+        @media (max-width: 768px) {
+            .target14-coupons-container {
+                grid-template-columns: 1fr;
+            }
+
+            .target14-coupon-predictions {
+                grid-template-columns: repeat(auto-fit, minmax(35px, 1fr));
+                gap: 6px;
+            }
+        }
+
         .winning-coupon-card {
             background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 165, 0, 0.2));
             backdrop-filter: blur(15px);
@@ -1264,6 +1371,14 @@
             </div>
         </div>
 
+        <!-- Hedef 14 Kuponlar -->
+        <div class="winning-coupon-section" id="target14Section">
+            <h2>🎯 Hedef 14 Kuponlar 🎯</h2>
+            <div class="target14-coupons-container" id="target14CouponsContainer">
+                <!-- JavaScript ile eklenecek -->
+            </div>
+        </div>
+
         <div class="billboard-container">
             <div class="billboard-title">15 HEDEF</div>
             <div class="marquee-container">
@@ -1434,7 +1549,7 @@
             { no: 3, date: '01.11.2025 20:00', teams: 'Galatasaray A.Ş. - Trabzonspor A.Ş.', status: 'FT', homeScore: 0, awayScore: 0 },
             { no: 4, date: '02.11.2025 14:30', teams: 'Konyaspor - Samsunspor A.Ş.', status: 'FT', homeScore: 1, awayScore: 3 },
             { no: 5, date: '02.11.2025 17:00', teams: 'Kayserispor - Kasımpaşa A.Ş.', status: 'FT', homeScore: 3, awayScore: 2 },
-            { no: 6, date: '02.11.2025 20:00', teams: 'Beşiktaş A.Ş. - Fenerbahçe A.Ş.', status: 'FT', homeScore: 2, awayScore: 2 },
+            { no: 6, date: '02.11.2025 20:00', teams: 'Beşiktaş A.Ş. - Fenerbahçe A.Ş.', status: 'FT', homeScore: 2, awayScore: 3 },
             { no: 7, date: '03.11.2025 20:00', teams: 'Alanyaspor - Gaziantep F.K. A.Ş.' },
             { no: 8, date: '03.11.2025 20:00', teams: 'Eyüpspor - Antalyaspor' },
             { no: 9, date: '03.11.2025 20:00', teams: 'Çaykur Rizespor A.Ş. - Fatih Karagümrük' },
@@ -1864,6 +1979,122 @@
             });
         }
 
+        // Hedef 14 kuponlarını render et
+        function renderTarget14Coupons() {
+            const container = document.getElementById('target14CouponsContainer');
+            const section = document.getElementById('target14Section');
+            if (!container || !section) return;
+
+            // FT maçları belirle ve sonuçlarını hesapla
+            const ftMatchResults = matches.map((match) => {
+                if (match.status === 'FT' && match.homeScore !== undefined && match.awayScore !== undefined) {
+                    let result = null;
+                    if (match.homeScore > match.awayScore) result = 1;
+                    else if (match.homeScore < match.awayScore) result = 2;
+                    else result = 0;
+                    return { matchNo: match.no, predictionIndex: match.no - 1, result: result };
+                }
+                return null;
+            }).filter(item => item !== null);
+
+            const remainingMatches = 15 - ftMatchResults.length;
+
+            // 14 doğru tahmin potansiyeline sahip kuponları bul
+            const target14Coupons = [];
+            for (let i = 0; i < csvDataCompact.length; i++) {
+                const predictions = csvDataCompact[i].split(',');
+                if (predictions.length === 15) {
+                    const couponPredictions = predictions.map(p => parseInt(p));
+                    let correctSoFar = 0;
+                    
+                    ftMatchResults.forEach(ftMatch => {
+                        if (couponPredictions[ftMatch.predictionIndex] === ftMatch.result) {
+                            correctSoFar++;
+                        }
+                    });
+                    
+                    const maxPossible = correctSoFar + remainingMatches;
+                    
+                    // Eğer 14'e ulaşabilecekse ama 15'e ulaşamıyorsa (yani 14 potansiyeli varsa)
+                    if (maxPossible === 14) {
+                        target14Coupons.push({
+                            id: i + 1,
+                            rowNumber: i + 1,
+                            predictions: couponPredictions,
+                            correctFT: correctSoFar
+                        });
+                    }
+                }
+            }
+
+            container.innerHTML = '';
+
+            if (target14Coupons.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: rgba(255, 255, 255, 0.7); padding: 20px;">14 doğru tahmin potansiyeline sahip kupon bulunamadı.</p>';
+                return;
+            }
+
+            // Kuponları render et (maksimum 20 kupon göster, fazlası için scroll)
+            const couponsToShow = target14Coupons.slice(0, 20);
+            couponsToShow.forEach(coupon => {
+                const couponCard = document.createElement('div');
+                couponCard.className = 'target14-coupon-card';
+
+                const headerHTML = `
+                    <div class="target14-coupon-header">
+                        <span class="target14-coupon-label">Kupon #${coupon.rowNumber}</span>
+                        <span class="target14-coupon-status">14 Hedefi</span>
+                    </div>
+                `;
+
+                let predictionsHTML = '<div class="target14-coupon-predictions">';
+                coupon.predictions.forEach((prediction, index) => {
+                    const matchNo = index + 1;
+                    const match = matches.find(m => m.no === matchNo);
+                    
+                    let itemClass = 'target14-prediction-item';
+                    let isFT = false;
+                    let isCorrect = false;
+
+                    // FT maçları kontrol et
+                    if (match && match.status === 'FT' && match.homeScore !== undefined && match.awayScore !== undefined) {
+                        isFT = true;
+                        let actualResult = null;
+                        if (match.homeScore > match.awayScore) actualResult = 1;
+                        else if (match.homeScore < match.awayScore) actualResult = 2;
+                        else actualResult = 0;
+
+                        if (prediction === actualResult) {
+                            isCorrect = true;
+                            itemClass += ' ft-correct';
+                        } else {
+                            itemClass += ' ft-incorrect';
+                        }
+                    } else {
+                        itemClass += ' pending';
+                    }
+
+                    // Prediction değerine göre class ekle
+                    if (prediction === 1) itemClass += ' prediction-1';
+                    else if (prediction === 0) itemClass += ' prediction-0';
+                    else if (prediction === 2) itemClass += ' prediction-2';
+
+                    predictionsHTML += `<div class="${itemClass}">${prediction}</div>`;
+                });
+                predictionsHTML += '</div>';
+
+                couponCard.innerHTML = headerHTML + predictionsHTML;
+                container.appendChild(couponCard);
+            });
+
+            if (target14Coupons.length > 20) {
+                const moreInfo = document.createElement('p');
+                moreInfo.style.cssText = 'text-align: center; color: rgba(255, 255, 255, 0.7); margin-top: 15px;';
+                moreInfo.textContent = `Toplam ${target14Coupons.length} kupon bulundu. İlk 20 kupon gösteriliyor.`;
+                container.appendChild(moreInfo);
+            }
+        }
+
         // Kuponları render et
         function renderCoupons() {
             const container = document.getElementById('couponsContainer');
@@ -2071,6 +2302,7 @@
             renderMatches(); // Maç listesini render et
             loadCoupons();
             renderWinningCoupon(); // Kazanmayı beklediğimiz kuponu render et
+            renderTarget14Coupons(); // Hedef 14 kuponlarını render et
             // Marquee ve emoji animasyonlarını hemen başlat (popup kapandığı gibi)
             const marqueeContent = document.getElementById('marqueeContent');
             if (marqueeContent) {
