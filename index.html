@@ -1224,19 +1224,19 @@
         // Maç listesi (canlı skor bilgileri ile)
         const matches = [
             { no: 1, date: '31.10.2025 20:00', teams: 'Başakşehir FK - Kocaelispor', isLive: true, status: 'FT', minute: null, homeScore: 1, awayScore: 0 },
-            { no: 2, date: '01.11.2025 17:00', teams: 'Göztepe A.Ş. - Gençlerbirliği', isLive: true, status: 'LIVE', minute: 73, homeScore: 1, awayScore: 0 },
-            { no: 3, date: '01.11.2025 20:00', teams: 'Galatasaray A.Ş. - Trabzonspor A.Ş.', isLive: false },
-            { no: 4, date: '02.11.2025 14:30', teams: 'Konyaspor - Samsunspor A.Ş.', isLive: false },
+            { no: 2, date: '01.11.2025 17:00', teams: 'Göztepe A.Ş. - Gençlerbirliği', isLive: true, status: 'FT', minute: null, homeScore: 1, awayScore: 0 },
+            { no: 3, date: '01.11.2025 20:00', teams: 'Galatasaray A.Ş. - Trabzonspor A.Ş.', isLive: true, status: 'FT', minute: null, homeScore: 0, awayScore: 0 },
+            { no: 4, date: '02.11.2025 14:30', teams: 'Konyaspor - Samsunspor A.Ş.', isLive: true, status: 'FT', minute: null, homeScore: 0, awayScore: 2 },
             { no: 5, date: '02.11.2025 17:00', teams: 'Kayserispor - Kasımpaşa A.Ş.', isLive: false },
             { no: 6, date: '02.11.2025 20:00', teams: 'Beşiktaş A.Ş. - Fenerbahçe A.Ş.', isLive: false },
             { no: 7, date: '03.11.2025 20:00', teams: 'Alanyaspor - Gaziantep F.K. A.Ş.', isLive: false },
             { no: 8, date: '03.11.2025 20:00', teams: 'Eyüpspor - Antalyaspor', isLive: false },
             { no: 9, date: '03.11.2025 20:00', teams: 'Çaykur Rizespor A.Ş. - Fatih Karagümrük', isLive: false },
-            { no: 10, date: '01.11.2025 17:30', teams: 'Leipzig - Stuttgart', isLive: true, status: 'LIVE', minute: 48, homeScore: 1, awayScore: 0 },
-            { no: 11, date: '01.11.2025 20:30', teams: 'Bayern Münih - B. Leverkusen', isLive: false },
-            { no: 12, date: '01.11.2025 20:30', teams: 'Tottenham - Chelsea', isLive: false },
+            { no: 10, date: '01.11.2025 17:30', teams: 'Leipzig - Stuttgart', isLive: true, status: 'FT', minute: null, homeScore: 3, awayScore: 1 },
+            { no: 11, date: '01.11.2025 20:30', teams: 'Bayern Münih - B. Leverkusen', isLive: true, status: 'FT', minute: null, homeScore: 3, awayScore: 0 },
+            { no: 12, date: '01.11.2025 20:30', teams: 'Tottenham - Chelsea', isLive: true, status: 'FT', minute: null, homeScore: 0, awayScore: 1 },
             { no: 13, date: '02.11.2025 19:30', teams: 'Manchester City - Bournemouth', isLive: false },
-            { no: 14, date: '01.11.2025 18:15', teams: 'Atletico Madrid - Sevilla', isLive: true, status: 'LIVE', minute: 21, homeScore: 0, awayScore: 0 },
+            { no: 14, date: '01.11.2025 18:15', teams: 'Atletico Madrid - Sevilla', isLive: true, status: 'FT', minute: null, homeScore: 3, awayScore: 0 },
             { no: 15, date: '02.11.2025 22:45', teams: 'AC Milan - AS Roma', isLive: false }
         ];
 
@@ -1773,7 +1773,7 @@
         }
 
         // Son güncelleme tarihi (push tarihi)
-        const lastPushDate = "01.11.2025 18:30:00"; // Push edildiğinde güncellenecek
+        const lastPushDate = "01.11.2025 14:47:00"; // Push edildiğinde güncellenecek
 
         // Popup şifresini kontrol et
         function checkPassword() {
