@@ -260,14 +260,14 @@
             animation: pulse 2s ease-in-out infinite;
         }
 
-        .target14-coupons-container {
+        .target13-coupons-container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 20px;
             margin-top: 20px;
         }
 
-        .target14-coupon-card {
+        .target13-coupon-card {
             background: linear-gradient(135deg, rgba(33, 150, 243, 0.2), rgba(25, 118, 210, 0.2));
             backdrop-filter: blur(15px);
             -webkit-backdrop-filter: blur(15px);
@@ -278,12 +278,12 @@
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
-        .target14-coupon-card:hover {
+        .target13-coupon-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 15px 40px rgba(33, 150, 243, 0.5);
         }
 
-        .target14-coupon-header {
+        .target13-coupon-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -292,14 +292,14 @@
             border-bottom: 2px solid rgba(33, 150, 243, 0.3);
         }
 
-        .target14-coupon-label {
+        .target13-coupon-label {
             font-size: clamp(1.1em, 2.5vw, 1.5em);
             font-weight: bold;
             color: #2196F3;
             text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
         }
 
-        .target14-coupon-status {
+        .target13-coupon-status {
             font-size: clamp(0.9em, 2vw, 1.2em);
             color: #4CAF50;
             font-weight: bold;
@@ -309,14 +309,14 @@
             border: 1px solid rgba(76, 175, 80, 0.5);
         }
 
-        .target14-coupon-predictions {
+        .target13-coupon-predictions {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(40px, 1fr));
             gap: 8px;
             margin-top: 15px;
         }
 
-        .target14-prediction-item {
+        .target13-prediction-item {
             background: rgba(255, 255, 255, 0.1);
             border-radius: 8px;
             padding: 8px 4px;
@@ -328,40 +328,40 @@
             position: relative;
         }
 
-        .target14-prediction-item.ft-correct {
+        .target13-prediction-item.ft-correct {
             background: linear-gradient(135deg, rgba(76, 175, 80, 0.4), rgba(255, 215, 0, 0.4));
             border: 2px solid #4CAF50;
             box-shadow: 0 0 10px rgba(76, 175, 80, 0.6);
         }
 
-        .target14-prediction-item.ft-incorrect {
+        .target13-prediction-item.ft-incorrect {
             background: rgba(244, 67, 54, 0.3);
             border: 2px solid #f44336;
         }
 
-        .target14-prediction-item.pending {
+        .target13-prediction-item.pending {
             background: rgba(33, 150, 243, 0.2);
             border: 2px solid rgba(33, 150, 243, 0.5);
         }
 
-        .target14-prediction-item.prediction-1 {
+        .target13-prediction-item.prediction-1 {
             color: #2196F3;
         }
 
-        .target14-prediction-item.prediction-0 {
+        .target13-prediction-item.prediction-0 {
             color: #FF9800;
         }
 
-        .target14-prediction-item.prediction-2 {
+        .target13-prediction-item.prediction-2 {
             color: #4CAF50;
         }
 
         @media (max-width: 768px) {
-            .target14-coupons-container {
+            .target13-coupons-container {
                 grid-template-columns: 1fr;
             }
 
-            .target14-coupon-predictions {
+            .target13-coupon-predictions {
                 grid-template-columns: repeat(auto-fit, minmax(35px, 1fr));
                 gap: 6px;
             }
@@ -1362,8 +1362,8 @@
             <h2>🏆 Kazanmayı Beklediğimiz Kupon 🏆</h2>
             <div class="winning-coupon-card">
                 <div class="winning-coupon-header">
-                    <span class="coupon-label">Kupon #363</span>
-                    <span class="coupon-status">15 Doğru Hedefi</span>
+                    <span class="coupon-label">Kupon #237</span>
+                    <span class="coupon-status">14 Doğru Hedefi</span>
                 </div>
                 <div class="winning-coupon-predictions" id="winningCouponPredictions">
                     <!-- JavaScript ile eklenecek -->
@@ -1371,10 +1371,10 @@
             </div>
         </div>
 
-        <!-- Hedef 14 Kuponlar -->
-        <div class="winning-coupon-section" id="target14Section">
-            <h2>🎯 Hedef 14 Kuponlar 🎯</h2>
-            <div class="target14-coupons-container" id="target14CouponsContainer">
+        <!-- Hedef 13 Kuponlar -->
+        <div class="winning-coupon-section" id="target13Section">
+            <h2>🎯 Hedef 13 Kuponlar 🎯</h2>
+            <div class="target13-coupons-container" id="target13CouponsContainer">
                 <!-- JavaScript ile eklenecek -->
             </div>
         </div>
@@ -1916,8 +1916,8 @@
             const container = document.getElementById('winningCouponPredictions');
             if (!container) return;
 
-            // Winning coupon predictions (Kupon #363 - CSV Row 363)
-            const winningPredictions = [1, 1, 0, 2, 1, 0, 0, 0, 0, 1, 1, 2, 1, 1, 2];
+            // Winning coupon predictions (Kupon #237 - 14'e gidebilecek)
+            const winningPredictions = [1, 1, 0, 2, 1, 2, 2, 2, 0, 0, 1, 2, 1, 1, 1];
 
             container.innerHTML = '';
 
@@ -1979,10 +1979,10 @@
             });
         }
 
-        // Hedef 14 kuponlarını render et
-        function renderTarget14Coupons() {
-            const container = document.getElementById('target14CouponsContainer');
-            const section = document.getElementById('target14Section');
+        // Hedef 13 kuponlarını render et
+        function renderTarget13Coupons() {
+            const container = document.getElementById('target13CouponsContainer');
+            const section = document.getElementById('target13Section');
             if (!container || !section) return;
 
             // FT maçları belirle ve sonuçlarını hesapla
@@ -1999,8 +1999,8 @@
 
             const remainingMatches = 15 - ftMatchResults.length;
 
-            // 14 doğru tahmin potansiyeline sahip kuponları bul
-            const target14Coupons = [];
+            // 13 doğru tahmin potansiyeline sahip kuponları bul
+            const target13Coupons = [];
             for (let i = 0; i < csvDataCompact.length; i++) {
                 const predictions = csvDataCompact[i].split(',');
                 if (predictions.length === 15) {
@@ -2015,9 +2015,9 @@
                     
                     const maxPossible = correctSoFar + remainingMatches;
                     
-                    // Eğer 14'e ulaşabilecekse ama 15'e ulaşamıyorsa (yani 14 potansiyeli varsa)
-                    if (maxPossible === 14) {
-                        target14Coupons.push({
+                    // Eğer 13'e ulaşabilecekse ama 14'e ulaşamıyorsa (yani 13 potansiyeli varsa)
+                    if (maxPossible === 13) {
+                        target13Coupons.push({
                             id: i + 1,
                             rowNumber: i + 1,
                             predictions: couponPredictions,
@@ -2029,30 +2029,30 @@
 
             container.innerHTML = '';
 
-            if (target14Coupons.length === 0) {
-                container.innerHTML = '<p style="text-align: center; color: rgba(255, 255, 255, 0.7); padding: 20px;">14 doğru tahmin potansiyeline sahip kupon bulunamadı.</p>';
+            if (target13Coupons.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: rgba(255, 255, 255, 0.7); padding: 20px;">13 doğru tahmin potansiyeline sahip kupon bulunamadı.</p>';
                 return;
             }
 
             // Kuponları render et (maksimum 20 kupon göster, fazlası için scroll)
-            const couponsToShow = target14Coupons.slice(0, 20);
+            const couponsToShow = target13Coupons.slice(0, 20);
             couponsToShow.forEach(coupon => {
                 const couponCard = document.createElement('div');
-                couponCard.className = 'target14-coupon-card';
+                couponCard.className = 'target13-coupon-card';
 
                 const headerHTML = `
-                    <div class="target14-coupon-header">
-                        <span class="target14-coupon-label">Kupon #${coupon.rowNumber}</span>
-                        <span class="target14-coupon-status">14 Hedefi</span>
+                    <div class="target13-coupon-header">
+                        <span class="target13-coupon-label">Kupon #${coupon.rowNumber}</span>
+                        <span class="target13-coupon-status">13 Hedefi</span>
                     </div>
                 `;
 
-                let predictionsHTML = '<div class="target14-coupon-predictions">';
+                let predictionsHTML = '<div class="target13-coupon-predictions">';
                 coupon.predictions.forEach((prediction, index) => {
                     const matchNo = index + 1;
                     const match = matches.find(m => m.no === matchNo);
                     
-                    let itemClass = 'target14-prediction-item';
+                    let itemClass = 'target13-prediction-item';
                     let isFT = false;
                     let isCorrect = false;
 
@@ -2087,10 +2087,10 @@
                 container.appendChild(couponCard);
             });
 
-            if (target14Coupons.length > 20) {
+            if (target13Coupons.length > 20) {
                 const moreInfo = document.createElement('p');
                 moreInfo.style.cssText = 'text-align: center; color: rgba(255, 255, 255, 0.7); margin-top: 15px;';
-                moreInfo.textContent = `Toplam ${target14Coupons.length} kupon bulundu. İlk 20 kupon gösteriliyor.`;
+                moreInfo.textContent = `Toplam ${target13Coupons.length} kupon bulundu. İlk 20 kupon gösteriliyor.`;
                 container.appendChild(moreInfo);
             }
         }
@@ -2302,7 +2302,7 @@
             renderMatches(); // Maç listesini render et
             loadCoupons();
             renderWinningCoupon(); // Kazanmayı beklediğimiz kuponu render et
-            renderTarget14Coupons(); // Hedef 14 kuponlarını render et
+            renderTarget13Coupons(); // Hedef 13 kuponlarını render et
             // Marquee ve emoji animasyonlarını hemen başlat (popup kapandığı gibi)
             const marqueeContent = document.getElementById('marqueeContent');
             if (marqueeContent) {
