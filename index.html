@@ -2533,10 +2533,6 @@
                     }
                 }
                 
-                // Başakşehir FK - Kocaelispor (Maç 1) sonucu kalıcı olarak 1 olmalı
-                // Bu filtreleme, yükleme sırasında uygulanır ve değiştirilemez.
-                allCoupons = allCoupons.filter(coupon => coupon.predictions[0] === 1);
-                
                 // İlk yüklemede tüm kuponları göster
                 filteredCoupons = allCoupons;
                 renderMatchFilters(); // Maç filtrelerini render et
