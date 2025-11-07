@@ -1484,7 +1484,6 @@
                     <span id="currentPageInfo">Sayfa: 1</span>
                 </div>
             </div>
-            <!-- Potansiyel Doğru Tahminler bölümü - henüz erken, comment out edildi
             <div class="potential-stats" id="potentialStats" style="margin-top: 15px; padding: 15px; background: linear-gradient(135deg, rgba(255,215,0,0.2) 0%, rgba(255,165,0,0.2) 100%); border-radius: 12px; border: 2px solid rgba(255,215,0,0.5);">
                 <h3 style="margin: 0 0 12px 0; color: #FFD700; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">💰 Potansiyel Doğru Tahminler 💰</h3>
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px;">
@@ -1505,7 +1504,6 @@
                     </div>
                 </div>
             </div>
-            -->
         </div>
 
         <div class="pagination-container">
@@ -2697,60 +2695,42 @@
             document.getElementById('currentPageInfo').textContent = `Sayfa: ${currentPage}/${totalPages || 1}`;
             
             // Potansiyel doğru tahmin istatistiklerini hesapla
-            // calculatePotentialStats();
+            calculatePotentialStats();
         }
 
-        /*// Potansiyel doğru tahmin istatistiklerini hesapla (15-14-13-12-11)
+        // Potansiyel doğru tahmin istatistiklerini hesapla (Hedef 15 kalma mantığı)
         function calculatePotentialStats() {
             const potentialCounts = { 15: 0, 14: 0, 13: 0, 12: 0, 11: 0 };
             
-            // FT (final) maçları belirle ve sonuçlarını hesapla
-            // ÖNEMLİ: predictions array'i maç numarasına göre sıralı (0=Maç1, 1=Maç2, ..., 14=Maç15)
-            // matches array'indeki match.no değerini kullanarak doğru index'i bulmalıyız
-            const ftMatchResults = matches.map((match, arrayIndex) => {
-                if (match.status === 'FT' && match.homeScore !== undefined && match.awayScore !== undefined) {
-                    // Skora göre sonucu belirle: 1 = ev sahibi kazandı, 2 = deplasman kazandı, 0 = beraberlik
-                    let result = null;
+            // FT (Final Time) olan maçların sonuçlarını belirle
+            const ftMatchResults = matches.map(match => {
+                if (match.status === 'FT' && match.homeScore !== null && match.awayScore !== null) {
+                    let result;
                     if (match.homeScore > match.awayScore) result = 1;
                     else if (match.homeScore < match.awayScore) result = 2;
                     else result = 0;
-                    // match.no - 1 = predictions array'indeki index (çünkü maç numaraları 1'den başlar, array 0'dan)
-                    return { matchNo: match.no, predictionIndex: match.no - 1, result: result };
+                    return { matchIndex: match.no - 1, result: result };
                 }
                 return null;
             }).filter(item => item !== null);
             
-            // TÜM kuponları (750) parse et ve hesapla (filtrelemeden önce)
-            const allPossibleCoupons = [];
-            for (let i = 0; i < csvDataCompact.length; i++) {
-                const predictions = csvDataCompact[i].split(',');
-                if (predictions.length === 15) {
-                    allPossibleCoupons.push({
-                        id: i + 1,
-                        rowNumber: i + 1,
-                        predictions: predictions.map(p => parseInt(p))
-                    });
-                }
-            }
+            // Kalan maç sayısı
+            const remainingMatches = 15 - ftMatchResults.length;
             
-            // Her kupon için potansiyel maksimum doğru sayısını hesapla
-            allPossibleCoupons.forEach(coupon => {
-                let correctSoFar = 0; // Şu ana kadar doğru tahmin sayısı
-                
-                // FT maçlara göre doğru tahminleri say
+            // TÜM 750 kupon için potansiyel hesapla
+            allCoupons.forEach(coupon => {
+                // FT maçlarda şu ana kadar kaç doğru tahmin yaptı
+                let correctSoFar = 0;
                 ftMatchResults.forEach(ftMatch => {
-                    // predictions array'inde index = matchNo - 1 (çünkü maç numaraları 1'den başlar)
-                    if (coupon.predictions[ftMatch.predictionIndex] === ftMatch.result) {
+                    if (coupon.predictions[ftMatch.matchIndex] === ftMatch.result) {
                         correctSoFar++;
                     }
                 });
                 
-                // Kalan maçlarda da doğru tahmin yapıldığını varsayarak maksimum doğru sayısını hesapla
-                // Toplam 15 maç var, FT olan maç sayısı = ftMatchResults.length
-                const remainingMatches = 15 - ftMatchResults.length;
+                // Maksimum doğru sayısı = şu ana kadar doğru + kalan tüm maçlar doğru olursa
                 const maxPossible = correctSoFar + remainingMatches;
                 
-                // 15-14-13-12-11 doğruya ulaşabilecek kuponları say
+                // Hedeflere ulaşabilecek kuponları say
                 if (maxPossible >= 15) potentialCounts[15]++;
                 if (maxPossible >= 14) potentialCounts[14]++;
                 if (maxPossible >= 13) potentialCounts[13]++;
@@ -2758,14 +2738,13 @@
                 if (maxPossible >= 11) potentialCounts[11]++;
             });
             
-            // İstatistikleri göster
+            // İstatistikleri güncelle
             document.getElementById('potential15').textContent = `15: ${potentialCounts[15]}`;
             document.getElementById('potential14').textContent = `14: ${potentialCounts[14]}`;
             document.getElementById('potential13').textContent = `13: ${potentialCounts[13]}`;
             document.getElementById('potential12').textContent = `12: ${potentialCounts[12]}`;
             document.getElementById('potential11').textContent = `11: ${potentialCounts[11]}`;
         }
-        */
 
         // Kazanmayı beklediğimiz kuponu render et - henüz erken, comment out edildi
         /*function renderWinningCoupon() {
