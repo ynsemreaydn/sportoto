@@ -2702,7 +2702,8 @@
             // calculatePotentialStats();
         }
 
-        /*// Potansiyel doğru tahmin istatistiklerini hesapla (15-14-13-12-11)
+        // Potansiyel doğru tahmin istatistiklerini hesapla (15-14-13-12-11) - henüz erken, comment out edildi
+        /*
         function calculatePotentialStats() {
             const potentialCounts = { 15: 0, 14: 0, 13: 0, 12: 0, 11: 0 };
             
@@ -2718,7 +2719,7 @@
                     else result = 0;
                     // match.no - 1 = predictions array'indeki index (çünkü maç numaraları 1'den başlar, array 0'dan)
                     return { matchNo: match.no, predictionIndex: match.no - 1, result: result };
-                }*/
+                }
                 return null;
             }).filter(item => item !== null);
             
@@ -2767,6 +2768,7 @@
             document.getElementById('potential12').textContent = `12: ${potentialCounts[12]}`;
             document.getElementById('potential11').textContent = `11: ${potentialCounts[11]}`;
         }
+        */
 
         // Kazanmayı beklediğimiz kuponu render et - henüz erken, comment out edildi
         /*function renderWinningCoupon() {
@@ -2837,6 +2839,7 @@
         }*/
 
         // Hedef 13 kuponlarını render et - henüz erken, comment out edildi
+        /*
         function renderTarget13Coupons() {
             const container = document.getElementById('target13CouponsContainer');
             const section = document.getElementById('target13Section');
