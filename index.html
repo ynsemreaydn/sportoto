@@ -436,6 +436,12 @@
             font-weight: 500;
         }
 
+        .perfect-coupons-meta.secondary {
+            background: linear-gradient(135deg, rgba(33, 150, 243, 0.15), rgba(76, 175, 80, 0.15));
+            margin-top: -10px;
+            font-size: 0.95em;
+        }
+
         .perfect-coupons-container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -1622,6 +1628,7 @@
         <div class="perfect-coupons-section" id="perfectCouponsSection">
             <h2>⭐ 15'e Giden Kuponlar ⭐</h2>
             <p class="perfect-coupons-meta" id="perfectCouponsMeta">Sonuçlanan maçlara göre uygun kuponlar hesaplanıyor...</p>
+            <p class="perfect-coupons-meta secondary" id="accuracySummary">Henüz tamamlanan maç yok.</p>
             <div class="perfect-coupons-container" id="perfectCouponsContainer"></div>
         </div>
 
@@ -1764,73 +1771,73 @@
                         "no": 3,
                         "date": "08.11.2025 17:00",
                         "teams": "Trabzonspor A.Ş.-Alanyaspor",
-                        "status": "",
-                        "homeScore": null,
-                        "awayScore": null
+                        "status": "FT",
+                        "homeScore": 1,
+                        "awayScore": 1
             },
             {
                         "no": 4,
                         "date": "08.11.2025 20:00",
                         "teams": "Antalyaspor-Beşiktaş A.Ş.",
-                        "status": "",
-                        "homeScore": null,
-                        "awayScore": null
+                        "status": "FT",
+                        "homeScore": 1,
+                        "awayScore": 3
             },
             {
                         "no": 5,
                         "date": "08.11.2025 20:00",
                         "teams": "Kasımpaşa A.Ş.-Göztepe A.Ş.",
-                        "status": "",
-                        "homeScore": null,
-                        "awayScore": null
+                        "status": "FT",
+                        "homeScore": 0,
+                        "awayScore": 2
             },
             {
                         "no": 6,
                         "date": "09.11.2025 14:30",
                         "teams": "Fatih Karagümrük-Konyaspor",
-                        "status": "",
-                        "homeScore": null,
-                        "awayScore": null
+                        "status": "FT",
+                        "homeScore": 2,
+                        "awayScore": 0
             },
             {
                         "no": 7,
                         "date": "09.11.2025 17:00",
                         "teams": "Kocaelispor-Galatasaray A.Ş.",
-                        "status": "",
-                        "homeScore": null,
-                        "awayScore": null
+                        "status": "FT",
+                        "homeScore": 1,
+                        "awayScore": 0
             },
             {
                         "no": 8,
                         "date": "09.11.2025 20:00",
                         "teams": "Fenerbahçe A.Ş.-Kayserispor",
-                        "status": "",
-                        "homeScore": null,
-                        "awayScore": null
+                        "status": "FT",
+                        "homeScore": 4,
+                        "awayScore": 2
             },
             {
                         "no": 9,
                         "date": "09.11.2025 20:00",
                         "teams": "Samsunspor A.Ş.-Eyüpspor",
-                        "status": "",
-                        "homeScore": null,
-                        "awayScore": null
+                        "status": "FT",
+                        "homeScore": 1,
+                        "awayScore": 0
             },
             {
                         "no": 10,
                         "date": "09.11.2025 15:30",
                         "teams": "Anderlecht-Club Brugge",
-                        "status": "",
-                        "homeScore": null,
-                        "awayScore": null
+                        "status": "FT",
+                        "homeScore": 1,
+                        "awayScore": 0
             },
             {
                         "no": 11,
                         "date": "08.11.2025 23:05",
                         "teams": "Monaco-RC Lens",
-                        "status": "",
-                        "homeScore": null,
-                        "awayScore": null
+                        "status": "FT",
+                        "homeScore": 4,
+                        "awayScore": 1
             },
             {
                         "no": 12,
@@ -1844,25 +1851,25 @@
                         "no": 13,
                         "date": "09.11.2025 19:30",
                         "teams": "Manchester City-Liverpool",
-                        "status": "",
-                        "homeScore": null,
-                        "awayScore": null
+                        "status": "FT",
+                        "homeScore": 3,
+                        "awayScore": 0
             },
             {
                         "no": 14,
                         "date": "08.11.2025 23:00",
                         "teams": "Espanyol-Villarreal",
-                        "status": "",
-                        "homeScore": null,
-                        "awayScore": null
+                        "status": "FT",
+                        "homeScore": 2,
+                        "awayScore": 0
             },
             {
                         "no": 15,
                         "date": "08.11.2025 20:00",
                         "teams": "Juventus-Torino",
-                        "status": "",
-                        "homeScore": null,
-                        "awayScore": null
+                        "status": "FT",
+                        "homeScore": 0,
+                        "awayScore": 0
             }
 ];
         function getFinishedMatchResults() {
@@ -2728,6 +2735,54 @@
                 `;
             }).join('');
         }
+        function updateAccuracySummary(finishedMatches) {
+            const summary = document.getElementById('accuracySummary');
+
+            if (!summary) {
+                return;
+            }
+
+            if (!finishedMatches.length) {
+                summary.textContent = 'Henüz tamamlanan maç yok. Kupon performansı hesaplanamıyor.';
+                return;
+            }
+
+            const counts = new Map();
+            let maxCorrect = 0;
+            let bestCoupons = [];
+
+            allCoupons.forEach(coupon => {
+                let correct = 0;
+
+                finishedMatches.forEach(ftMatch => {
+                    if (coupon.predictions[ftMatch.matchIndex] === ftMatch.result) {
+                        correct++;
+                    }
+                });
+
+                counts.set(correct, (counts.get(correct) || 0) + 1);
+
+                if (correct > maxCorrect) {
+                    maxCorrect = correct;
+                    bestCoupons = [coupon.rowNumber];
+                } else if (correct === maxCorrect) {
+                    bestCoupons.push(coupon.rowNumber);
+                }
+            });
+
+            const totalFinished = finishedMatches.length;
+            const previewList = bestCoupons.slice(0, 5).map(id => `#${id}`);
+            const preview = previewList.length ? previewList.join(', ') : 'Yok';
+            const extraCount = Math.max(bestCoupons.length - 5, 0);
+            const distributionEntries = [...counts.entries()]
+                .sort((a, b) => b[0] - a[0])
+                .slice(0, 6)
+                .map(([correct, count]) => `${correct}/${totalFinished}: ${count}`);
+            const distribution = distributionEntries.length ? distributionEntries.join(' • ') : 'Veri yok';
+
+            summary.innerHTML = `<strong>En çok bilen:</strong> ${maxCorrect}/${totalFinished} (${preview}${extraCount > 0 ? `, +${extraCount} kupon` : ''})<br><strong>Dağılım:</strong> ${distribution}`;
+        }
+
         function renderPerfectCoupons(limit = 24) {
             const section = document.getElementById('perfectCouponsSection');
             const container = document.getElementById('perfectCouponsContainer');
@@ -2740,6 +2795,7 @@
             if (allCoupons.length === 0) {
                 container.innerHTML = '';
                 meta.textContent = 'Kuponlar yükleniyor...';
+                updateAccuracySummary([]);
                 return;
             }
 
@@ -2751,6 +2807,7 @@
                 perfectCoupons = [];
                 container.innerHTML = '<p style="text-align:center; color: rgba(255,255,255,0.75);">Henüz sonuçlanan maç yok. İlk sonuç geldiğinde burada görüntülenecek.</p>';
                 meta.textContent = 'Henüz sonuçlanan maç yok. Kuponlar maç sonuçlarına göre otomatik güncellenecek.';
+                updateAccuracySummary(finishedMatches);
                 return;
             }
 
@@ -2758,7 +2815,13 @@
                 finishedMatches.every(item => coupon.predictions[item.matchIndex] === item.result)
             );
 
-            meta.textContent = `${finishedMatches.length} maç tamamlandı (${remainingMatches} maç kaldı). ${perfectCoupons.length} kupon hâlâ 15 hedefinde.`;
+            updateAccuracySummary(finishedMatches);
+
+            if (remainingMatches === 0) {
+                meta.textContent = `Tüm 15 maç tamamlandı. ${perfectCoupons.length} kupon 15 hedefinde kaldı.`;
+            } else {
+                meta.textContent = `${finishedMatches.length} maç tamamlandı (${remainingMatches} maç kaldı). ${perfectCoupons.length} kupon hâlâ 15 hedefinde.`;
+            }
 
             if (perfectCoupons.length === 0) {
                 container.innerHTML = '<p style="text-align:center; color: rgba(255,255,255,0.75);">Şu anda tüm tamamlanan maçları doğru tahmin eden kupon bulunamadı.</p>';
