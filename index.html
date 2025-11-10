@@ -24,6 +24,48 @@
             overflow-x: hidden;
         }
 
+        .shutdown-banner {
+            position: relative;
+            z-index: 1001;
+            background: linear-gradient(90deg, #8B0000, #FF4500, #8B0000);
+            color: #fff;
+            text-align: center;
+            padding: 18px 12px;
+            font-size: clamp(1.4em, 4vw, 2.4em);
+            font-weight: 900;
+            letter-spacing: 6px;
+            text-transform: uppercase;
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.35);
+            border-bottom: 4px solid rgba(255, 255, 255, 0.3);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .shutdown-banner .shutdown-icon {
+            font-size: 1.2em;
+            filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.6));
+            animation: iconPulse 1.5s ease-in-out infinite;
+        }
+
+        .shutdown-banner .shutdown-text {
+            text-shadow: 0 0 15px rgba(255, 69, 0, 0.8);
+        }
+
+        @keyframes iconPulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.2); opacity: 0.7; }
+        }
+
+        @media (max-width: 768px) {
+            .shutdown-banner {
+                letter-spacing: 3px;
+                padding: 14px 10px;
+                gap: 12px;
+            }
+        }
+
         @keyframes gradientShift {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
@@ -1496,6 +1538,12 @@
             " onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">Giriş Yap</button>
             <p id="lastUpdateDisplay" style="font-size: 0.9em; opacity: 0.8; margin-top: 10px; color: #FFD700;"></p>
         </div>
+    </div>
+
+    <div class="shutdown-banner">
+        <span class="shutdown-icon">⚠️</span>
+        <span class="shutdown-text">İFLAS ETTİK • SİTE KAPANDI</span>
+        <span class="shutdown-icon">⚠️</span>
     </div>
 
     <div class="container">
