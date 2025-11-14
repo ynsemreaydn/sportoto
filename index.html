@@ -66,6 +66,48 @@
             }
         }
 
+        /* GIF Carousel Styles */
+        .gif-carousel {
+            position: relative;
+            width: 100%;
+            height: 200px;
+            overflow: hidden;
+            background: rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 0;
+            z-index: 1000;
+        }
+
+        .gif-carousel-item {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .gif-carousel-item.active {
+            opacity: 1;
+        }
+
+        .gif-carousel-item img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            border-radius: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .gif-carousel {
+                height: 150px;
+            }
+        }
+
         @keyframes gradientShift {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
@@ -1546,6 +1588,43 @@
         </div>
     </div>
 
+    <!-- GIF Carousel -->
+    <div class="gif-carousel" id="gifCarousel">
+        <div class="gif-carousel-item active">
+            <img src="https://media1.tenor.com/m/Kf7h5nieOP8AAAAC/koksal-baba-hey-yavrum-hey.gif" alt="GIF 1">
+        </div>
+        <div class="gif-carousel-item">
+            <img src="https://media.tenor.com/Cab0Yy15IwsAAAAM/koksal-baba-burkanov.gif" alt="GIF 2">
+        </div>
+        <div class="gif-carousel-item">
+            <img src="https://media.tenor.com/ga1H-DvV8TMAAAAM/koksal-koksal-baba.gif" alt="GIF 3">
+        </div>
+        <div class="gif-carousel-item">
+            <img src="https://media.tenor.com/ypZPUYPiWzQAAAAM/koksal-koksalbaba.gif" alt="GIF 4">
+        </div>
+        <div class="gif-carousel-item">
+            <img src="https://media.tenor.com/9mxNxGg85_oAAAAM/koksal-babish.gif" alt="GIF 5">
+        </div>
+        <div class="gif-carousel-item">
+            <img src="https://media.tenor.com/EvZTjMeKB7AAAAAM/good-day.gif" alt="GIF 6">
+        </div>
+        <div class="gif-carousel-item">
+            <img src="https://media.tenor.com/a_8sW_BRVh8AAAAM/doge-dogecoin.gif" alt="GIF 7">
+        </div>
+        <div class="gif-carousel-item">
+            <img src="https://media.tenor.com/_G3e306GFoAAAAAM/koksal-koksal-baba.gif" alt="GIF 8">
+        </div>
+        <div class="gif-carousel-item">
+            <img src="https://media.tenor.com/gxp8vwijW6kAAAAM/working-cat.gif" alt="GIF 9">
+        </div>
+        <div class="gif-carousel-item">
+            <img src="https://media.tenor.com/hd2TnWZSlHMAAAAM/koksal-koksalbaba.gif" alt="GIF 10">
+        </div>
+        <div class="gif-carousel-item">
+            <img src="https://media.tenor.com/GD16I3XR7joAAAA1/komik-fotolar.webp" alt="GIF 11">
+        </div>
+    </div>
+
     <div class="shutdown-banner" id="topBanner">
         <span class="shutdown-icon">🔥</span>
         <span class="shutdown-text">Allah büyüktür. Fırtına ne kadar büyük olursa olsun, kökü sağlam ağacı yerinden söküp atamaz. Biz sabredecek ve safımızda sebât edeceğiz. Bu topraklar bizlere Peygamberimiz sallallahu aleyhi ve sellemin emanetidir.</span>
@@ -1925,7 +2004,7 @@
                         "homeScore": null,
                         "awayScore": null
             }
-        ];
+];
         function getFinishedMatchResults() {
             return matches
                 .map((match, index) => {
@@ -2924,7 +3003,7 @@
             "1,2,2,2,1,2,2,1,0,1,2,2,1,1,1",
             "1,0,2,2,1,2,2,1,1,0,0,1,2,1,1",
             "1,0,2,2,1,1,0,0,1,2,2,1,1,0,1",
-        ];
+];
 
         // Maç listesini render et
         function renderMatches() {
@@ -3823,6 +3902,32 @@
             document.getElementById('rowEnd').addEventListener('keypress', (e) => {
                 if (e.key === 'Enter') filterByRows();
             });
+        });
+
+        // GIF Carousel - Hızlı döngüsel geçiş
+        function initGifCarousel() {
+            const carousel = document.getElementById('gifCarousel');
+            if (!carousel) return;
+            
+            const items = carousel.querySelectorAll('.gif-carousel-item');
+            let currentIndex = 0;
+            
+            // İlk 2 saniyede bir geçiş yap (hızlı)
+            const changeInterval = setInterval(() => {
+                // Mevcut aktif öğeyi kaldır
+                items[currentIndex].classList.remove('active');
+                
+                // Sonraki öğeye geç
+                currentIndex = (currentIndex + 1) % items.length;
+                
+                // Yeni öğeyi aktif yap
+                items[currentIndex].classList.add('active');
+            }, 2000); // 2 saniyede bir geçiş
+        }
+
+        // Sayfa yüklendiğinde GIF carousel'i başlat
+        document.addEventListener('DOMContentLoaded', () => {
+            initGifCarousel();
         });
     </script>
 </body>
