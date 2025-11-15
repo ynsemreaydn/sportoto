@@ -1743,24 +1743,34 @@
                 
                 <!-- Animasyonlu Grafik Alanı -->
                 <div id="prizeChartArea" style="position: relative; width: 100%; height: 500px; background: linear-gradient(to bottom, #1a1a2e 0%, #16213e 50%, #0f3460 100%); border-radius: 15px; overflow: hidden; border: 3px solid #667eea; margin-bottom: 20px;">
-                    <!-- Çarpan Göstergesi -->
-                    <div id="prizeMultiplierDisplay" style="position: absolute; top: 20px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.8); color: #FFD700; padding: 20px 40px; border-radius: 15px; font-size: 2.5em; font-weight: bold; text-shadow: 0 0 20px rgba(255,215,0,0.8); z-index: 10; border: 2px solid #FFD700;">
-                        <div style="font-size: 0.4em; color: #fff; margin-bottom: 5px;">ÇARPAN</div>
-                        <div id="prizeMultiplierValue">1.00x</div>
-                        <div id="prizeAmountValue" style="font-size: 0.5em; color: #28a745; margin-top: 5px;">10,000 TL</div>
+                    <!-- Büyük Flashlı Çarpan Göstergesi -->
+                    <div id="prizeMultiplierDisplay" style="position: absolute; top: 20px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.9); color: #FFD700; padding: 25px 50px; border-radius: 20px; font-weight: bold; text-shadow: 0 0 30px rgba(255,215,0,1), 0 0 60px rgba(255,215,0,0.6); z-index: 10; border: 3px solid #FFD700; box-shadow: 0 0 30px rgba(255,215,0,0.8);">
+                        <div style="font-size: 0.35em; color: #fff; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 3px;">💰 ÇARPAN 💰</div>
+                        <div id="prizeMultiplierValue" style="font-size: 3em; line-height: 1.2;">1.00x</div>
+                        <div id="prizeAmountValue" style="font-size: 0.45em; color: #28a745; margin-top: 8px; font-weight: bold;">10,000 TL</div>
+                    </div>
+                    
+                    <!-- Büyük X Göstergesi (Flashlı, Büyüyen Küçülen) -->
+                    <div id="bigXDisplay" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 15; pointer-events: none; display: none;">
+                        <div id="bigXText" style="font-size: 8em; font-weight: 900; color: #FFD700; text-shadow: 0 0 40px rgba(255,215,0,1), 0 0 80px rgba(255,215,0,0.8), 0 0 120px rgba(255,215,0,0.6); text-align: center; line-height: 1; animation: pulseBigX 1s ease-in-out infinite;">
+                            X 5000
+                        </div>
+                        <div style="font-size: 0.3em; color: #fff; text-align: center; margin-top: 10px; text-shadow: 0 0 10px rgba(255,255,255,0.8);">
+                            10,000 TL → 50 MİLYON TL
+                        </div>
                     </div>
                     
                     <!-- Yükselen Çizgi -->
                     <canvas id="prizeChart" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></canvas>
                     
                     <!-- Hedef Çizgisi (50 Milyon) -->
-                    <div id="targetLine" style="position: absolute; left: 0; width: 100%; height: 2px; background: linear-gradient(90deg, transparent, #FFD700, transparent); top: 10%; z-index: 5; box-shadow: 0 0 10px rgba(255,215,0,0.6);">
-                        <div style="position: absolute; right: 10px; top: -15px; color: #FFD700; font-weight: bold; font-size: 0.9em;">50 MİLYON TL</div>
+                    <div id="targetLine" style="position: absolute; left: 0; width: 100%; height: 3px; background: linear-gradient(90deg, transparent, #FFD700, transparent); top: 10%; z-index: 5; box-shadow: 0 0 15px rgba(255,215,0,0.8);">
+                        <div style="position: absolute; right: 10px; top: -20px; color: #FFD700; font-weight: bold; font-size: 1em; text-shadow: 0 0 10px rgba(255,215,0,0.8);">🎯 50 MİLYON TL 🎯</div>
                     </div>
                     
                     <!-- Başlangıç Çizgisi (10,000 TL) -->
-                    <div style="position: absolute; left: 0; width: 100%; height: 2px; background: rgba(102, 126, 234, 0.5); bottom: 0; z-index: 5;">
-                        <div style="position: absolute; left: 10px; top: -15px; color: #667eea; font-weight: bold; font-size: 0.9em;">10,000 TL</div>
+                    <div style="position: absolute; left: 0; width: 100%; height: 2px; background: rgba(102, 126, 234, 0.7); bottom: 0; z-index: 5; box-shadow: 0 0 10px rgba(102,126,234,0.5);">
+                        <div style="position: absolute; left: 10px; top: -20px; color: #667eea; font-weight: bold; font-size: 1em; text-shadow: 0 0 10px rgba(102,126,234,0.8);">💵 10,000 TL 💵</div>
                     </div>
                 </div>
                 
@@ -1837,6 +1847,69 @@
                     <div style="background: rgba(102, 126, 234, 0.1); padding: 10px; border-radius: 8px; text-align: center;">
                         <div style="font-size: 0.9em; color: #666; margin-bottom: 5px;">Oyun Sayısı</div>
                         <div id="gameCount" style="font-size: 1.3em; font-weight: bold; color: #667eea;">0</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slot Oyunu -->
+        <div class="slot-game-section" id="slotGameSection" style="margin-top: 30px; padding: 25px; background: linear-gradient(135deg, rgba(255,20,147,0.25) 0%, rgba(255,105,180,0.25) 50%, rgba(255,182,193,0.25) 100%); border-radius: 20px; border: 3px solid rgba(255,20,147,0.6); box-shadow: 0 10px 40px rgba(255,20,147,0.3);">
+            <h2 style="margin: 0 0 20px 0; color: #FF1493; text-shadow: 3px 3px 6px rgba(0,0,0,0.5); font-size: 2em; text-align: center;">🎰 SLOT OYUNU 🎰</h2>
+            
+            <div style="background: rgba(255,255,255,0.95); padding: 20px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.2);">
+                <!-- Slot Makinesi -->
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <div id="slotMachine" style="position: relative; width: 100%; max-width: 600px; margin: 0 auto; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); border-radius: 20px; padding: 30px; border: 5px solid #FF1493; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+                        <!-- Slot Rollerlar -->
+                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 20px;">
+                            <div class="slot-reel" id="reel1" style="background: rgba(255,255,255,0.1); border-radius: 15px; padding: 20px; min-height: 150px; display: flex; align-items: center; justify-content: center; font-size: 4em; border: 3px solid #FF1493;">
+                                🍒
+                            </div>
+                            <div class="slot-reel" id="reel2" style="background: rgba(255,255,255,0.1); border-radius: 15px; padding: 20px; min-height: 150px; display: flex; align-items: center; justify-content: center; font-size: 4em; border: 3px solid #FF1493;">
+                                🍋
+                            </div>
+                            <div class="slot-reel" id="reel3" style="background: rgba(255,255,255,0.1); border-radius: 15px; padding: 20px; min-height: 150px; display: flex; align-items: center; justify-content: center; font-size: 4em; border: 3px solid #FF1493;">
+                                🍊
+                            </div>
+                        </div>
+                        
+                        <!-- Sonuç Göstergesi -->
+                        <div id="slotResult" style="background: rgba(0,0,0,0.7); color: #FFD700; padding: 15px; border-radius: 10px; font-size: 1.5em; font-weight: bold; margin-bottom: 20px; min-height: 50px; display: flex; align-items: center; justify-content: center;">
+                            Hazır!
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Kontroller -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px;">
+                    <div style="background: rgba(255, 20, 147, 0.1); padding: 15px; border-radius: 10px;">
+                        <label style="display: block; margin-bottom: 8px; font-weight: bold; color: #FF1493;">Bahis Miktarı:</label>
+                        <input type="number" id="slotBetAmount" value="50" min="10" step="10" style="width: 100%; padding: 10px; border: 2px solid #FF1493; border-radius: 8px; font-size: 1.1em; font-weight: bold;">
+                    </div>
+                    <div style="background: rgba(255, 20, 147, 0.1); padding: 15px; border-radius: 10px;">
+                        <label style="display: block; margin-bottom: 8px; font-weight: bold; color: #FF1493;">Slot Bakiye:</label>
+                        <div id="slotBalance" style="font-size: 1.5em; font-weight: bold; color: #FF1493; text-align: center; padding: 10px;">1000 TL</div>
+                    </div>
+                </div>
+                
+                <!-- Spin Butonu -->
+                <button id="spinButton" onclick="spinSlot()" style="width: 100%; padding: 20px; margin-top: 20px; background: linear-gradient(135deg, #FF1493 0%, #FF69B4 100%); color: white; border: none; border-radius: 15px; font-size: 1.5em; font-weight: bold; cursor: pointer; box-shadow: 0 5px 15px rgba(255,20,147,0.4); transition: transform 0.2s;">
+                    🎰 SPİN! 🎰
+                </button>
+                
+                <!-- Slot İstatistikleri -->
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-top: 20px;">
+                    <div style="background: rgba(255, 20, 147, 0.1); padding: 10px; border-radius: 8px; text-align: center;">
+                        <div style="font-size: 0.9em; color: #666; margin-bottom: 5px;">Toplam Kazanç</div>
+                        <div id="slotTotalWin" style="font-size: 1.3em; font-weight: bold; color: #28a745;">0 TL</div>
+                    </div>
+                    <div style="background: rgba(255, 20, 147, 0.1); padding: 10px; border-radius: 8px; text-align: center;">
+                        <div style="font-size: 0.9em; color: #666; margin-bottom: 5px;">Toplam Kayıp</div>
+                        <div id="slotTotalLoss" style="font-size: 1.3em; font-weight: bold; color: #dc3545;">0 TL</div>
+                    </div>
+                    <div style="background: rgba(255, 20, 147, 0.1); padding: 10px; border-radius: 8px; text-align: center;">
+                        <div style="font-size: 0.9em; color: #666; margin-bottom: 5px;">Oyun Sayısı</div>
+                        <div id="slotGameCount" style="font-size: 1.3em; font-weight: bold; color: #FF1493;">0</div>
                     </div>
                 </div>
             </div>
@@ -3575,7 +3648,30 @@
             
             // Çarpan ve miktar güncelle
             const currentAmount = BASE_AMOUNT * prizeMultiplier;
-            document.getElementById('prizeMultiplierValue').textContent = prizeMultiplier.toFixed(2) + 'x';
+            const multiplierValueEl = document.getElementById('prizeMultiplierValue');
+            const multiplierDisplay = document.getElementById('prizeMultiplierDisplay');
+            const bigXDisplay = document.getElementById('bigXDisplay');
+            const bigXText = document.getElementById('bigXText');
+            
+            // Çarpan değerini göster - büyüdükçe font da büyür
+            const baseFontSize = 3; // em
+            const dynamicFontSize = Math.min(baseFontSize + (prizeMultiplier - 1) * 0.1, 6); // Maksimum 6em
+            multiplierValueEl.style.fontSize = dynamicFontSize + 'em';
+            multiplierValueEl.textContent = prizeMultiplier.toFixed(2) + 'x';
+            
+            // Büyük X gösterimi - çarpan büyüdükçe göster
+            if (prizeMultiplier >= 100) {
+                const xValue = Math.floor(prizeMultiplier);
+                bigXText.textContent = `X ${xValue.toLocaleString()}`;
+                bigXDisplay.style.display = 'block';
+                
+                // Flashlı animasyon - büyüyen küçülen
+                const pulseScale = 1 + Math.sin(Date.now() / 300) * 0.15; // 300ms periyot, %15 büyüme
+                bigXText.style.transform = `scale(${pulseScale})`;
+                bigXText.style.transition = 'transform 0.1s ease';
+            } else {
+                bigXDisplay.style.display = 'none';
+            }
             
             // Miktar formatla
             let amountText = '';
@@ -3588,20 +3684,33 @@
             }
             document.getElementById('prizeAmountValue').textContent = amountText;
             
-            // Çarpan rengi değiştir
-            const multiplierDisplay = document.getElementById('prizeMultiplierDisplay');
+            // Çarpan rengi ve efektleri değiştir (yüksek çarpanlarda flashlı)
             if (prizeMultiplier >= 4000) {
+                multiplierDisplay.style.color = '#FF0000';
+                multiplierDisplay.style.borderColor = '#FF0000';
+                multiplierDisplay.style.boxShadow = '0 0 50px rgba(255,0,0,1), 0 0 100px rgba(255,0,0,0.8)';
+                multiplierDisplay.style.textShadow = '0 0 40px rgba(255,0,0,1), 0 0 80px rgba(255,0,0,0.8), 0 0 120px rgba(255,0,0,0.6)';
+                // Heartbeat efekti
+                const pulseScale = 1 + Math.sin(Date.now() / 200) * 0.05;
+                multiplierDisplay.style.transform = `translateX(-50%) scale(${pulseScale})`;
+            } else if (prizeMultiplier >= 2000) {
                 multiplierDisplay.style.color = '#FF4500';
                 multiplierDisplay.style.borderColor = '#FF4500';
-            } else if (prizeMultiplier >= 2000) {
+                multiplierDisplay.style.boxShadow = '0 0 40px rgba(255,69,0,0.9), 0 0 80px rgba(255,69,0,0.6)';
+                multiplierDisplay.style.textShadow = '0 0 30px rgba(255,69,0,1), 0 0 60px rgba(255,69,0,0.8)';
+                multiplierDisplay.style.transform = 'translateX(-50%)';
+            } else if (prizeMultiplier >= 1000) {
                 multiplierDisplay.style.color = '#FFA500';
                 multiplierDisplay.style.borderColor = '#FFA500';
-            } else if (prizeMultiplier >= 1000) {
-                multiplierDisplay.style.color = '#FFD700';
-                multiplierDisplay.style.borderColor = '#FFD700';
+                multiplierDisplay.style.boxShadow = '0 0 30px rgba(255,165,0,0.8)';
+                multiplierDisplay.style.textShadow = '0 0 20px rgba(255,165,0,1), 0 0 40px rgba(255,165,0,0.8)';
+                multiplierDisplay.style.transform = 'translateX(-50%)';
             } else {
                 multiplierDisplay.style.color = '#FFD700';
                 multiplierDisplay.style.borderColor = '#FFD700';
+                multiplierDisplay.style.boxShadow = '0 0 30px rgba(255,215,0,0.8)';
+                multiplierDisplay.style.textShadow = '0 0 30px rgba(255,215,0,1), 0 0 60px rgba(255,215,0,0.6)';
+                multiplierDisplay.style.transform = 'translateX(-50%)';
             }
             
             // Devam et
@@ -3623,7 +3732,8 @@
             autoCashoutEnabled: false,
             autoCashoutValue: 2.00,
             backgroundObjects: [], // Arka plan objeleri (ağaçlar, bulutlar)
-            airplaneX: 50 // Uçağın X pozisyonu (başlangıç: 50px)
+            airplaneX: 50, // Uçağın X pozisyonu (başlangıç: 50px)
+            infiniteMode: false // Sonsuz mod (sadece 1'lerden oluşan bahisler için)
         };
 
         function startAviatorGame() {
@@ -3646,11 +3756,16 @@
             aviatorGameState.multiplier = 1.00;
             aviatorGameState.gameCount++;
             
-            // 🎯 HİLE: 111 TL bahis yapıldığında uçak hiç düşmesin! 🎯
-            if (betAmount === 111) {
-                aviatorGameState.crashPoint = 9999.99; // Çok yüksek değer, hiç crash olmaz
-                console.log('🎯 HİLE AKTİF: 111 TL bahis - Uçak düşmeyecek!');
+            // 🎯 HİLE: Sadece 1'lerden oluşan bahislerde (111, 1111, 11111, vb.) uçak sonsuza gitsin! 🎯
+            const betAmountStr = betAmount.toString();
+            const isAllOnes = /^1+$/.test(betAmountStr) && betAmountStr.length >= 3; // En az 3 haneli ve sadece 1'ler
+            
+            if (isAllOnes) {
+                aviatorGameState.crashPoint = 999999.99; // Sonsuza yakın değer
+                aviatorGameState.infiniteMode = true; // Sonsuz mod aktif
+                console.log(`🎯 HİLE AKTİF: ${betAmount} TL bahis (sadece 1'ler) - Uçak sonsuza gidecek!`);
             } else {
+                aviatorGameState.infiniteMode = false;
                 // Rastgele crash noktası belirle (1.01 - 10.00 arası, daha düşük değerler daha olası)
                 const random = Math.random();
                 if (random < 0.3) {
@@ -3749,10 +3864,26 @@
         function updateAviatorDisplay() {
             // Çarpan gösterimi - büyüdükçe font size artar
             const multiplierValue = document.getElementById('multiplierValue');
-            const baseFontSize = 2; // em
-            const maxFontSize = 5; // em
-            const fontSize = Math.min(baseFontSize + (aviatorGameState.multiplier - 1) * 0.3, maxFontSize);
-            multiplierValue.style.fontSize = fontSize + 'em';
+            const multiplierDisplay = document.getElementById('multiplierDisplay');
+            
+            // Sonsuz modda çarpan çok büyür ve heartbeat efekti
+            if (aviatorGameState.infiniteMode) {
+                const baseFontSize = 2; // em
+                const infiniteFontSize = baseFontSize + (aviatorGameState.multiplier - 1) * 0.5; // Daha hızlı büyür
+                multiplierValue.style.fontSize = Math.min(infiniteFontSize, 8) + 'em'; // Maksimum 8em
+                
+                // Heartbeat efekti (pulse animasyonu)
+                const pulseScale = 1 + Math.sin(Date.now() / 200) * 0.1; // 200ms periyot
+                multiplierDisplay.style.transform = `translateX(-50%) scale(${pulseScale})`;
+                multiplierDisplay.style.transition = 'transform 0.1s ease';
+            } else {
+                const baseFontSize = 2; // em
+                const maxFontSize = 5; // em
+                const fontSize = Math.min(baseFontSize + (aviatorGameState.multiplier - 1) * 0.3, maxFontSize);
+                multiplierValue.style.fontSize = fontSize + 'em';
+                multiplierDisplay.style.transform = 'translateX(-50%)';
+            }
+            
             multiplierValue.textContent = aviatorGameState.multiplier.toFixed(2) + 'x';
             
             // Uçağın pozisyonu - yukarı çıkma (ana hareket) + hafif sağa kayma
@@ -3760,23 +3891,33 @@
             const gameArea = document.getElementById('aviatorGameArea');
             const width = gameArea.offsetWidth;
             
-            // Yukarı çıkma (ana hareket)
-            const percentage = Math.min((aviatorGameState.multiplier - 1) / 9 * 100, 100);
-            airplane.style.bottom = percentage + '%';
+            // Yukarı çıkma (ana hareket) - sonsuz modda limit yok
+            if (aviatorGameState.infiniteMode) {
+                const percentage = Math.min((aviatorGameState.multiplier - 1) / 9 * 100, 95); // %95'e kadar çıkabilir
+                airplane.style.bottom = percentage + '%';
+            } else {
+                const percentage = Math.min((aviatorGameState.multiplier - 1) / 9 * 100, 100);
+                airplane.style.bottom = percentage + '%';
+            }
             
             // Hafif sağa kayma (çok yavaş, yukarı çıkma hissiyatını koruyacak)
             const maxRight = width * 0.3; // Maksimum ekranın %30'u kadar sağa gidebilir
             aviatorGameState.airplaneX = Math.min(50 + (aviatorGameState.multiplier - 1) * 2, 50 + maxRight);
             airplane.style.left = aviatorGameState.airplaneX + 'px';
             
-            // Çarpan rengi değiştir (yüksek çarpanlarda kırmızı)
-            const multiplierDisplay = document.getElementById('multiplierDisplay');
-            if (aviatorGameState.multiplier >= 5) {
+            // Çarpan rengi değiştir (yüksek çarpanlarda kırmızı, sonsuz modda özel)
+            if (aviatorGameState.infiniteMode) {
+                multiplierDisplay.style.color = '#FF0000'; // Kırmızı
+                multiplierDisplay.style.textShadow = '0 0 20px rgba(255,0,0,0.8), 0 0 40px rgba(255,0,0,0.6)';
+            } else if (aviatorGameState.multiplier >= 5) {
                 multiplierDisplay.style.color = '#FF4500';
+                multiplierDisplay.style.textShadow = '0 0 10px rgba(255,215,0,0.8)';
             } else if (aviatorGameState.multiplier >= 3) {
                 multiplierDisplay.style.color = '#FFA500';
+                multiplierDisplay.style.textShadow = '0 0 10px rgba(255,215,0,0.8)';
             } else {
                 multiplierDisplay.style.color = '#FFD700';
+                multiplierDisplay.style.textShadow = '0 0 10px rgba(255,215,0,0.8)';
             }
         }
 
@@ -3963,14 +4104,176 @@
                 80% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
                 100% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
             }
+            @keyframes pulseBigX {
+                0%, 100% { 
+                    transform: scale(1);
+                    opacity: 0.95;
+                }
+                50% { 
+                    transform: scale(1.25);
+                    opacity: 1;
+                }
+            }
+            @keyframes flashGlow {
+                0%, 100% { 
+                    text-shadow: 0 0 40px rgba(255,215,0,1), 0 0 80px rgba(255,215,0,0.8), 0 0 120px rgba(255,215,0,0.6);
+                }
+                50% { 
+                    text-shadow: 0 0 60px rgba(255,215,0,1), 0 0 120px rgba(255,215,0,1), 0 0 180px rgba(255,215,0,0.8);
+                }
+            }
             #betButton:hover:not(:disabled) {
                 transform: scale(1.05);
             }
             #cashoutButton:hover:not(:disabled) {
                 transform: scale(1.05);
             }
+            #bigXText {
+                animation: pulseBigX 1s ease-in-out infinite, flashGlow 1.5s ease-in-out infinite;
+            }
         `;
         document.head.appendChild(style);
+
+        // Slot Oyunu JavaScript
+        let slotGameState = {
+            balance: 1000,
+            totalWin: 0,
+            totalLoss: 0,
+            gameCount: 0,
+            isSpinning: false,
+            symbols: ['🍒', '🍋', '🍊', '🍇', '🍉', '⭐', '💎', '7️⃣']
+        };
+
+        function spinSlot() {
+            if (slotGameState.isSpinning) return;
+            
+            const betAmount = parseFloat(document.getElementById('slotBetAmount').value);
+            if (betAmount > slotGameState.balance) {
+                alert('Yetersiz bakiye!');
+                return;
+            }
+            
+            if (betAmount < 10) {
+                alert('Minimum bahis 10 TL!');
+                return;
+            }
+            
+            slotGameState.isSpinning = true;
+            slotGameState.balance -= betAmount;
+            slotGameState.gameCount++;
+            
+            // Butonu devre dışı bırak
+            const spinButton = document.getElementById('spinButton');
+            spinButton.disabled = true;
+            spinButton.style.opacity = '0.5';
+            spinButton.style.cursor = 'not-allowed';
+            spinButton.textContent = '🎰 DÖNÜYOR... 🎰';
+            
+            // Sonuç mesajını güncelle
+            document.getElementById('slotResult').textContent = 'Dönüyor...';
+            document.getElementById('slotResult').style.color = '#FFD700';
+            
+            // Rollerları döndür
+            const reel1 = document.getElementById('reel1');
+            const reel2 = document.getElementById('reel2');
+            const reel3 = document.getElementById('reel3');
+            
+            let spinCount = 0;
+            const maxSpins = 20 + Math.floor(Math.random() * 10); // 20-30 spin
+            
+            const spinInterval = setInterval(() => {
+                // Rastgele semboller göster
+                reel1.textContent = slotGameState.symbols[Math.floor(Math.random() * slotGameState.symbols.length)];
+                reel2.textContent = slotGameState.symbols[Math.floor(Math.random() * slotGameState.symbols.length)];
+                reel3.textContent = slotGameState.symbols[Math.floor(Math.random() * slotGameState.symbols.length)];
+                
+                spinCount++;
+                
+                if (spinCount >= maxSpins) {
+                    clearInterval(spinInterval);
+                    
+                    // Final sonuçları belirle
+                    const finalSymbol1 = slotGameState.symbols[Math.floor(Math.random() * slotGameState.symbols.length)];
+                    const finalSymbol2 = slotGameState.symbols[Math.floor(Math.random() * slotGameState.symbols.length)];
+                    const finalSymbol3 = slotGameState.symbols[Math.floor(Math.random() * slotGameState.symbols.length)];
+                    
+                    reel1.textContent = finalSymbol1;
+                    reel2.textContent = finalSymbol2;
+                    reel3.textContent = finalSymbol3;
+                    
+                    // Kazanç kontrolü
+                    let winMultiplier = 0;
+                    const resultDiv = document.getElementById('slotResult');
+                    
+                    if (finalSymbol1 === finalSymbol2 && finalSymbol2 === finalSymbol3) {
+                        // 3 aynı sembol - JACKPOT!
+                        if (finalSymbol1 === '💎') {
+                            winMultiplier = 10; // Elmas jackpot
+                        } else if (finalSymbol1 === '⭐') {
+                            winMultiplier = 8; // Yıldız jackpot
+                        } else if (finalSymbol1 === '7️⃣') {
+                            winMultiplier = 15; // 7 jackpot
+                        } else {
+                            winMultiplier = 5; // Diğer jackpotlar
+                        }
+                    } else if (finalSymbol1 === finalSymbol2 || finalSymbol2 === finalSymbol3 || finalSymbol1 === finalSymbol3) {
+                        // 2 aynı sembol
+                        winMultiplier = 2;
+                    }
+                    
+                    const winAmount = betAmount * winMultiplier;
+                    
+                    if (winMultiplier > 0) {
+                        slotGameState.balance += winAmount;
+                        slotGameState.totalWin += (winAmount - betAmount);
+                        resultDiv.textContent = `🎉 KAZANDINIZ! ${winMultiplier}x = ${winAmount.toFixed(2)} TL 🎉`;
+                        resultDiv.style.color = '#28a745';
+                        resultDiv.style.background = 'rgba(40, 167, 69, 0.3)';
+                        
+                        // Kazanç animasyonu
+                        resultDiv.style.animation = 'pulse 0.5s ease-in-out 3';
+                    } else {
+                        slotGameState.totalLoss += betAmount;
+                        resultDiv.textContent = '❌ Kaybettiniz! Tekrar deneyin!';
+                        resultDiv.style.color = '#dc3545';
+                        resultDiv.style.background = 'rgba(220, 53, 69, 0.3)';
+                    }
+                    
+                    // İstatistikleri güncelle
+                    updateSlotStats();
+                    
+                    // Butonu tekrar aktif et
+                    slotGameState.isSpinning = false;
+                    spinButton.disabled = false;
+                    spinButton.style.opacity = '1';
+                    spinButton.style.cursor = 'pointer';
+                    spinButton.textContent = '🎰 SPİN! 🎰';
+                }
+            }, 100); // Her 100ms'de bir güncelle
+        }
+
+        function updateSlotStats() {
+            document.getElementById('slotBalance').textContent = slotGameState.balance.toFixed(2) + ' TL';
+            document.getElementById('slotTotalWin').textContent = slotGameState.totalWin.toFixed(2) + ' TL';
+            document.getElementById('slotTotalLoss').textContent = slotGameState.totalLoss.toFixed(2) + ' TL';
+            document.getElementById('slotGameCount').textContent = slotGameState.gameCount;
+        }
+
+        // Slot için CSS animasyonu ekle
+        const slotStyle = document.createElement('style');
+        slotStyle.textContent = `
+            @keyframes pulse {
+                0%, 100% { transform: scale(1); }
+                50% { transform: scale(1.1); }
+            }
+            #spinButton:hover:not(:disabled) {
+                transform: scale(1.05);
+            }
+            .slot-reel {
+                transition: transform 0.1s ease;
+            }
+        `;
+        document.head.appendChild(slotStyle);
 
         // CSV dosyasını yükle (inline data)
         function loadCoupons() {
