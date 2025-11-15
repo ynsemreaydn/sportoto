@@ -1779,7 +1779,7 @@
                         <canvas id="aviatorBackgroundCanvas" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1;"></canvas>
                         
                         <!-- Uçak -->
-                        <div id="airplane" style="position: absolute; left: 50px; bottom: 0; font-size: 60px; transform: translateX(-50%); z-index: 10; transition: none;">✈️</div>
+                        <div id="airplane" style="position: absolute; left: 50px; bottom: 0; font-size: 60px; transform: translateX(-50%); z-index: 10; transition: bottom 0.1s linear;">✈️</div>
                         
                         <!-- Çarpan Göstergesi -->
                         <div id="multiplierDisplay" style="position: absolute; top: 20px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.7); color: #FFD700; padding: 15px 30px; border-radius: 10px; font-weight: bold; text-shadow: 0 0 10px rgba(255,215,0,0.8); z-index: 20; transition: font-size 0.1s ease;">
@@ -3622,11 +3622,8 @@
             recentMultipliers: [],
             autoCashoutEnabled: false,
             autoCashoutValue: 2.00,
-            airplaneX: 50, // Uçağın X pozisyonu (pixel)
-            airplaneY: 0, // Uçağın Y pozisyonu (pixel)
-            scrollOffset: 0, // Ekran kaydırma offset'i
-            trailPoints: [], // Trail noktaları
-            backgroundObjects: [] // Arka plan objeleri (ağaçlar, bulutlar)
+            backgroundObjects: [], // Arka plan objeleri (ağaçlar, bulutlar)
+            airplaneX: 50 // Uçağın X pozisyonu (başlangıç: 50px)
         };
 
         function startAviatorGame() {
@@ -3685,11 +3682,8 @@
             // Çıkış çizgisini göster
             document.getElementById('cashoutLine').style.display = 'none';
             
-            // Oyun durumunu sıfırla
+            // Uçağın pozisyonunu sıfırla
             aviatorGameState.airplaneX = 50;
-            aviatorGameState.airplaneY = 0;
-            aviatorGameState.scrollOffset = 0;
-            aviatorGameState.trailPoints = [];
             
             // Arka plan objelerini oluştur
             initializeBackgroundObjects();
@@ -3732,34 +3726,6 @@
             const speed = Math.min(0.01 + (aviatorGameState.multiplier - 1) * 0.001, 0.05);
             aviatorGameState.multiplier += speed;
             
-            // Uçağın Y pozisyonunu güncelle (yukarı)
-            const gameArea = document.getElementById('aviatorGameArea');
-            const height = gameArea.offsetHeight;
-            const percentage = Math.min((aviatorGameState.multiplier - 1) / 9 * 100, 100);
-            aviatorGameState.airplaneY = height - (percentage / 100) * height;
-            
-            // Uçağın X pozisyonunu güncelle (sağa)
-            const width = gameArea.offsetWidth;
-            const maxX = width - 100; // Sağ kenara çok yaklaşmasın
-            aviatorGameState.airplaneX = Math.min(50 + (aviatorGameState.multiplier - 1) * 15, maxX);
-            
-            // Ekran kaydırma (scroll offset)
-            if (aviatorGameState.airplaneX > width * 0.6) {
-                aviatorGameState.scrollOffset += (aviatorGameState.airplaneX - width * 0.6) * 0.1;
-            }
-            
-            // Trail noktası ekle
-            aviatorGameState.trailPoints.push({
-                x: aviatorGameState.airplaneX,
-                y: aviatorGameState.airplaneY,
-                multiplier: aviatorGameState.multiplier
-            });
-            
-            // Eski trail noktalarını temizle (son 50 nokta)
-            if (aviatorGameState.trailPoints.length > 50) {
-                aviatorGameState.trailPoints.shift();
-            }
-            
             // Crash kontrolü
             if (aviatorGameState.multiplier >= aviatorGameState.crashPoint) {
                 crashAviator();
@@ -3789,11 +3755,19 @@
             multiplierValue.style.fontSize = fontSize + 'em';
             multiplierValue.textContent = aviatorGameState.multiplier.toFixed(2) + 'x';
             
-            // Uçağın pozisyonu (X ve Y)
+            // Uçağın pozisyonu - yukarı çıkma (ana hareket) + hafif sağa kayma
             const airplane = document.getElementById('airplane');
+            const gameArea = document.getElementById('aviatorGameArea');
+            const width = gameArea.offsetWidth;
+            
+            // Yukarı çıkma (ana hareket)
+            const percentage = Math.min((aviatorGameState.multiplier - 1) / 9 * 100, 100);
+            airplane.style.bottom = percentage + '%';
+            
+            // Hafif sağa kayma (çok yavaş, yukarı çıkma hissiyatını koruyacak)
+            const maxRight = width * 0.3; // Maksimum ekranın %30'u kadar sağa gidebilir
+            aviatorGameState.airplaneX = Math.min(50 + (aviatorGameState.multiplier - 1) * 2, 50 + maxRight);
             airplane.style.left = aviatorGameState.airplaneX + 'px';
-            airplane.style.bottom = (aviatorGameState.airplaneY) + 'px';
-            airplane.style.transform = 'translateX(-50%)';
             
             // Çarpan rengi değiştir (yüksek çarpanlarda kırmızı)
             const multiplierDisplay = document.getElementById('multiplierDisplay');
@@ -3817,32 +3791,9 @@
             // Canvas'ı temizle
             ctx.clearRect(0, 0, width, height);
             
-            // Trail çizgisi çiz (uçağın arkasında)
-            if (aviatorGameState.trailPoints.length > 1) {
-                ctx.strokeStyle = '#FFD700';
-                ctx.lineWidth = 3;
-                ctx.shadowBlur = 10;
-                ctx.shadowColor = '#FFD700';
-                ctx.beginPath();
-                
-                aviatorGameState.trailPoints.forEach((point, index) => {
-                    const x = point.x - aviatorGameState.scrollOffset;
-                    const y = height - point.y;
-                    
-                    if (index === 0) {
-                        ctx.moveTo(x, y);
-                    } else {
-                        ctx.lineTo(x, y);
-                    }
-                });
-                
-                ctx.stroke();
-                ctx.shadowBlur = 0;
-            }
-            
             // Arka plan objelerini çiz (ağaçlar, bulutlar)
             aviatorGameState.backgroundObjects.forEach(obj => {
-                const x = obj.x - aviatorGameState.scrollOffset;
+                const x = obj.x;
                 
                 // Sadece görünür alandaki objeleri çiz
                 if (x > -100 && x < width + 100) {
@@ -3948,9 +3899,6 @@
                 airplane.style.left = '50px';
                 aviatorGameState.multiplier = 1.00;
                 aviatorGameState.airplaneX = 50;
-                aviatorGameState.airplaneY = 0;
-                aviatorGameState.scrollOffset = 0;
-                aviatorGameState.trailPoints = [];
                 document.getElementById('multiplierValue').textContent = '1.00x';
                 document.getElementById('multiplierValue').style.fontSize = '2em';
                 document.getElementById('multiplierDisplay').style.color = '#FFD700';
