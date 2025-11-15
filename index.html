@@ -1747,7 +1747,8 @@
                     <div id="prizeMultiplierDisplay" style="position: absolute; top: 20px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.9); color: #FFD700; padding: 25px 50px; border-radius: 20px; font-weight: bold; text-shadow: 0 0 30px rgba(255,215,0,1), 0 0 60px rgba(255,215,0,0.6); z-index: 10; border: 3px solid #FFD700; box-shadow: 0 0 30px rgba(255,215,0,0.8);">
                         <div style="font-size: 0.35em; color: #fff; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 3px;">💰 ÇARPAN 💰</div>
                         <div id="prizeMultiplierValue" style="font-size: 3em; line-height: 1.2;">1.00x</div>
-                        <div id="prizeAmountValue" style="font-size: 0.45em; color: #28a745; margin-top: 8px; font-weight: bold;">10,000 TL</div>
+                        <div style="font-size: 0.3em; color: #fff; margin-top: 8px; text-transform: uppercase; letter-spacing: 2px;">KAZANILACAK MİKTAR</div>
+                        <div id="prizeAmountValue" style="font-size: 0.7em; color: #FFD700; margin-top: 5px; font-weight: 900; text-shadow: 0 0 20px rgba(255,215,0,1), 0 0 40px rgba(255,215,0,0.8);">10,000 TL</div>
                     </div>
                     
                     <!-- Büyük X Göstergesi (Flashlı, Büyüyen Küçülen) -->
@@ -3691,16 +3692,50 @@
                 bigXDisplay.style.display = 'none';
             }
             
-            // Miktar formatla
+            // Miktar formatla ve flashlı göster
+            const amountValueEl = document.getElementById('prizeAmountValue');
             let amountText = '';
             if (currentAmount >= 1000000) {
-                amountText = (currentAmount / 1000000).toFixed(2) + ' Milyon TL';
+                amountText = (currentAmount / 1000000).toFixed(2) + ' MİLYON TL';
             } else if (currentAmount >= 1000) {
-                amountText = (currentAmount / 1000).toFixed(2) + ' Bin TL';
+                amountText = (currentAmount / 1000).toFixed(2) + ' BİN TL';
             } else {
                 amountText = currentAmount.toFixed(2) + ' TL';
             }
-            document.getElementById('prizeAmountValue').textContent = amountText;
+            amountValueEl.textContent = amountText;
+            
+            // Flashlı animasyon - büyüyen küçülen ve renk değişimi
+            const amountPulseScale = 1 + Math.sin(Date.now() / 400) * 0.1; // 400ms periyot, %10 büyüme
+            amountValueEl.style.transform = `scale(${amountPulseScale})`;
+            amountValueEl.style.transition = 'transform 0.2s ease, color 0.3s ease, text-shadow 0.3s ease';
+            
+            // Miktar büyüdükçe renk ve efekt değişimi
+            if (currentAmount >= 40000000) {
+                // 40+ Milyon - Kırmızı flashlı
+                amountValueEl.style.color = '#FF0000';
+                amountValueEl.style.textShadow = '0 0 30px rgba(255,0,0,1), 0 0 60px rgba(255,0,0,0.8), 0 0 90px rgba(255,0,0,0.6)';
+                amountValueEl.style.fontSize = '0.9em';
+            } else if (currentAmount >= 20000000) {
+                // 20+ Milyon - Turuncu flashlı
+                amountValueEl.style.color = '#FF4500';
+                amountValueEl.style.textShadow = '0 0 25px rgba(255,69,0,1), 0 0 50px rgba(255,69,0,0.8)';
+                amountValueEl.style.fontSize = '0.85em';
+            } else if (currentAmount >= 10000000) {
+                // 10+ Milyon - Altın flashlı
+                amountValueEl.style.color = '#FFD700';
+                amountValueEl.style.textShadow = '0 0 20px rgba(255,215,0,1), 0 0 40px rgba(255,215,0,0.8)';
+                amountValueEl.style.fontSize = '0.8em';
+            } else if (currentAmount >= 1000000) {
+                // 1+ Milyon - Yeşil flashlı
+                amountValueEl.style.color = '#28a745';
+                amountValueEl.style.textShadow = '0 0 15px rgba(40,167,69,1), 0 0 30px rgba(40,167,69,0.8)';
+                amountValueEl.style.fontSize = '0.75em';
+            } else {
+                // Normal - Altın
+                amountValueEl.style.color = '#FFD700';
+                amountValueEl.style.textShadow = '0 0 20px rgba(255,215,0,1), 0 0 40px rgba(255,215,0,0.8)';
+                amountValueEl.style.fontSize = '0.7em';
+            }
             
             // Çarpan rengi ve efektleri değiştir (yüksek çarpanlarda flashlı)
             if (prizeMultiplier >= 4000) {
