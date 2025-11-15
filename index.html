@@ -1934,6 +1934,64 @@
             </div>
         </div>
 
+        <!-- OCI'ye Özel F1 Yarış Oyunu -->
+        <div class="f1-game-section" id="f1GameSection" style="margin-top: 30px; padding: 25px; background: linear-gradient(135deg, rgba(255,0,0,0.25) 0%, rgba(255,140,0,0.25) 50%, rgba(255,215,0,0.25) 100%); border-radius: 20px; border: 3px solid rgba(255,0,0,0.6); box-shadow: 0 10px 40px rgba(255,0,0,0.3);">
+            <h2 style="margin: 0 0 20px 0; color: #FF0000; text-shadow: 3px 3px 6px rgba(0,0,0,0.5); font-size: 2em; text-align: center;">🏎️ OCI'YE ÖZEL F1 YARIŞ OYUNU 🏎️</h2>
+            
+            <div style="background: rgba(255,255,255,0.95); padding: 20px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.2);">
+                <!-- F1 Yarış Alanı -->
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <div id="f1GameArea" style="position: relative; width: 100%; max-width: 800px; margin: 0 auto; background: linear-gradient(to bottom, #2d5016 0%, #1a3009 50%, #0d1804 100%); border-radius: 20px; padding: 20px; border: 5px solid #FF0000; box-shadow: 0 10px 30px rgba(0,0,0,0.5); overflow: hidden;">
+                        <canvas id="f1Canvas" style="width: 100%; height: 500px; border-radius: 15px; background: linear-gradient(to bottom, #87CEEB 0%, #4682B4 50%, #2d5016 100%); display: block;"></canvas>
+                        
+                        <!-- Hız Göstergesi -->
+                        <div id="f1SpeedDisplay" style="position: absolute; top: 20px; right: 20px; background: rgba(0,0,0,0.8); color: #FFD700; padding: 15px 25px; border-radius: 10px; font-weight: bold; text-shadow: 0 0 10px rgba(255,215,0,0.8); z-index: 20; border: 2px solid #FFD700;">
+                            <div style="font-size: 0.5em; color: #fff; margin-bottom: 5px;">HIZ</div>
+                            <div id="f1SpeedValue" style="font-size: 2em;">0 KM/H</div>
+                        </div>
+                        
+                        <!-- Mesafe Göstergesi -->
+                        <div id="f1DistanceDisplay" style="position: absolute; top: 20px; left: 20px; background: rgba(0,0,0,0.8); color: #00FF00; padding: 15px 25px; border-radius: 10px; font-weight: bold; text-shadow: 0 0 10px rgba(0,255,0,0.8); z-index: 20; border: 2px solid #00FF00;">
+                            <div style="font-size: 0.5em; color: #fff; margin-bottom: 5px;">MESAFE</div>
+                            <div id="f1DistanceValue" style="font-size: 2em;">0 M</div>
+                        </div>
+                        
+                        <!-- Kontrol Talimatları -->
+                        <div id="f1Instructions" style="position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.8); color: #fff; padding: 15px 30px; border-radius: 10px; font-size: 1.1em; z-index: 20; border: 2px solid #FFD700;">
+                            <div style="margin-bottom: 5px;">⬅️ ⬆️ ⬇️ ➡️ Yön Tuşları ile Sür</div>
+                            <div style="font-size: 0.8em; color: #FFD700;">SPACE: Başlat / Duraklat</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Kontroller -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px;">
+                    <button id="f1StartButton" onclick="startF1Game()" style="padding: 15px; background: linear-gradient(135deg, #FF0000 0%, #FF4500 100%); color: white; border: none; border-radius: 10px; font-size: 1.3em; font-weight: bold; cursor: pointer; box-shadow: 0 5px 15px rgba(255,0,0,0.4);">
+                        🏁 BAŞLA
+                    </button>
+                    <button id="f1ResetButton" onclick="resetF1Game()" style="padding: 15px; background: linear-gradient(135deg, #666 0%, #333 100%); color: white; border: none; border-radius: 10px; font-size: 1.3em; font-weight: bold; cursor: pointer; box-shadow: 0 5px 15px rgba(0,0,0,0.4);">
+                        🔄 YENİDEN
+                    </button>
+                </div>
+                
+                <!-- İstatistikler -->
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-top: 20px;">
+                    <div style="background: rgba(255, 0, 0, 0.1); padding: 10px; border-radius: 8px; text-align: center;">
+                        <div style="font-size: 0.9em; color: #666; margin-bottom: 5px;">En Yüksek Hız</div>
+                        <div id="f1MaxSpeed" style="font-size: 1.3em; font-weight: bold; color: #FF0000;">0 KM/H</div>
+                    </div>
+                    <div style="background: rgba(255, 0, 0, 0.1); padding: 10px; border-radius: 8px; text-align: center;">
+                        <div style="font-size: 0.9em; color: #666; margin-bottom: 5px;">En Uzun Mesafe</div>
+                        <div id="f1MaxDistance" style="font-size: 1.3em; font-weight: bold; color: #FF0000;">0 M</div>
+                    </div>
+                    <div style="background: rgba(255, 0, 0, 0.1); padding: 10px; border-radius: 8px; text-align: center;">
+                        <div style="font-size: 0.9em; color: #666; margin-bottom: 5px;">Oyun Sayısı</div>
+                        <div id="f1GameCount" style="font-size: 1.3em; font-weight: bold; color: #FF0000;">0</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="matches-section">
             <h2>📅 Maç Listesi</h2>
             <div class="sportoto-image">
@@ -4547,6 +4605,256 @@
             }
         `;
         document.head.appendChild(slotStyle);
+
+        // OCI'ye Özel F1 Yarış Oyunu JavaScript
+        let f1GameState = {
+            isRunning: false,
+            isPaused: false,
+            carX: 400,
+            carY: 400,
+            carSpeed: 0,
+            carAngle: 0,
+            distance: 0,
+            maxSpeed: 0,
+            maxDistance: 0,
+            gameCount: 0,
+            animationId: null,
+            keys: {},
+            roadOffset: 0,
+            obstacles: [],
+            lastObstacleTime: 0
+        };
+
+        function startF1Game() {
+            if (f1GameState.isRunning && !f1GameState.isPaused) return;
+            
+            if (f1GameState.isPaused) {
+                f1GameState.isPaused = false;
+                document.getElementById('f1StartButton').textContent = '⏸️ DURAKLAT';
+                animateF1();
+                return;
+            }
+            
+            f1GameState.isRunning = true;
+            f1GameState.isPaused = false;
+            f1GameState.carX = 400;
+            f1GameState.carY = 400;
+            f1GameState.carSpeed = 0;
+            f1GameState.carAngle = 0;
+            f1GameState.distance = 0;
+            f1GameState.roadOffset = 0;
+            f1GameState.obstacles = [];
+            f1GameState.lastObstacleTime = 0;
+            f1GameState.gameCount++;
+            
+            document.getElementById('f1StartButton').textContent = '⏸️ DURAKLAT';
+            document.getElementById('f1Instructions').style.display = 'none';
+            
+            // Klavye olaylarını dinle
+            document.addEventListener('keydown', handleF1KeyDown);
+            document.addEventListener('keyup', handleF1KeyUp);
+            
+            animateF1();
+        }
+
+        function resetF1Game() {
+            f1GameState.isRunning = false;
+            f1GameState.isPaused = false;
+            if (f1GameState.animationId) {
+                cancelAnimationFrame(f1GameState.animationId);
+            }
+            
+            document.getElementById('f1StartButton').textContent = '🏁 BAŞLA';
+            document.getElementById('f1Instructions').style.display = 'block';
+            
+            const canvas = document.getElementById('f1Canvas');
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            document.getElementById('f1SpeedValue').textContent = '0 KM/H';
+            document.getElementById('f1DistanceValue').textContent = '0 M';
+        }
+
+        function handleF1KeyDown(e) {
+            if (!f1GameState.isRunning || f1GameState.isPaused) {
+                if (e.code === 'Space') {
+                    e.preventDefault();
+                    startF1Game();
+                }
+                return;
+            }
+            
+            f1GameState.keys[e.code] = true;
+            
+            if (e.code === 'Space') {
+                e.preventDefault();
+                f1GameState.isPaused = !f1GameState.isPaused;
+                document.getElementById('f1StartButton').textContent = f1GameState.isPaused ? '▶️ DEVAM ET' : '⏸️ DURAKLAT';
+                if (!f1GameState.isPaused) {
+                    animateF1();
+                }
+            }
+        }
+
+        function handleF1KeyUp(e) {
+            f1GameState.keys[e.code] = false;
+        }
+
+        function animateF1() {
+            if (!f1GameState.isRunning || f1GameState.isPaused) return;
+            
+            const canvas = document.getElementById('f1Canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+            
+            // Araba kontrolü
+            if (f1GameState.keys['ArrowUp'] || f1GameState.keys['KeyW']) {
+                f1GameState.carSpeed = Math.min(f1GameState.carSpeed + 0.5, 15);
+            } else {
+                f1GameState.carSpeed = Math.max(f1GameState.carSpeed - 0.3, 0);
+            }
+            
+            if (f1GameState.keys['ArrowLeft'] || f1GameState.keys['KeyA']) {
+                f1GameState.carAngle -= 0.05;
+            }
+            if (f1GameState.keys['ArrowRight'] || f1GameState.keys['KeyD']) {
+                f1GameState.carAngle += 0.05;
+            }
+            
+            // Araba hareketi
+            f1GameState.carX += Math.cos(f1GameState.carAngle) * f1GameState.carSpeed;
+            f1GameState.carY += Math.sin(f1GameState.carAngle) * f1GameState.carSpeed;
+            
+            // Sınırlar
+            f1GameState.carX = Math.max(50, Math.min(canvas.width - 50, f1GameState.carX));
+            f1GameState.carY = Math.max(50, Math.min(canvas.height - 50, f1GameState.carY));
+            
+            // Mesafe ve hız güncelle
+            f1GameState.distance += f1GameState.carSpeed * 0.1;
+            const speedKmh = Math.floor(f1GameState.carSpeed * 20);
+            f1GameState.maxSpeed = Math.max(f1GameState.maxSpeed, speedKmh);
+            f1GameState.maxDistance = Math.max(f1GameState.maxDistance, Math.floor(f1GameState.distance));
+            
+            // Yol animasyonu
+            f1GameState.roadOffset += f1GameState.carSpeed * 2;
+            
+            // Engeller oluştur
+            const now = Date.now();
+            if (now - f1GameState.lastObstacleTime > 2000 && f1GameState.carSpeed > 5) {
+                f1GameState.obstacles.push({
+                    x: Math.random() * canvas.width,
+                    y: -50,
+                    width: 40,
+                    height: 40,
+                    type: Math.random() > 0.5 ? 'cone' : 'barrier'
+                });
+                f1GameState.lastObstacleTime = now;
+            }
+            
+            // Engelleri hareket ettir
+            f1GameState.obstacles = f1GameState.obstacles.filter(obs => {
+                obs.y += f1GameState.carSpeed * 2;
+                return obs.y < canvas.height + 50;
+            });
+            
+            // Çizim
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Gökyüzü gradient
+            const skyGradient = ctx.createLinearGradient(0, 0, 0, canvas.height * 0.6);
+            skyGradient.addColorStop(0, '#87CEEB');
+            skyGradient.addColorStop(1, '#4682B4');
+            ctx.fillStyle = skyGradient;
+            ctx.fillRect(0, 0, canvas.width, canvas.height * 0.6);
+            
+            // Yol çizgileri
+            ctx.strokeStyle = '#FFD700';
+            ctx.lineWidth = 4;
+            ctx.setLineDash([20, 20]);
+            ctx.lineDashOffset = -f1GameState.roadOffset;
+            
+            for (let i = 0; i < 5; i++) {
+                const x = (canvas.width / 6) * (i + 1);
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, canvas.height);
+                ctx.stroke();
+            }
+            
+            ctx.setLineDash([]);
+            
+            // Yol kenarları
+            ctx.strokeStyle = '#FFFFFF';
+            ctx.lineWidth = 8;
+            ctx.beginPath();
+            ctx.moveTo(canvas.width * 0.2, 0);
+            ctx.lineTo(canvas.width * 0.2, canvas.height);
+            ctx.moveTo(canvas.width * 0.8, 0);
+            ctx.lineTo(canvas.width * 0.8, canvas.height);
+            ctx.stroke();
+            
+            // Engelleri çiz
+            f1GameState.obstacles.forEach(obs => {
+                if (obs.type === 'cone') {
+                    // Koni
+                    ctx.fillStyle = '#FF4500';
+                    ctx.beginPath();
+                    ctx.moveTo(obs.x, obs.y);
+                    ctx.lineTo(obs.x - obs.width/2, obs.y + obs.height);
+                    ctx.lineTo(obs.x + obs.width/2, obs.y + obs.height);
+                    ctx.closePath();
+                    ctx.fill();
+                } else {
+                    // Bariyer
+                    ctx.fillStyle = '#FFD700';
+                    ctx.fillRect(obs.x - obs.width/2, obs.y, obs.width, obs.height);
+                    ctx.strokeStyle = '#000';
+                    ctx.lineWidth = 2;
+                    ctx.strokeRect(obs.x - obs.width/2, obs.y, obs.width, obs.height);
+                }
+            });
+            
+            // F1 Arabası çiz
+            ctx.save();
+            ctx.translate(f1GameState.carX, f1GameState.carY);
+            ctx.rotate(f1GameState.carAngle);
+            
+            // Araba gövdesi
+            ctx.fillStyle = '#FF0000';
+            ctx.fillRect(-30, -15, 60, 30);
+            
+            // Araba camı
+            ctx.fillStyle = '#1E90FF';
+            ctx.fillRect(-20, -10, 40, 15);
+            
+            // Tekerlekler
+            ctx.fillStyle = '#000';
+            ctx.fillRect(-25, -20, 15, 10);
+            ctx.fillRect(10, -20, 15, 10);
+            ctx.fillRect(-25, 10, 15, 10);
+            ctx.fillRect(10, 10, 15, 10);
+            
+            // F1 logosu
+            ctx.fillStyle = '#FFD700';
+            ctx.font = 'bold 20px Arial';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('F1', 0, 0);
+            
+            ctx.restore();
+            
+            // Hız ve mesafe güncelle
+            document.getElementById('f1SpeedValue').textContent = speedKmh + ' KM/H';
+            document.getElementById('f1DistanceValue').textContent = Math.floor(f1GameState.distance) + ' M';
+            
+            // İstatistikleri güncelle
+            document.getElementById('f1MaxSpeed').textContent = f1GameState.maxSpeed + ' KM/H';
+            document.getElementById('f1MaxDistance').textContent = f1GameState.maxDistance + ' M';
+            document.getElementById('f1GameCount').textContent = f1GameState.gameCount;
+            
+            f1GameState.animationId = requestAnimationFrame(animateF1);
+        }
 
         // CSV dosyasını yükle (inline data)
         function loadCoupons() {
