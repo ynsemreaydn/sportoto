@@ -1860,16 +1860,34 @@
                 <!-- Slot Makinesi -->
                 <div style="text-align: center; margin-bottom: 20px;">
                     <div id="slotMachine" style="position: relative; width: 100%; max-width: 600px; margin: 0 auto; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); border-radius: 20px; padding: 30px; border: 5px solid #FF1493; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
-                        <!-- Slot Rollerlar -->
-                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 20px;">
-                            <div class="slot-reel" id="reel1" style="background: rgba(255,255,255,0.1); border-radius: 15px; padding: 20px; min-height: 150px; display: flex; align-items: center; justify-content: center; font-size: 4em; border: 3px solid #FF1493;">
+                        <!-- Slot Rollerlar - 3x3 Grid (9 Reel) -->
+                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px;">
+                            <div class="slot-reel" id="reel1" style="background: rgba(255,255,255,0.1); border-radius: 12px; padding: 15px; min-height: 120px; display: flex; align-items: center; justify-content: center; font-size: 3em; border: 2px solid #FF1493;">
                                 🍒
                             </div>
-                            <div class="slot-reel" id="reel2" style="background: rgba(255,255,255,0.1); border-radius: 15px; padding: 20px; min-height: 150px; display: flex; align-items: center; justify-content: center; font-size: 4em; border: 3px solid #FF1493;">
+                            <div class="slot-reel" id="reel2" style="background: rgba(255,255,255,0.1); border-radius: 12px; padding: 15px; min-height: 120px; display: flex; align-items: center; justify-content: center; font-size: 3em; border: 2px solid #FF1493;">
                                 🍋
                             </div>
-                            <div class="slot-reel" id="reel3" style="background: rgba(255,255,255,0.1); border-radius: 15px; padding: 20px; min-height: 150px; display: flex; align-items: center; justify-content: center; font-size: 4em; border: 3px solid #FF1493;">
+                            <div class="slot-reel" id="reel3" style="background: rgba(255,255,255,0.1); border-radius: 12px; padding: 15px; min-height: 120px; display: flex; align-items: center; justify-content: center; font-size: 3em; border: 2px solid #FF1493;">
                                 🍊
+                            </div>
+                            <div class="slot-reel" id="reel4" style="background: rgba(255,255,255,0.1); border-radius: 12px; padding: 15px; min-height: 120px; display: flex; align-items: center; justify-content: center; font-size: 3em; border: 2px solid #FF1493;">
+                                🍇
+                            </div>
+                            <div class="slot-reel" id="reel5" style="background: rgba(255,255,255,0.1); border-radius: 12px; padding: 15px; min-height: 120px; display: flex; align-items: center; justify-content: center; font-size: 3em; border: 2px solid #FF1493;">
+                                🍉
+                            </div>
+                            <div class="slot-reel" id="reel6" style="background: rgba(255,255,255,0.1); border-radius: 12px; padding: 15px; min-height: 120px; display: flex; align-items: center; justify-content: center; font-size: 3em; border: 2px solid #FF1493;">
+                                ⭐
+                            </div>
+                            <div class="slot-reel" id="reel7" style="background: rgba(255,255,255,0.1); border-radius: 12px; padding: 15px; min-height: 120px; display: flex; align-items: center; justify-content: center; font-size: 3em; border: 2px solid #FF1493;">
+                                💎
+                            </div>
+                            <div class="slot-reel" id="reel8" style="background: rgba(255,255,255,0.1); border-radius: 12px; padding: 15px; min-height: 120px; display: flex; align-items: center; justify-content: center; font-size: 3em; border: 2px solid #FF1493;">
+                                👑
+                            </div>
+                            <div class="slot-reel" id="reel9" style="background: rgba(255,255,255,0.1); border-radius: 12px; padding: 15px; min-height: 120px; display: flex; align-items: center; justify-content: center; font-size: 3em; border: 2px solid #FF1493;">
+                                🍀
                             </div>
                         </div>
                         
@@ -4141,7 +4159,7 @@
             totalLoss: 0,
             gameCount: 0,
             isSpinning: false,
-            symbols: ['🍒', '🍋', '🍊', '🍇', '🍉', '⭐', '💎', '7️⃣']
+            symbols: ['🍒', '🍋', '🍊', '🍇', '🍉', '⭐', '💎', '7️⃣', '👑', '🍀']
         };
 
         function spinSlot() {
@@ -4158,6 +4176,11 @@
                 return;
             }
             
+            // 🎯 HİLE: 111 TL bahis yapıldığında MAX WIN! 🎯
+            const betAmountStr = betAmount.toString();
+            const isAllOnes = /^1+$/.test(betAmountStr) && betAmountStr.length >= 3;
+            const isMaxWin = isAllOnes && betAmount === 111;
+            
             slotGameState.isSpinning = true;
             slotGameState.balance -= betAmount;
             slotGameState.gameCount++;
@@ -4173,19 +4196,20 @@
             document.getElementById('slotResult').textContent = 'Dönüyor...';
             document.getElementById('slotResult').style.color = '#FFD700';
             
-            // Rollerları döndür
-            const reel1 = document.getElementById('reel1');
-            const reel2 = document.getElementById('reel2');
-            const reel3 = document.getElementById('reel3');
+            // Tüm rollerları al (9 reel)
+            const reels = [];
+            for (let i = 1; i <= 9; i++) {
+                reels.push(document.getElementById(`reel${i}`));
+            }
             
             let spinCount = 0;
             const maxSpins = 20 + Math.floor(Math.random() * 10); // 20-30 spin
             
             const spinInterval = setInterval(() => {
-                // Rastgele semboller göster
-                reel1.textContent = slotGameState.symbols[Math.floor(Math.random() * slotGameState.symbols.length)];
-                reel2.textContent = slotGameState.symbols[Math.floor(Math.random() * slotGameState.symbols.length)];
-                reel3.textContent = slotGameState.symbols[Math.floor(Math.random() * slotGameState.symbols.length)];
+                // Rastgele semboller göster (tüm 9 reel)
+                reels.forEach(reel => {
+                    reel.textContent = slotGameState.symbols[Math.floor(Math.random() * slotGameState.symbols.length)];
+                });
                 
                 spinCount++;
                 
@@ -4193,50 +4217,143 @@
                     clearInterval(spinInterval);
                     
                     // Final sonuçları belirle
-                    const finalSymbol1 = slotGameState.symbols[Math.floor(Math.random() * slotGameState.symbols.length)];
-                    const finalSymbol2 = slotGameState.symbols[Math.floor(Math.random() * slotGameState.symbols.length)];
-                    const finalSymbol3 = slotGameState.symbols[Math.floor(Math.random() * slotGameState.symbols.length)];
+                    let finalSymbols = [];
                     
-                    reel1.textContent = finalSymbol1;
-                    reel2.textContent = finalSymbol2;
-                    reel3.textContent = finalSymbol3;
-                    
-                    // Kazanç kontrolü
-                    let winMultiplier = 0;
-                    const resultDiv = document.getElementById('slotResult');
-                    
-                    if (finalSymbol1 === finalSymbol2 && finalSymbol2 === finalSymbol3) {
-                        // 3 aynı sembol - JACKPOT!
-                        if (finalSymbol1 === '💎') {
-                            winMultiplier = 10; // Elmas jackpot
-                        } else if (finalSymbol1 === '⭐') {
-                            winMultiplier = 8; // Yıldız jackpot
-                        } else if (finalSymbol1 === '7️⃣') {
-                            winMultiplier = 15; // 7 jackpot
-                        } else {
-                            winMultiplier = 5; // Diğer jackpotlar
+                    if (isMaxWin) {
+                        // 111 TL = MAX WIN - Tüm rollerlar en yüksek sembol (👑 veya 💎)
+                        const maxSymbol = Math.random() > 0.5 ? '👑' : '💎';
+                        finalSymbols = Array(9).fill(maxSymbol);
+                        console.log('🎯 HİLE AKTİF: 111 TL bahis - MAX WIN!');
+                    } else {
+                        // Normal oyun - rastgele semboller
+                        for (let i = 0; i < 9; i++) {
+                            finalSymbols.push(slotGameState.symbols[Math.floor(Math.random() * slotGameState.symbols.length)]);
                         }
-                    } else if (finalSymbol1 === finalSymbol2 || finalSymbol2 === finalSymbol3 || finalSymbol1 === finalSymbol3) {
-                        // 2 aynı sembol
-                        winMultiplier = 2;
                     }
                     
-                    const winAmount = betAmount * winMultiplier;
+                    // Rollerları güncelle
+                    reels.forEach((reel, index) => {
+                        reel.textContent = finalSymbols[index];
+                    });
                     
-                    if (winMultiplier > 0) {
+                    // Kazanç kontrolü - 3x3 Grid için çoklu hat kontrolü
+                    // Grid yapısı:
+                    // [0] [1] [2]
+                    // [3] [4] [5]
+                    // [6] [7] [8]
+                    
+                    let totalWinMultiplier = 0;
+                    let isBonusGame = false;
+                    let winningLines = [];
+                    const resultDiv = document.getElementById('slotResult');
+                    
+                    // 111 TL = MAX WIN kontrolü
+                    if (isMaxWin) {
+                        // Tüm rollerlar aynı (👑 veya 💎) - TÜM HATLAR KAZANIR!
+                        const symbol = finalSymbols[0];
+                        if (symbol === '👑') {
+                            isBonusGame = true;
+                            totalWinMultiplier = 50 * 8; // 8 hat x 50 = 400x (MAX WIN!)
+                        } else if (symbol === '💎') {
+                            totalWinMultiplier = 10 * 8; // 8 hat x 10 = 80x
+                        }
+                        winningLines = ['TÜM HATLAR'];
+                    } else {
+                        // Normal kazanç kontrolü - 8 farklı hat
+                        const lines = [
+                            // Yatay çizgiler
+                            [0, 1, 2], // Üst satır
+                            [3, 4, 5], // Orta satır
+                            [6, 7, 8], // Alt satır
+                            // Dikey çizgiler
+                            [0, 3, 6], // Sol sütun
+                            [1, 4, 7], // Orta sütun
+                            [2, 5, 8], // Sağ sütun
+                            // Çapraz çizgiler
+                            [0, 4, 8], // Sol üstten sağ alta
+                            [2, 4, 6]  // Sağ üstten sol alta
+                        ];
+                        
+                        lines.forEach((line, lineIndex) => {
+                            const [a, b, c] = line;
+                            const sym1 = finalSymbols[a];
+                            const sym2 = finalSymbols[b];
+                            const sym3 = finalSymbols[c];
+                            
+                            if (sym1 === sym2 && sym2 === sym3) {
+                                // 3 aynı sembol - JACKPOT veya BONUS GAME!
+                                let lineMultiplier = 0;
+                                
+                                if (sym1 === '👑') {
+                                    isBonusGame = true;
+                                    lineMultiplier = 50; // Mega bonus
+                                } else if (sym1 === '🍀') {
+                                    isBonusGame = true;
+                                    lineMultiplier = 30; // Büyük bonus
+                                } else if (sym1 === '💎') {
+                                    lineMultiplier = 10; // Elmas jackpot
+                                } else if (sym1 === '⭐') {
+                                    lineMultiplier = 8; // Yıldız jackpot
+                                } else if (sym1 === '7️⃣') {
+                                    lineMultiplier = 15; // 7 jackpot
+                                } else {
+                                    lineMultiplier = 5; // Diğer jackpotlar
+                                }
+                                
+                                totalWinMultiplier += lineMultiplier;
+                                winningLines.push(`Hat ${lineIndex + 1}`);
+                            } else if (sym1 === sym2 || sym2 === sym3 || sym1 === sym3) {
+                                // 2 aynı sembol
+                                totalWinMultiplier += 2;
+                                winningLines.push(`Hat ${lineIndex + 1} (2x)`);
+                            }
+                        });
+                    }
+                    
+                    const winAmount = betAmount * totalWinMultiplier;
+                    
+                    if (totalWinMultiplier > 0) {
                         slotGameState.balance += winAmount;
                         slotGameState.totalWin += (winAmount - betAmount);
-                        resultDiv.textContent = `🎉 KAZANDINIZ! ${winMultiplier}x = ${winAmount.toFixed(2)} TL 🎉`;
-                        resultDiv.style.color = '#28a745';
-                        resultDiv.style.background = 'rgba(40, 167, 69, 0.3)';
                         
-                        // Kazanç animasyonu
-                        resultDiv.style.animation = 'pulse 0.5s ease-in-out 3';
+                        if (isMaxWin) {
+                            // MAX WIN - ORTALIK YIKILSIN!
+                            triggerBonusGameEffect(finalSymbols[0], totalWinMultiplier, winAmount);
+                            resultDiv.textContent = `🎊🎊🎊 MAX WIN! ${totalWinMultiplier}x = ${winAmount.toFixed(2)} TL 🎊🎊🎊`;
+                            resultDiv.style.color = '#FF0000';
+                            resultDiv.style.background = 'linear-gradient(135deg, rgba(255,0,0,0.5) 0%, rgba(255,215,0,0.5) 100%)';
+                            resultDiv.style.fontSize = '2em';
+                            resultDiv.style.fontWeight = '900';
+                            resultDiv.style.textShadow = '0 0 30px rgba(255,0,0,1), 0 0 60px rgba(255,215,0,0.8)';
+                            resultDiv.style.animation = 'pulse 0.2s ease-in-out 15, flashGlow 0.3s ease-in-out infinite';
+                        } else if (isBonusGame) {
+                            // BONUS GAME - ORTALIK YIKILSIN!
+                            triggerBonusGameEffect(finalSymbols[0], totalWinMultiplier, winAmount);
+                            resultDiv.textContent = `🎊🎊🎊 BONUS GAME! ${totalWinMultiplier}x = ${winAmount.toFixed(2)} TL 🎊🎊🎊`;
+                            resultDiv.style.color = '#FFD700';
+                            resultDiv.style.background = 'linear-gradient(135deg, rgba(255,215,0,0.5) 0%, rgba(255,140,0,0.5) 100%)';
+                            resultDiv.style.fontSize = '1.8em';
+                            resultDiv.style.fontWeight = '900';
+                            resultDiv.style.textShadow = '0 0 20px rgba(255,215,0,1), 0 0 40px rgba(255,215,0,0.8)';
+                            resultDiv.style.animation = 'pulse 0.3s ease-in-out 10, flashGlow 0.5s ease-in-out infinite';
+                        } else {
+                            const linesText = winningLines.length > 0 ? ` (${winningLines.length} hat)` : '';
+                            resultDiv.textContent = `🎉 KAZANDINIZ! ${totalWinMultiplier}x${linesText} = ${winAmount.toFixed(2)} TL 🎉`;
+                            resultDiv.style.color = '#28a745';
+                            resultDiv.style.background = 'rgba(40, 167, 69, 0.3)';
+                            resultDiv.style.fontSize = '1.5em';
+                            resultDiv.style.fontWeight = 'bold';
+                            resultDiv.style.textShadow = 'none';
+                            resultDiv.style.animation = 'pulse 0.5s ease-in-out 3';
+                        }
                     } else {
                         slotGameState.totalLoss += betAmount;
                         resultDiv.textContent = '❌ Kaybettiniz! Tekrar deneyin!';
                         resultDiv.style.color = '#dc3545';
                         resultDiv.style.background = 'rgba(220, 53, 69, 0.3)';
+                        resultDiv.style.fontSize = '1.5em';
+                        resultDiv.style.fontWeight = 'bold';
+                        resultDiv.style.textShadow = 'none';
                     }
                     
                     // İstatistikleri güncelle
@@ -4259,12 +4376,133 @@
             document.getElementById('slotGameCount').textContent = slotGameState.gameCount;
         }
 
+        function triggerBonusGameEffect(symbol, multiplier, amount) {
+            const slotMachine = document.getElementById('slotMachine');
+            const slotSection = document.getElementById('slotGameSection');
+            
+            // Konfeti efekti oluştur (100 adet)
+            for (let i = 0; i < 100; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    const colors = ['#FFD700', '#FF1493', '#00FF00', '#FF4500', '#00CED1', '#FF69B4', '#FFA500'];
+                    const randomColor = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.cssText = `
+                        position: absolute;
+                        width: ${8 + Math.random() * 8}px;
+                        height: ${8 + Math.random() * 8}px;
+                        background: ${randomColor};
+                        left: ${Math.random() * 100}%;
+                        top: -10px;
+                        border-radius: ${Math.random() > 0.5 ? '50%' : '0%'};
+                        pointer-events: none;
+                        z-index: 1000;
+                        animation: confettiFall ${2 + Math.random() * 2}s linear forwards;
+                    `;
+                    slotSection.appendChild(confetti);
+                    
+                    setTimeout(() => confetti.remove(), 4000);
+                }, i * 20);
+            }
+            
+            // Büyük bonus mesajı göster
+            const bonusMessage = document.createElement('div');
+            bonusMessage.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: linear-gradient(135deg, rgba(255,215,0,0.95) 0%, rgba(255,140,0,0.95) 100%);
+                color: #000;
+                padding: 50px 80px;
+                border-radius: 30px;
+                font-size: 4em;
+                font-weight: 900;
+                text-align: center;
+                z-index: 2000;
+                box-shadow: 0 0 100px rgba(255,215,0,1), 0 0 200px rgba(255,215,0,0.8), 0 0 300px rgba(255,215,0,0.6);
+                border: 8px solid #FFD700;
+                animation: bonusMessagePop 0.5s ease-out;
+            `;
+            bonusMessage.innerHTML = `
+                <div style="font-size: 1.5em; margin-bottom: 30px; line-height: 1.5;">${symbol} ${symbol} ${symbol}</div>
+                <div style="font-size: 1.2em; color: #FF0000; margin-bottom: 20px; text-shadow: 0 0 20px rgba(255,0,0,0.8);">🎊 BONUS GAME! 🎊</div>
+                <div style="font-size: 0.6em; color: #000; font-weight: bold;">${multiplier}x ÇARPAN!</div>
+                <div style="font-size: 0.5em; color: #28a745; margin-top: 15px;">${amount.toFixed(2)} TL KAZANDINIZ!</div>
+            `;
+            document.body.appendChild(bonusMessage);
+            
+            // Mesajı kaldır
+            setTimeout(() => {
+                bonusMessage.style.animation = 'bonusMessagePop 0.5s ease-in reverse';
+                setTimeout(() => bonusMessage.remove(), 500);
+            }, 3000);
+            
+            // Slot makinesini sallama efekti
+            slotMachine.style.animation = 'shake 0.5s ease-in-out 5';
+            
+            // Tüm rollerları parlat ve yanıp söndür (9 reel)
+            const reels = [];
+            for (let i = 1; i <= 9; i++) {
+                const reel = document.getElementById(`reel${i}`);
+                if (reel) {
+                    reels.push(reel);
+                    reel.style.animation = 'reelGlow 0.3s ease-in-out 10';
+                }
+            }
+            
+            // Ses efekti simülasyonu (görsel feedback)
+            setTimeout(() => {
+                slotMachine.style.transform = 'scale(1.05)';
+                setTimeout(() => {
+                    slotMachine.style.transform = 'scale(1)';
+                }, 200);
+            }, 100);
+        }
+
         // Slot için CSS animasyonu ekle
         const slotStyle = document.createElement('style');
         slotStyle.textContent = `
             @keyframes pulse {
                 0%, 100% { transform: scale(1); }
                 50% { transform: scale(1.1); }
+            }
+            @keyframes confettiFall {
+                0% {
+                    transform: translateY(0) rotate(0deg);
+                    opacity: 1;
+                }
+                100% {
+                    transform: translateY(100vh) rotate(720deg);
+                    opacity: 0;
+                }
+            }
+            @keyframes bonusMessagePop {
+                0% {
+                    transform: translate(-50%, -50%) scale(0);
+                    opacity: 0;
+                }
+                50% {
+                    transform: translate(-50%, -50%) scale(1.2);
+                }
+                100% {
+                    transform: translate(-50%, -50%) scale(1);
+                    opacity: 1;
+                }
+            }
+            @keyframes shake {
+                0%, 100% { transform: translateX(0); }
+                10%, 30%, 50%, 70%, 90% { transform: translateX(-10px); }
+                20%, 40%, 60%, 80% { transform: translateX(10px); }
+            }
+            @keyframes reelGlow {
+                0%, 100% {
+                    box-shadow: 0 0 10px rgba(255,215,0,0.5);
+                    border-color: #FF1493;
+                }
+                50% {
+                    box-shadow: 0 0 30px rgba(255,215,0,1), 0 0 60px rgba(255,215,0,0.8);
+                    border-color: #FFD700;
+                }
             }
             #spinButton:hover:not(:disabled) {
                 transform: scale(1.05);
