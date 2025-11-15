@@ -1527,6 +1527,7 @@
             }
         }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 </head>
 <body>
     <!-- Popup HTML -->
@@ -1712,7 +1713,37 @@
             <div class="perfect-coupons-container" id="perfectCouponsContainer"></div>
         </div>
 
+        <!-- Grafik ve İkramiye Bölümü -->
+        <div class="prize-section" id="prizeSection" style="margin-top: 30px; padding: 25px; background: linear-gradient(135deg, rgba(255,215,0,0.25) 0%, rgba(255,140,0,0.25) 50%, rgba(255,69,0,0.25) 100%); border-radius: 20px; border: 3px solid rgba(255,215,0,0.6); box-shadow: 0 10px 40px rgba(255,215,0,0.3);">
+            <h2 style="margin: 0 0 20px 0; color: #FFD700; text-shadow: 3px 3px 6px rgba(0,0,0,0.5); font-size: 2em; text-align: center;">💰 50 MİLYON TL İKRAMİYE HEDEFİ 💰</h2>
+            
+            <!-- İkramiye Açıklaması -->
+            <div style="background: rgba(255,255,255,0.95); padding: 20px; border-radius: 15px; margin-bottom: 25px; box-shadow: 0 5px 20px rgba(0,0,0,0.2);">
+                <h3 style="color: #FF6B35; margin-bottom: 15px; font-size: 1.5em; text-align: center;">🏆 15 BİLEN KUPON İLE KAZANACAKLARINIZ 🏆</h3>
+                <div style="line-height: 1.8; font-size: 1.1em; color: #333;">
+                    <p style="margin-bottom: 12px;">✨ <strong style="color: #FFD700; font-size: 1.2em;">50 MİLYON TL</strong> ana ikramiye ile hayatınız değişecek! ✨</p>
+                    <ul style="list-style: none; padding-left: 0;">
+                        <li style="margin-bottom: 10px;">💎 <strong>Lüks Yaşam:</strong> İstediğiniz her şeyi alabilir, hayallerinizi gerçekleştirebilirsiniz!</li>
+                        <li style="margin-bottom: 10px;">🏠 <strong>Hayalinizdeki Ev:</strong> Deniz manzaralı villa, şehir merkezinde penthouse, istediğiniz her yerde!</li>
+                        <li style="margin-bottom: 10px;">🚗 <strong>Premium Araçlar:</strong> Ferrari, Lamborghini, Rolls-Royce... Garajınızı doldurun!</li>
+                        <li style="margin-bottom: 10px;">✈️ <strong>Sınırsız Seyahat:</strong> Dünyanın her yerini gezebilir, en lüks otellerde kalabilirsiniz!</li>
+                        <li style="margin-bottom: 10px;">💼 <strong>İş Kurma:</strong> Kendi işinizi kurabilir, yatırımlar yapabilirsiniz!</li>
+                        <li style="margin-bottom: 10px;">🎓 <strong>Eğitim:</strong> Çocuklarınızın en iyi okullarda okumasını sağlayabilirsiniz!</li>
+                        <li style="margin-bottom: 10px;">❤️ <strong>Aile:</strong> Sevdiklerinize istediğiniz her şeyi alabilir, onları mutlu edebilirsiniz!</li>
+                        <li style="margin-bottom: 10px;">🌟 <strong>Finansal Özgürlük:</strong> Bir daha asla para derdi çekmeyeceksiniz!</li>
+                    </ul>
+                    <p style="margin-top: 15px; text-align: center; font-size: 1.3em; color: #FF6B35; font-weight: bold;">🎯 HEDEF: 15 BİLEN KUPON İLE 50 MİLYON TL! 🎯</p>
+                </div>
+            </div>
 
+            <!-- Grafik Bölümü -->
+            <div style="background: rgba(255,255,255,0.95); padding: 20px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.2);">
+                <h3 style="color: #667eea; margin-bottom: 15px; font-size: 1.5em; text-align: center;">📈 Paraya Yakınlık Grafiği 📈</h3>
+                <p style="text-align: center; color: #666; margin-bottom: 15px;">Kalan 11 maç için 278 kuponun 15'e yakınlık durumu</p>
+                <canvas id="prizeChart" style="max-height: 400px;"></canvas>
+                <div id="prizeChartInfo" style="margin-top: 15px; text-align: center; color: #667eea; font-weight: bold; font-size: 1.1em;"></div>
+            </div>
+        </div>
 
         <div class="matches-section">
             <h2>📅 Maç Listesi</h2>
@@ -1867,13 +1898,28 @@
             const container = document.getElementById('couponIdsList');
             const totalCombinations = csvDataCompact.length;
             const combinationsPerCoupon = 5;
-            const percentagePerCoupon = ((combinationsPerCoupon / totalCombinations) * 100).toFixed(2);
+            
+            // Her kupon için kombinasyon sayısını ve yüzdesini hesapla
+            const couponData = COUPON_IDS.map((couponId, index) => {
+                const startIndex = index * combinationsPerCoupon;
+                const endIndex = Math.min(startIndex + combinationsPerCoupon, totalCombinations);
+                const actualCombinations = endIndex - startIndex;
+                const percentage = ((actualCombinations / totalCombinations) * 100).toFixed(2);
+                return {
+                    couponNum: index + 1,
+                    couponId: couponId,
+                    combinations: actualCombinations,
+                    percentage: parseFloat(percentage)
+                };
+            });
+            
+            // Yüzdeleri büyükten küçüğe sırala
+            couponData.sort((a, b) => b.percentage - a.percentage);
             
             let html = '';
-            COUPON_IDS.forEach((couponId, index) => {
-                const couponNum = index + 1;
+            couponData.forEach(coupon => {
                 html += `<div style="padding: 5px; border-bottom: 1px solid rgba(102,126,234,0.2);">
-                    <strong>Kupon #${couponNum}:</strong> ${couponId} <span style="color: #764ba2;">(${percentagePerCoupon}%)</span>
+                    <strong>Kupon #${coupon.couponNum}:</strong> ${coupon.couponId} <span style="color: #764ba2;">(${coupon.percentage}%)</span>
                 </div>`;
             });
             
@@ -2008,7 +2054,7 @@
         function getFinishedMatchResults() {
             return matches
                 .map((match, index) => {
-                    if (match.status === 'FT' && match.homeScore !== null && match.awayScore !== null) {
+                    if (match.status === 'FT' && match.homeScore !== null && match.homeScore !== undefined && match.awayScore !== null && match.awayScore !== undefined) {
                         let result;
                         if (match.homeScore > match.awayScore) result = 1;
                         else if (match.homeScore < match.awayScore) result = 2;
@@ -3012,7 +3058,7 @@
                 let liveScoreHTML = '';
                 let itemClass = 'match-item';
                 
-                if (match.status === 'FT' && match.homeScore !== undefined && match.awayScore !== undefined) {
+                if (match.status === 'FT' && match.homeScore !== null && match.homeScore !== undefined && match.awayScore !== null && match.awayScore !== undefined) {
                     itemClass += ' live';
                     liveScoreHTML = `
                         <div class="match-live-score">
@@ -3041,11 +3087,11 @@
         function renderMatchFilters() {
             const matchFiltersGrid = document.getElementById('matchFiltersGrid');
             matchFiltersGrid.innerHTML = matches.map((match, index) => {
-                // FT (Fulltime) olan maçlar için disabled
+                // FT (Fulltime) olan maçlar için disabled - sonuçlanan maçlar değiştirilemez
                 const isDisabled = (match.status === 'FT' || match.status === 'FT ') ? 'disabled' : '';
                 // FT olan maçlar için seçili değeri otomatik ayarla
                 let selectedValue = '';
-                if (isDisabled && match.homeScore !== undefined && match.awayScore !== undefined) {
+                if (isDisabled && match.homeScore !== null && match.homeScore !== undefined && match.awayScore !== null && match.awayScore !== undefined) {
                     if (match.homeScore > match.awayScore) selectedValue = '1';
                     else if (match.homeScore < match.awayScore) selectedValue = '2';
                     else selectedValue = '0';
@@ -3232,6 +3278,184 @@
             if (perfectCoupons.length > limit) {
                 container.innerHTML += `<p style="text-align:center; margin-top:15px; color: rgba(255,255,255,0.82);">Toplam ${perfectCoupons.length} kupon var, ilk ${limit} kupon gösteriliyor.</p>`;
             }
+            
+            // Grafik çiz
+            renderPrizeChart();
+        }
+
+        // Grafik çizme fonksiyonu
+        let prizeChartInstance = null;
+        function renderPrizeChart() {
+            const canvas = document.getElementById('prizeChart');
+            const infoDiv = document.getElementById('prizeChartInfo');
+            
+            if (!canvas) return;
+            
+            const finishedMatches = getFinishedMatchResults();
+            const remainingMatches = 15 - finishedMatches.length;
+            
+            if (finishedMatches.length === 0) {
+                if (infoDiv) {
+                    infoDiv.innerHTML = 'Henüz sonuçlanan maç yok. Grafik maç sonuçları geldiğinde güncellenecek.';
+                }
+                return;
+            }
+            
+            // 15'e giden kuponları al
+            const activeCoupons = perfectCoupons.length > 0 ? perfectCoupons : allCoupons.filter(coupon =>
+                finishedMatches.every(item => coupon.predictions[item.matchIndex] === item.result)
+            );
+            
+            // Her kupon için kaç maç doğru tahmin edildiğini hesapla
+            const couponStats = activeCoupons.map(coupon => {
+                let correctCount = 0;
+                finishedMatches.forEach(ftMatch => {
+                    if (coupon.predictions[ftMatch.matchIndex] === ftMatch.result) {
+                        correctCount++;
+                    }
+                });
+                return {
+                    couponNum: coupon.rowNumber,
+                    correct: correctCount,
+                    remaining: remainingMatches,
+                    totalCorrect: correctCount,
+                    progress: (correctCount / 15) * 100
+                };
+            });
+            
+            // Doğru tahmin sayısına göre grupla (4, 5, 6, ... 15)
+            const distribution = {};
+            couponStats.forEach(stat => {
+                const key = stat.correct;
+                if (!distribution[key]) {
+                    distribution[key] = 0;
+                }
+                distribution[key]++;
+            });
+            
+            // Grafik verilerini hazırla
+            const labels = [];
+            const data = [];
+            const colors = [];
+            
+            for (let i = 4; i <= finishedMatches.length; i++) {
+                labels.push(`${i} Doğru`);
+                data.push(distribution[i] || 0);
+                
+                // Renk: 15'e yaklaştıkça daha parlak
+                const progress = (i / 15) * 100;
+                if (progress >= 90) {
+                    colors.push('rgba(255, 215, 0, 0.8)'); // Altın
+                } else if (progress >= 80) {
+                    colors.push('rgba(255, 140, 0, 0.8)'); // Turuncu
+                } else if (progress >= 70) {
+                    colors.push('rgba(255, 69, 0, 0.8)'); // Kırmızı-turuncu
+                } else if (progress >= 60) {
+                    colors.push('rgba(102, 126, 234, 0.8)'); // Mavi
+                } else {
+                    colors.push('rgba(118, 75, 162, 0.8)'); // Mor
+                }
+            }
+            
+            // Mevcut grafik varsa yok et
+            if (prizeChartInstance) {
+                prizeChartInstance.destroy();
+            }
+            
+            // Yeni grafik oluştur
+            const ctx = canvas.getContext('2d');
+            prizeChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Kupon Sayısı',
+                        data: data,
+                        backgroundColor: colors,
+                        borderColor: colors.map(c => c.replace('0.8', '1')),
+                        borderWidth: 2,
+                        borderRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        title: {
+                            display: true,
+                            text: `${activeCoupons.length} Kupon - 15'e Yakınlık Durumu`,
+                            font: {
+                                size: 16,
+                                weight: 'bold'
+                            },
+                            color: '#667eea'
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const value = context.parsed.y;
+                                    const percentage = ((value / activeCoupons.length) * 100).toFixed(1);
+                                    return `${value} kupon (${percentage}%)`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1,
+                                color: '#667eea'
+                            },
+                            grid: {
+                                color: 'rgba(102, 126, 234, 0.2)'
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                color: '#667eea',
+                                font: {
+                                    weight: 'bold'
+                                }
+                            },
+                            grid: {
+                                display: false
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Bilgi metni
+            if (infoDiv) {
+                const totalCoupons = activeCoupons.length;
+                const maxCorrect = Math.max(...couponStats.map(s => s.correct));
+                const maxCount = distribution[maxCorrect] || 0;
+                const maxPercentage = ((maxCount / totalCoupons) * 100).toFixed(1);
+                
+                infoDiv.innerHTML = `
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 15px;">
+                        <div style="background: rgba(102, 126, 234, 0.1); padding: 10px; border-radius: 8px;">
+                            <strong>Toplam Aktif Kupon:</strong> ${totalCoupons}
+                        </div>
+                        <div style="background: rgba(255, 215, 0, 0.1); padding: 10px; border-radius: 8px;">
+                            <strong>En Yüksek Doğru:</strong> ${maxCorrect}/15
+                        </div>
+                        <div style="background: rgba(255, 140, 0, 0.1); padding: 10px; border-radius: 8px;">
+                            <strong>Kalan Maç:</strong> ${remainingMatches}
+                        </div>
+                        <div style="background: rgba(255, 69, 0, 0.1); padding: 10px; border-radius: 8px;">
+                            <strong>${maxCorrect} Doğru Kupon:</strong> ${maxCount} (${maxPercentage}%)
+                        </div>
+                    </div>
+                    <p style="margin-top: 15px; font-size: 1.2em; color: #FF6B35;">
+                        🎯 ${remainingMatches} maç kaldı! ${maxCorrect} doğru tahmin ile ${50 * (maxCorrect / 15)} milyon TL'ye yaklaşıyorsunuz! 🎯
+                    </p>
+                `;
+            }
         }
 
 
@@ -3278,9 +3502,9 @@
                 const filterElement = document.getElementById(`matchFilter${matchIndex}`);
                 let result = null;
                 
-                // FT olan maçlar için otomatik skora göre filtreleme
+                // FT olan maçlar için otomatik skora göre filtreleme - sonuçlanan maçlar değiştirilemez
                 if (match.status === 'FT' || match.status === 'FT ') {
-                    if (match.homeScore !== undefined && match.awayScore !== undefined) {
+                    if (match.homeScore !== null && match.homeScore !== undefined && match.awayScore !== null && match.awayScore !== undefined) {
                         if (match.homeScore > match.awayScore) result = 1;
                         else if (match.homeScore < match.awayScore) result = 2;
                         else result = 0;
@@ -3312,6 +3536,8 @@
             updateDisplayedCoupons();
             updateStats();
             renderCoupons();
+            renderPerfectCoupons(); // 15'e giden kuponları güncelle
+            renderPrizeChart(); // Grafik güncelle
         }
 
         // Satır numarasına göre filtrele
