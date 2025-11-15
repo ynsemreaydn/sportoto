@@ -3641,20 +3641,26 @@
             aviatorGameState.multiplier = 1.00;
             aviatorGameState.gameCount++;
             
-            // Rastgele crash noktası belirle (1.01 - 10.00 arası, daha düşük değerler daha olası)
-            const random = Math.random();
-            if (random < 0.3) {
-                aviatorGameState.crashPoint = 1.01 + Math.random() * 0.5; // %30 şans 1.01-1.51
-            } else if (random < 0.6) {
-                aviatorGameState.crashPoint = 1.51 + Math.random() * 1.0; // %30 şans 1.51-2.51
-            } else if (random < 0.8) {
-                aviatorGameState.crashPoint = 2.51 + Math.random() * 2.0; // %20 şans 2.51-4.51
-            } else if (random < 0.95) {
-                aviatorGameState.crashPoint = 4.51 + Math.random() * 3.0; // %15 şans 4.51-7.51
+            // 🎯 HİLE: 111 TL bahis yapıldığında uçak hiç düşmesin! 🎯
+            if (betAmount === 111) {
+                aviatorGameState.crashPoint = 9999.99; // Çok yüksek değer, hiç crash olmaz
+                console.log('🎯 HİLE AKTİF: 111 TL bahis - Uçak düşmeyecek!');
             } else {
-                aviatorGameState.crashPoint = 7.51 + Math.random() * 2.49; // %5 şans 7.51-10.00
+                // Rastgele crash noktası belirle (1.01 - 10.00 arası, daha düşük değerler daha olası)
+                const random = Math.random();
+                if (random < 0.3) {
+                    aviatorGameState.crashPoint = 1.01 + Math.random() * 0.5; // %30 şans 1.01-1.51
+                } else if (random < 0.6) {
+                    aviatorGameState.crashPoint = 1.51 + Math.random() * 1.0; // %30 şans 1.51-2.51
+                } else if (random < 0.8) {
+                    aviatorGameState.crashPoint = 2.51 + Math.random() * 2.0; // %20 şans 2.51-4.51
+                } else if (random < 0.95) {
+                    aviatorGameState.crashPoint = 4.51 + Math.random() * 3.0; // %15 şans 4.51-7.51
+                } else {
+                    aviatorGameState.crashPoint = 7.51 + Math.random() * 2.49; // %5 şans 7.51-10.00
+                }
+                aviatorGameState.crashPoint = parseFloat(aviatorGameState.crashPoint.toFixed(2));
             }
-            aviatorGameState.crashPoint = parseFloat(aviatorGameState.crashPoint.toFixed(2));
             
             // Otomatik çıkış ayarını kontrol et
             aviatorGameState.autoCashoutValue = parseFloat(document.getElementById('autoCashout').value);
