@@ -1739,9 +1739,32 @@
             <!-- Grafik Bölümü -->
             <div style="background: rgba(255,255,255,0.95); padding: 20px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.2);">
                 <h3 style="color: #667eea; margin-bottom: 15px; font-size: 1.5em; text-align: center;">📈 Paraya Yakınlık Grafiği 📈</h3>
-                <p style="text-align: center; color: #666; margin-bottom: 15px;">Kalan 11 maç için 278 kuponun 15'e yakınlık durumu</p>
-                <canvas id="prizeChart" style="max-height: 400px;"></canvas>
-                <div id="prizeChartInfo" style="margin-top: 15px; text-align: center; color: #667eea; font-weight: bold; font-size: 1.1em;"></div>
+                <p style="text-align: center; color: #666; margin-bottom: 15px;">10,000 TL → 50 MİLYON TL Hedefi | Canlı Yükselen Grafik</p>
+                
+                <!-- Animasyonlu Grafik Alanı -->
+                <div id="prizeChartArea" style="position: relative; width: 100%; height: 500px; background: linear-gradient(to bottom, #1a1a2e 0%, #16213e 50%, #0f3460 100%); border-radius: 15px; overflow: hidden; border: 3px solid #667eea; margin-bottom: 20px;">
+                    <!-- Çarpan Göstergesi -->
+                    <div id="prizeMultiplierDisplay" style="position: absolute; top: 20px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.8); color: #FFD700; padding: 20px 40px; border-radius: 15px; font-size: 2.5em; font-weight: bold; text-shadow: 0 0 20px rgba(255,215,0,0.8); z-index: 10; border: 2px solid #FFD700;">
+                        <div style="font-size: 0.4em; color: #fff; margin-bottom: 5px;">ÇARPAN</div>
+                        <div id="prizeMultiplierValue">1.00x</div>
+                        <div id="prizeAmountValue" style="font-size: 0.5em; color: #28a745; margin-top: 5px;">10,000 TL</div>
+                    </div>
+                    
+                    <!-- Yükselen Çizgi -->
+                    <canvas id="prizeChart" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></canvas>
+                    
+                    <!-- Hedef Çizgisi (50 Milyon) -->
+                    <div id="targetLine" style="position: absolute; left: 0; width: 100%; height: 2px; background: linear-gradient(90deg, transparent, #FFD700, transparent); top: 10%; z-index: 5; box-shadow: 0 0 10px rgba(255,215,0,0.6);">
+                        <div style="position: absolute; right: 10px; top: -15px; color: #FFD700; font-weight: bold; font-size: 0.9em;">50 MİLYON TL</div>
+                    </div>
+                    
+                    <!-- Başlangıç Çizgisi (10,000 TL) -->
+                    <div style="position: absolute; left: 0; width: 100%; height: 2px; background: rgba(102, 126, 234, 0.5); bottom: 0; z-index: 5;">
+                        <div style="position: absolute; left: 10px; top: -15px; color: #667eea; font-weight: bold; font-size: 0.9em;">10,000 TL</div>
+                    </div>
+                </div>
+                
+                <div id="prizeChartInfo" style="text-align: center; color: #667eea; font-weight: bold; font-size: 1.1em;"></div>
             </div>
         </div>
 
@@ -3354,8 +3377,17 @@
             renderPrizeChart();
         }
 
-        // Grafik çizme fonksiyonu
+        // Animasyonlu Yükselen Grafik
         let prizeChartInstance = null;
+        let prizeAnimationId = null;
+        let prizeMultiplier = 1.00;
+        const BASE_AMOUNT = 10000; // 10,000 TL
+        const TARGET_AMOUNT = 50000000; // 50 Milyon TL
+        const MAX_MULTIPLIER = TARGET_AMOUNT / BASE_AMOUNT; // 5000x
+        let prizeDataPoints = [];
+        let prizeAnimationSpeed = 0.01;
+        let prizeTargetMultiplier = 1.00;
+
         function renderPrizeChart() {
             const canvas = document.getElementById('prizeChart');
             const infoDiv = document.getElementById('prizeChartInfo');
@@ -3368,6 +3400,11 @@
             if (finishedMatches.length === 0) {
                 if (infoDiv) {
                     infoDiv.innerHTML = 'Henüz sonuçlanan maç yok. Grafik maç sonuçları geldiğinde güncellenecek.';
+                }
+                // Animasyonu durdur
+                if (prizeAnimationId) {
+                    cancelAnimationFrame(prizeAnimationId);
+                    prizeAnimationId = null;
                 }
                 return;
             }
@@ -3394,118 +3431,30 @@
                 };
             });
             
-            // Doğru tahmin sayısına göre grupla (4, 5, 6, ... 15)
-            const distribution = {};
-            couponStats.forEach(stat => {
-                const key = stat.correct;
-                if (!distribution[key]) {
-                    distribution[key] = 0;
-                }
-                distribution[key]++;
-            });
+            // En yüksek doğru sayısını bul
+            const maxCorrect = couponStats.length > 0 ? Math.max(...couponStats.map(s => s.correct)) : 0;
             
-            // Grafik verilerini hazırla
-            const labels = [];
-            const data = [];
-            const colors = [];
-            
-            for (let i = 4; i <= finishedMatches.length; i++) {
-                labels.push(`${i} Doğru`);
-                data.push(distribution[i] || 0);
-                
-                // Renk: 15'e yaklaştıkça daha parlak
-                const progress = (i / 15) * 100;
-                if (progress >= 90) {
-                    colors.push('rgba(255, 215, 0, 0.8)'); // Altın
-                } else if (progress >= 80) {
-                    colors.push('rgba(255, 140, 0, 0.8)'); // Turuncu
-                } else if (progress >= 70) {
-                    colors.push('rgba(255, 69, 0, 0.8)'); // Kırmızı-turuncu
-                } else if (progress >= 60) {
-                    colors.push('rgba(102, 126, 234, 0.8)'); // Mavi
-                } else {
-                    colors.push('rgba(118, 75, 162, 0.8)'); // Mor
-                }
+            // Çarpan hesapla: 4 doğru = 1x, 15 doğru = 5000x
+            // Doğrusal interpolasyon: (correct - 4) / (15 - 4) * (5000 - 1) + 1
+            if (maxCorrect >= 4) {
+                prizeTargetMultiplier = ((maxCorrect - 4) / 11) * (MAX_MULTIPLIER - 1) + 1;
+            } else {
+                prizeTargetMultiplier = 1.00;
             }
             
-            // Mevcut grafik varsa yok et
-            if (prizeChartInstance) {
-                prizeChartInstance.destroy();
+            // Animasyonu başlat
+            if (!prizeAnimationId) {
+                prizeDataPoints = [];
+                prizeMultiplier = 1.00;
+                animatePrizeChart();
             }
-            
-            // Yeni grafik oluştur
-            const ctx = canvas.getContext('2d');
-            prizeChartInstance = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Kupon Sayısı',
-                        data: data,
-                        backgroundColor: colors,
-                        borderColor: colors.map(c => c.replace('0.8', '1')),
-                        borderWidth: 2,
-                        borderRadius: 8
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: true,
-                    plugins: {
-                        legend: {
-                            display: false
-                        },
-                        title: {
-                            display: true,
-                            text: `${activeCoupons.length} Kupon - 15'e Yakınlık Durumu`,
-                            font: {
-                                size: 16,
-                                weight: 'bold'
-                            },
-                            color: '#667eea'
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    const value = context.parsed.y;
-                                    const percentage = ((value / activeCoupons.length) * 100).toFixed(1);
-                                    return `${value} kupon (${percentage}%)`;
-                                }
-                            }
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                stepSize: 1,
-                                color: '#667eea'
-                            },
-                            grid: {
-                                color: 'rgba(102, 126, 234, 0.2)'
-                            }
-                        },
-                        x: {
-                            ticks: {
-                                color: '#667eea',
-                                font: {
-                                    weight: 'bold'
-                                }
-                            },
-                            grid: {
-                                display: false
-                            }
-                        }
-                    }
-                }
-            });
             
             // Bilgi metni
             if (infoDiv) {
                 const totalCoupons = activeCoupons.length;
-                const maxCorrect = Math.max(...couponStats.map(s => s.correct));
-                const maxCount = distribution[maxCorrect] || 0;
-                const maxPercentage = ((maxCount / totalCoupons) * 100).toFixed(1);
+                const currentAmount = BASE_AMOUNT * prizeMultiplier;
+                const targetAmount = BASE_AMOUNT * prizeTargetMultiplier;
+                const progressPercent = ((prizeMultiplier - 1) / (prizeTargetMultiplier - 1)) * 100;
                 
                 infoDiv.innerHTML = `
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 15px;">
@@ -3519,14 +3468,141 @@
                             <strong>Kalan Maç:</strong> ${remainingMatches}
                         </div>
                         <div style="background: rgba(255, 69, 0, 0.1); padding: 10px; border-radius: 8px;">
-                            <strong>${maxCorrect} Doğru Kupon:</strong> ${maxCount} (${maxPercentage}%)
+                            <strong>Hedef Çarpan:</strong> ${prizeTargetMultiplier.toFixed(2)}x
                         </div>
                     </div>
                     <p style="margin-top: 15px; font-size: 1.2em; color: #FF6B35;">
-                        🎯 ${remainingMatches} maç kaldı! ${maxCorrect} doğru tahmin ile ${50 * (maxCorrect / 15)} milyon TL'ye yaklaşıyorsunuz! 🎯
+                        🎯 ${remainingMatches} maç kaldı! ${maxCorrect} doğru tahmin ile ${(targetAmount / 1000000).toFixed(2)} milyon TL'ye yaklaşıyorsunuz! 🎯
                     </p>
                 `;
             }
+        }
+
+        function animatePrizeChart() {
+            const canvas = document.getElementById('prizeChart');
+            if (!canvas) return;
+            
+            const ctx = canvas.getContext('2d');
+            const width = canvas.width = canvas.offsetWidth;
+            const height = canvas.height = canvas.offsetHeight;
+            
+            // Çarpanı hedefe doğru artır (Aviator gibi hızlanarak)
+            const diff = prizeTargetMultiplier - prizeMultiplier;
+            if (diff > 0.01) {
+                prizeAnimationSpeed = Math.min(0.01 + (prizeMultiplier - 1) * 0.0005, 0.05);
+                prizeMultiplier += Math.min(diff * 0.1, prizeAnimationSpeed);
+            } else {
+                prizeMultiplier = prizeTargetMultiplier;
+            }
+            
+            // Veri noktası ekle
+            prizeDataPoints.push({
+                x: Date.now(),
+                y: prizeMultiplier
+            });
+            
+            // Eski noktaları temizle (son 200 nokta)
+            if (prizeDataPoints.length > 200) {
+                prizeDataPoints.shift();
+            }
+            
+            // Canvas'ı temizle
+            ctx.clearRect(0, 0, width, height);
+            
+            // Grid çizgileri
+            ctx.strokeStyle = 'rgba(102, 126, 234, 0.2)';
+            ctx.lineWidth = 1;
+            for (let i = 0; i <= 10; i++) {
+                const y = (height / 10) * i;
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(width, y);
+                ctx.stroke();
+            }
+            
+            // Yükselen çizgiyi çiz
+            if (prizeDataPoints.length > 1) {
+                ctx.strokeStyle = '#FFD700';
+                ctx.lineWidth = 3;
+                ctx.shadowBlur = 10;
+                ctx.shadowColor = '#FFD700';
+                ctx.beginPath();
+                
+                const timeRange = 30000; // 30 saniye
+                const now = Date.now();
+                const minTime = now - timeRange;
+                
+                prizeDataPoints.forEach((point, index) => {
+                    if (point.x >= minTime) {
+                        const x = ((point.x - minTime) / timeRange) * width;
+                        // Y pozisyonu: alt (1x) üst (5000x) arası
+                        const yPercent = 1 - ((point.y - 1) / (MAX_MULTIPLIER - 1));
+                        const y = yPercent * (height - 40) + 20; // Üst ve alt boşluk
+                        
+                        if (index === 0) {
+                            ctx.moveTo(x, y);
+                        } else {
+                            ctx.lineTo(x, y);
+                        }
+                    }
+                });
+                
+                ctx.stroke();
+                ctx.shadowBlur = 0;
+                
+                // Son noktayı vurgula
+                if (prizeDataPoints.length > 0) {
+                    const lastPoint = prizeDataPoints[prizeDataPoints.length - 1];
+                    if (lastPoint.x >= minTime) {
+                        const x = ((lastPoint.x - minTime) / timeRange) * width;
+                        const yPercent = 1 - ((lastPoint.y - 1) / (MAX_MULTIPLIER - 1));
+                        const y = yPercent * (height - 40) + 20;
+                        
+                        // Parlak nokta
+                        ctx.fillStyle = '#FFD700';
+                        ctx.shadowBlur = 20;
+                        ctx.shadowColor = '#FFD700';
+                        ctx.beginPath();
+                        ctx.arc(x, y, 8, 0, Math.PI * 2);
+                        ctx.fill();
+                        ctx.shadowBlur = 0;
+                    }
+                }
+            }
+            
+            // Çarpan ve miktar güncelle
+            const currentAmount = BASE_AMOUNT * prizeMultiplier;
+            document.getElementById('prizeMultiplierValue').textContent = prizeMultiplier.toFixed(2) + 'x';
+            
+            // Miktar formatla
+            let amountText = '';
+            if (currentAmount >= 1000000) {
+                amountText = (currentAmount / 1000000).toFixed(2) + ' Milyon TL';
+            } else if (currentAmount >= 1000) {
+                amountText = (currentAmount / 1000).toFixed(2) + ' Bin TL';
+            } else {
+                amountText = currentAmount.toFixed(2) + ' TL';
+            }
+            document.getElementById('prizeAmountValue').textContent = amountText;
+            
+            // Çarpan rengi değiştir
+            const multiplierDisplay = document.getElementById('prizeMultiplierDisplay');
+            if (prizeMultiplier >= 4000) {
+                multiplierDisplay.style.color = '#FF4500';
+                multiplierDisplay.style.borderColor = '#FF4500';
+            } else if (prizeMultiplier >= 2000) {
+                multiplierDisplay.style.color = '#FFA500';
+                multiplierDisplay.style.borderColor = '#FFA500';
+            } else if (prizeMultiplier >= 1000) {
+                multiplierDisplay.style.color = '#FFD700';
+                multiplierDisplay.style.borderColor = '#FFD700';
+            } else {
+                multiplierDisplay.style.color = '#FFD700';
+                multiplierDisplay.style.borderColor = '#FFD700';
+            }
+            
+            // Devam et
+            prizeAnimationId = requestAnimationFrame(animatePrizeChart);
         }
 
         // Aviator Oyunu JavaScript
