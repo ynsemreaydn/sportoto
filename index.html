@@ -2101,6 +2101,7 @@
                         <div style="font-weight: bold; color: #FF6B35; font-size: 1.2em;" id="potential11">11: 0</div>
                     </div>
                 </div>
+                <div class="detailed-candidates" id="potentialDetailsContainer" style="display:none; margin-top:12px;"></div>
             </div>
         </div>
 
@@ -5611,6 +5612,7 @@
         // Potansiyel doğru tahmin istatistiklerini hesapla (Hedef 15 kalma mantığı)
         function calculatePotentialStats() {
             const potentialCounts = { 15: 0, 14: 0, 13: 0, 12: 0, 11: 0 };
+            const potentialLists = { 15: [], 14: [], 13: [], 12: [], 11: [] };
 
             const ftMatchResults = getFinishedMatchResults();
             const remainingMatches = 15 - ftMatchResults.length;
@@ -5631,6 +5633,15 @@
                 if (maxPossible >= 13) potentialCounts[13]++;
                 if (maxPossible >= 12) potentialCounts[12]++;
                 if (maxPossible >= 11) potentialCounts[11]++;
+
+                // "Kalan maçlar da doğru olursa" en iyi senaryo final doğru sayısı
+                const finalIfAllCorrect = correctSoFar + remainingMatches;
+                if (finalIfAllCorrect >= 11 && finalIfAllCorrect <= 15) {
+                    potentialLists[finalIfAllCorrect].push({
+                        rowNumber: coupon.rowNumber,
+                        predictions: coupon.predictions
+                    });
+                }
             });
 
             document.getElementById('potential15').textContent = `15: ${potentialCounts[15]}`;
@@ -5638,6 +5649,36 @@
             document.getElementById('potential13').textContent = `13: ${potentialCounts[13]}`;
             document.getElementById('potential12').textContent = `12: ${potentialCounts[12]}`;
             document.getElementById('potential11').textContent = `11: ${potentialCounts[11]}`;
+
+            // 14 ve 13 için detayları göster
+            const details = document.getElementById('potentialDetailsContainer');
+            if (details) {
+                const list14 = potentialLists[14];
+                const list13 = potentialLists[13];
+                if (list14.length || list13.length) {
+                    function renderList(arr, title) {
+                        if (!arr || arr.length === 0) return '';
+                        const items = arr.map(c => `
+                            <div class="detailed-item">
+                                <div class="title">Kupon #${c.rowNumber}</div>
+                                <div class="preds">${c.predictions.join(',')}</div>
+                            </div>
+                        `).join('');
+                        return `
+                            <h3>${title} (toplam ${arr.length})</h3>
+                            <div class="detailed-list">${items}</div>
+                        `;
+                    }
+                    details.style.display = 'block';
+                    details.innerHTML = `
+                        ${renderList(list14, 'Kalan maçlar da doğru olursa 14 bilen kuponlar')}
+                        ${renderList(list13, 'Kalan maçlar da doğru olursa 13 bilen kuponlar')}
+                    `;
+                } else {
+                    details.style.display = 'none';
+                    details.innerHTML = '';
+                }
+            }
         }
 
         // Kazanmayı beklediğimiz kuponu render et - henüz erken, comment out edildi
