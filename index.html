@@ -2060,18 +2060,6 @@
                     </div>
                 </div>
             </div>
-            <div class="coupon-ids-section" id="couponIdsSection" style="margin-top: 15px; padding: 15px; background: linear-gradient(135deg, rgba(102,126,234,0.2) 0%, rgba(118,75,162,0.2) 100%); border-radius: 12px; border: 2px solid rgba(102,126,234,0.5);">
-                <h3 style="margin: 0 0 12px 0; color: #667eea; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">📋 Kupon ID'leri ve Yüzdeler</h3>
-                <div style="margin-bottom: 10px;">
-                    <strong style="color: #667eea;">Toplam Kupon Sayısı: <span id="totalCouponCount">196</span></strong><br>
-                    <strong style="color: #667eea;">Toplam Kombinasyon: <span id="totalCombinationCount">980</span></strong>
-                </div>
-                <div style="max-height: 300px; overflow-y: auto; background: rgba(255,255,255,0.9); padding: 10px; border-radius: 8px;">
-                    <div id="couponIdsList" style="font-size: 0.9em; line-height: 1.6;">
-                        <!-- Coupon IDs will be populated by JavaScript -->
-                    </div>
-                </div>
-            </div>
         </div>
 
         <div class="pagination-container">
@@ -2133,40 +2121,7 @@
             '4601800425272506', '4601800425272558', '4601800425272801', '4601800425272835'
         ];
 
-        // Kupon ID'lerini ve yüzdelerini göster
-        function renderCouponIds() {
-            const container = document.getElementById('couponIdsList');
-            const totalCombinations = csvDataCompact.length;
-            const combinationsPerCoupon = 5;
-            
-            // Her kupon için kombinasyon sayısını ve yüzdesini hesapla
-            const couponData = COUPON_IDS.map((couponId, index) => {
-                const startIndex = index * combinationsPerCoupon;
-                const endIndex = Math.min(startIndex + combinationsPerCoupon, totalCombinations);
-                const actualCombinations = endIndex - startIndex;
-                const percentage = ((actualCombinations / totalCombinations) * 100).toFixed(2);
-                return {
-                    couponNum: index + 1,
-                    couponId: couponId,
-                    combinations: actualCombinations,
-                    percentage: parseFloat(percentage)
-                };
-            });
-            
-            // Yüzdeleri büyükten küçüğe sırala
-            couponData.sort((a, b) => b.percentage - a.percentage);
-            
-            let html = '';
-            couponData.forEach(coupon => {
-                html += `<div style="padding: 5px; border-bottom: 1px solid rgba(102,126,234,0.2);">
-                    <strong>Kupon #${coupon.couponNum}:</strong> ${coupon.couponId} <span style="color: #764ba2;">(${coupon.percentage}%)</span>
-                </div>`;
-            });
-            
-            container.innerHTML = html;
-            document.getElementById('totalCouponCount').textContent = COUPON_IDS.length;
-            document.getElementById('totalCombinationCount').textContent = totalCombinations;
-        }
+        // (Kaldırıldı) Kupon ID'leri ve yüzdeleri bileşeni
 
         // Maç listesi (canlı skor bilgileri ile)
         const matches = [
@@ -5942,7 +5897,6 @@
         function initializeApp() {
             renderMatches(); // Maç listesini render et
             loadCoupons();
-            renderCouponIds(); // Kupon ID'lerini ve yüzdelerini render et
             // renderWinningCoupon(); // Kazanmayı beklediğimiz kuponu render et - henüz erken, comment out edildi
             // renderTarget13Coupons(); // Hedef 13 kuponlarını render et - henüz erken, comment out edildi
             // Marquee ve emoji animasyonlarını hemen başlat (popup kapandığı gibi)
