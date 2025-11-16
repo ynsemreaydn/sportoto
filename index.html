@@ -24,6 +24,12 @@
             overflow-x: hidden;
         }
 
+        /* Üst bannerları gizle */
+        .shutdown-banner,
+        .billboard-container {
+            display: none !important;
+        }
+
         .shutdown-banner {
             position: relative;
             z-index: 1001;
@@ -70,7 +76,7 @@
         .gif-carousel {
             position: relative;
             width: 100%;
-            height: 200px;
+            height: 360px;
             overflow: hidden;
             background: rgba(0, 0, 0, 0.3);
             display: flex;
@@ -1967,7 +1973,7 @@
         </div>
 
         <div class="perfect-coupons-section" id="perfectCouponsSection">
-            <h2>⭐ 14'e Giden Kuponlar ⭐</h2>
+            <h2 id="perfectCouponsTitle">⭐ 14'e Giden Kuponlar ⭐</h2>
             <p class="perfect-coupons-meta" id="perfectCouponsMeta">Sonuçlanan maçlara göre uygun kuponlar hesaplanıyor...</p>
             <p class="perfect-coupons-meta secondary" id="accuracySummary">Henüz tamamlanan maç yok.</p>
             <div class="perfect-coupons-container" id="perfectCouponsContainer"></div>
@@ -3674,6 +3680,16 @@
                     </div>
                     ${top14}
                 `);
+                // Başlığı güncelle (örn. ⭐ 14'e Giden 5 Kupon ⭐)
+                const titleEl = document.getElementById('perfectCouponsTitle');
+                if (titleEl) {
+                    const count = Math.min(5, candidates14.length);
+                    titleEl.textContent = `⭐ 14'e Giden ${count} Kupon ⭐`;
+                }
+            }
+            if (!candidates14.length) {
+                const titleEl = document.getElementById('perfectCouponsTitle');
+                if (titleEl) titleEl.textContent = `⭐ 14'e Giden Kuponlar ⭐`;
             }
             if (candidates13.length) {
                 const top13 = candidates13.slice(0, limit).map(x => renderCouponCard(x.coupon)).join('');
