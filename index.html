@@ -639,6 +639,69 @@
             border: 1px solid rgba(255,255,255,0.25);
             background: rgba(255,255,255,0.12);
         }
+        /* Path flow (14'e giden 5 kupon) */
+        .path-flow {
+            grid-column: 1 / -1;
+            margin-top: 16px;
+            padding: 14px 16px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, rgba(0,0,0,0.15), rgba(255,255,255,0.06));
+            border: 1px solid rgba(255,255,255,0.16);
+            color: rgba(255,255,255,0.95);
+        }
+        .path-flow h3 {
+            margin: 0 0 10px 0;
+            font-size: 1.05em;
+            color: #9ad1ff;
+        }
+        .path-grid {
+            display: grid;
+            grid-auto-flow: column;
+            grid-auto-columns: minmax(220px, 1fr);
+            gap: 12px;
+            overflow-x: auto;
+            padding-bottom: 6px;
+        }
+        .path-col {
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.14);
+            border-radius: 10px;
+            padding: 10px;
+            min-width: 220px;
+        }
+        .path-col .col-head {
+            font-weight: 800;
+            margin-bottom: 6px;
+            color: rgba(255,255,255,0.98);
+            text-align: center;
+        }
+        .path-node {
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.18);
+            border-radius: 10px;
+            padding: 8px 10px;
+            margin-bottom: 8px;
+        }
+        .path-node .node-head {
+            display: flex;
+            justify-content: space-between;
+            font-weight: 700;
+        }
+        .path-node .node-children {
+            margin-top: 6px;
+            font-size: 0.92em;
+            opacity: 0.95;
+        }
+        .path-node .node-children .child {
+            display: flex;
+            justify-content: space-between;
+            padding: 2px 0;
+        }
+        .path-note {
+            margin-top: 8px;
+            font-size: 0.92em;
+            color: rgba(255,255,255,0.85);
+        }
         /* Detailed candidates list */
         .detailed-candidates {
             margin: 16px auto 0 auto;
@@ -1911,6 +1974,8 @@
             <div class="perfect-coupons-summary" id="remainingOutcomeSummary" style="display:none;"></div>
             <div class="decision-tree" id="decisionTreeContainer" style="display:none;"></div>
             <div class="detailed-candidates" id="detailedCandidatesContainer" style="display:none;"></div>
+            <div class="coupon-details" id="couponDetails14" style="display:none;"></div>
+            <div class="coupon-details" id="couponDetails13" style="display:none;"></div>
         </div>
 
         <!-- İkramiye hedefi bölümü kaldırıldı -->
@@ -3603,88 +3668,20 @@
             let htmlSections = [];
             if (candidates14.length) {
                 const top14 = candidates14.slice(0, limit).map(x => renderCouponCard(x.coupon)).join('');
-                // Build collapsible details (all 14-candidate coupons)
-                function buildDetails(cands, title) {
-                    const items = cands.map(x => {
-                        const c = x.coupon;
-                        const rows = c.predictions.map((prediction, idx) => {
-                            const m = matches[idx];
-                            const status = (m && m.status === 'FT')
-                                ? `FT ${m.homeScore}-${m.awayScore}`
-                                : 'Beklemede';
-                            return `
-                                <div class="match-line">
-                                    <div class="badge">Maç ${m?.no ?? (idx+1)}</div>
-                                    <div>${m?.teams ?? ''}</div>
-                                    <div class="badge">Tahmin: ${prediction}</div>
-                                </div>
-                            `;
-                        }).join('');
-                        return `
-                            <details>
-                                <summary>Kupon #${c.rowNumber}</summary>
-                                <div class="detail-body">
-                                    ${rows}
-                                </div>
-                            </details>
-                        `;
-                    }).join('');
-                    return `
-                        <div class="coupon-details">
-                            <div style="text-align:center; font-weight:800; color: rgba(255,255,255,0.95); margin: 8px 0 6px 0;">${title} (toplam ${cands.length})</div>
-                            ${items}
-                        </div>
-                    `;
-                }
                 htmlSections.push(`
                     <div style="grid-column: 1 / -1; text-align:center; color: rgba(255,255,255,0.95); font-weight: 800; margin-top: 5px;">
                         14 bilen kuponlar (ilk ${Math.min(limit, candidates14.length)})
                     </div>
                     ${top14}
-                    ${buildDetails(candidates14, "⭐ 14'e Giden Kuponlar ⭐")}
                 `);
             }
             if (candidates13.length) {
                 const top13 = candidates13.slice(0, limit).map(x => renderCouponCard(x.coupon)).join('');
-                // Reuse details builder for 13
-                function buildDetails13(cands, title) {
-                    const items = cands.map(x => {
-                        const c = x.coupon;
-                        const rows = c.predictions.map((prediction, idx) => {
-                            const m = matches[idx];
-                            const status = (m && m.status === 'FT')
-                                ? `FT ${m.homeScore}-${m.awayScore}`
-                                : 'Beklemede';
-                            return `
-                                <div class="match-line">
-                                    <div class="badge">Maç ${m?.no ?? (idx+1)}</div>
-                                    <div>${m?.teams ?? ''}</div>
-                                    <div class="badge">Tahmin: ${prediction}</div>
-                                </div>
-                            `;
-                        }).join('');
-                        return `
-                            <details>
-                                <summary>Kupon #${c.rowNumber}</summary>
-                                <div class="detail-body">
-                                    ${rows}
-                                </div>
-                            </details>
-                        `;
-                    }).join('');
-                    return `
-                        <div class="coupon-details">
-                            <div style="text-align:center; font-weight:800; color: rgba(255,255,255,0.95); margin: 8px 0 6px 0;">${title} (toplam ${cands.length})</div>
-                            ${items}
-                        </div>
-                    `;
-                }
                 htmlSections.push(`
                     <div style="grid-column: 1 / -1; text-align:center; color: rgba(255,255,255,0.95); font-weight: 800; margin-top: 14px;">
                         13 bilen kuponlar (ilk ${Math.min(limit, candidates13.length)})
                     </div>
                     ${top13}
-                    ${buildDetails13(candidates13, "⭐ 13'e Giden Kuponlar ⭐")}
                 `);
             }
             if (!candidates14.length && !candidates13.length) {
@@ -3705,6 +3702,158 @@
             if (perfectCoupons.length > limit) {
                 container.innerHTML += `<p style="text-align:center; margin-top:15px; color: rgba(255,255,255,0.82);">Toplam ${perfectCoupons.length} kupon var, ilk ${limit} kupon gösteriliyor.</p>`;
             }
+
+            // Dış detay konteynerlerini doldur (tüm 14 ve 13 adayları)
+            (function renderExternalDetails() {
+                const c14Div = document.getElementById('couponDetails14');
+                const c13Div = document.getElementById('couponDetails13');
+                function buildAccordion(cands, title) {
+                    if (!cands || !cands.length) return {html:'', show:false};
+                    const items = cands.map(x => {
+                        const c = x.coupon;
+                        const rows = c.predictions.map((prediction, idx) => {
+                            const m = matches[idx];
+                            const matchNo = m ? m.no : (idx + 1);
+                            const teams = m ? m.teams : '';
+                            return `
+                                <div class="match-line">
+                                    <div class="badge">Maç ${matchNo}</div>
+                                    <div>${teams}</div>
+                                    <div class="badge">Tahmin: ${prediction}</div>
+                                </div>
+                            `;
+                        }).join('');
+                        return `
+                            <details>
+                                <summary>Kupon #${c.rowNumber}</summary>
+                                <div class="detail-body">
+                                    ${rows}
+                                </div>
+                            </details>
+                        `;
+                    }).join('');
+                    const html = `
+                        <div style="text-align:center; font-weight:800; color: rgba(255,255,255,0.95); margin: 8px 0 6px 0;">${title} (toplam ${cands.length})</div>
+                        ${items}
+                    `;
+                    return {html, show:true};
+                }
+                if (c14Div) {
+                    const res14 = buildAccordion(candidates14, "⭐ 14'e Giden Kuponlar ⭐");
+                    c14Div.innerHTML = res14.html;
+                    c14Div.style.display = res14.show ? 'block' : 'none';
+                }
+                if (c13Div) {
+                    const res13 = buildAccordion(candidates13, "⭐ 13'e Giden Kuponlar ⭐");
+                    c13Div.innerHTML = res13.html;
+                    c13Div.style.display = res13.show ? 'block' : 'none';
+                }
+            })();
+
+            // 14'e giden 5 kupon için yol haritası (kalan maçlar kolonlar)
+            (function renderFourteenPathFlow() {
+                const flowMountAfter = document.getElementById('couponDetails14');
+                if (!flowMountAfter) return;
+                const flowCoupons = candidates14.map(x => x.coupon);
+                const remainingIndexes = matches.map((_, idx) => idx).filter(idx => !finishedMap.has(idx));
+                if (flowCoupons.length !== 5 || remainingIndexes.length === 0) {
+                    // Yalın not göster
+                    return;
+                }
+                function groupByOption(coupons, idx) {
+                    const map = new Map();
+                    coupons.forEach(c => {
+                        const key = String(c.predictions[idx]);
+                        if (!map.has(key)) map.set(key, []);
+                        map.get(key).push(c);
+                    });
+                    return map; // key -> coupon[]
+                }
+                // Build columns content
+                const columnsHtml = remainingIndexes.map((idx, colPos) => {
+                    const match = matches[idx];
+                    const colTitle = `Maç ${match.no} • ${match.teams}`;
+                    // At this column, we need branching counts from each possible parent branch.
+                    // For the first column, parent is the full set (5 kupon). Next columns derive from each previous option bucket.
+                    function buildNodesForColumn(previousBuckets) {
+                        // previousBuckets: array of {label, coupons}
+                        const blocks = previousBuckets.map(bucket => {
+                            const grouped = groupByOption(bucket.coupons, idx);
+                            const children = [...grouped.entries()]
+                                .sort((a,b) => {
+                                    const order = ['1','0','2'];
+                                    const ai = order.indexOf(a[0]); const bi = order.indexOf(b[0]);
+                                    if (ai === -1 && bi === -1) return a[0].localeCompare(b[0]);
+                                    if (ai === -1) return 1;
+                                    if (bi === -1) return -1;
+                                    return ai - bi;
+                                })
+                                .map(([opt, arr]) => ({ opt, count: arr.length, coupons: arr }));
+                            const childHtml = children.map(child => {
+                                return `<div class="child"><span>Seçenek ${child.opt}</span><span>${child.count} kupon</span></div>`;
+                            }).join('');
+                            return {
+                                html: `
+                                    <div class="path-node">
+                                        <div class="node-head">
+                                            <span>${bucket.label}</span>
+                                            <span>${bucket.coupons.length} kupon</span>
+                                        </div>
+                                        <div class="node-children">
+                                            ${childHtml || '<div class="child"><span>Seçenek yok</span><span>0</span></div>'}
+                                        </div>
+                                    </div>
+                                `,
+                                // produce next buckets with labels extended
+                                nextBuckets: children.map(child => ({
+                                    label: `${bucket.label} • ${match.no}:${child.opt}`,
+                                    coupons: child.coupons
+                                }))
+                            };
+                        });
+                        const html = blocks.map(b => b.html).join('');
+                        const flattenedNext = blocks.flatMap(b => b.nextBuckets);
+                        return { html, nextBuckets: flattenedNext };
+                    }
+                    // derive buckets for this column
+                    let currentBuckets;
+                    if (colPos === 0) {
+                        currentBuckets = [{ label: 'Başlangıç', coupons: flowCoupons }];
+                    } else {
+                        // compute buckets by replaying previous columns
+                        currentBuckets = [{ label: 'Başlangıç', coupons: flowCoupons }];
+                        for (let i = 0; i < colPos; i++) {
+                            const prevIdx = remainingIndexes[i];
+                            const matchPrev = matches[prevIdx];
+                            const built = buildNodesForColumn(currentBuckets);
+                            currentBuckets = built.nextBuckets;
+                            // collapse redundant single-option columns note: if all coupons same option, it's single branch anyway
+                        }
+                    }
+                    const builtThis = buildNodesForColumn(currentBuckets);
+                    return `
+                        <div class="path-col">
+                            <div class="col-head">${colTitle}</div>
+                            ${builtThis.html}
+                        </div>
+                    `;
+                }).join('');
+                const flowHtml = `
+                    <div class="path-flow" id="fourteenPathFlow">
+                        <h3>Yol Haritası: 14'e giden 5 kupon</h3>
+                        <div class="path-grid">
+                            ${columnsHtml}
+                        </div>
+                        <div class="path-note">Not: Her sütun, o maç için mevcut dalları ve her dalın kaç kuponla devam ettiğini gösterir. Bir sütunun içindeki her kutu, sol taraftaki seçimlerden gelen alt kümeyi temsil eder.</div>
+                    </div>
+                `;
+                // Insert after couponDetails14
+                if (!document.getElementById('fourteenPathFlow')) {
+                    flowMountAfter.insertAdjacentHTML('afterend', flowHtml);
+                } else {
+                    document.getElementById('fourteenPathFlow').outerHTML = flowHtml;
+                }
+            })();
 
             // 14 ve 13 doğru bilen kuponların detay listesi (tamamı)
             const detailedContainer = document.getElementById('detailedCandidatesContainer');
