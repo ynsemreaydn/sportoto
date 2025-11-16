@@ -912,6 +912,12 @@
             box-shadow: 0 0 12px rgba(76, 175, 80, 0.65);
         }
 
+        .perfect-prediction-item.ft-incorrect {
+            background: linear-gradient(135deg, rgba(244, 67, 54, 0.5), rgba(211, 47, 47, 0.4));
+            border-color: rgba(244, 67, 54, 0.9);
+            box-shadow: 0 0 12px rgba(244, 67, 54, 0.7);
+        }
+
         .perfect-prediction-item.pending {
             background: rgba(33, 150, 243, 0.25);
             border-color: rgba(33, 150, 243, 0.55);
@@ -3702,7 +3708,12 @@
                     const classes = ['perfect-prediction-item', `prediction-${prediction}`];
 
                     if (finishedItem) {
-                        classes.push('ft-correct');
+                        // Doğru tahmin: yeşil, yanlış tahmin: kırmızı
+                        if (coupon.predictions[index] === finishedItem.result) {
+                            classes.push('ft-correct');
+                        } else {
+                            classes.push('ft-incorrect');
+                        }
                     } else {
                         classes.push('pending');
                     }
@@ -3786,7 +3797,7 @@
                 container.innerHTML += `<p style="text-align:center; margin-top:15px; color: rgba(255,255,255,0.82);">Toplam ${perfectCoupons.length} kupon var, ilk ${limit} kupon gösteriliyor.</p>`;
             }
 
-            // FORCE: 5 kuponun detaylarını kesinlikle göster
+            // FORCE: 5 kuponun detaylarını kesinlikle göster (renklendirmeli, duplicate yok)
             const forcedRows = [143, 161, 381, 763, 939];
             const forcedCoupons = allCoupons.filter(c => forcedRows.includes(c.rowNumber));
             if (forcedCoupons.length > 0) {
@@ -3795,10 +3806,20 @@
                         const m = matches[idx];
                         const matchNo = m ? m.no : (idx + 1);
                         const teams = m ? m.teams : '';
-                        const ft = (m && m.status === 'FT' && m.homeScore !== null && m.awayScore !== null) 
-                            ? ` • FT ${m.homeScore}-${m.awayScore}` 
-                            : '';
-                        return `<div class="match-line" style="display:flex; gap:10px; padding:8px; border-bottom:1px solid rgba(255,255,255,0.1);"><div class="badge" style="background:rgba(102,126,234,0.3); padding:4px 8px; border-radius:6px;">Maç ${matchNo}</div><div style="flex:1;">${teams}</div><div class="badge" style="background:rgba(76,175,80,0.3); padding:4px 8px; border-radius:6px;">Tahmin: ${pred}${ft}</div></div>`;
+                        const finishedItem = finishedMap.get(idx);
+                        let bgColor = 'rgba(33,150,243,0.3)'; // Pending: mavi
+                        let borderColor = 'rgba(33,150,243,0.5)';
+                        if (finishedItem) {
+                            if (pred === finishedItem.result) {
+                                bgColor = 'rgba(76,175,80,0.4)'; // Doğru: yeşil
+                                borderColor = 'rgba(76,175,80,0.7)';
+                            } else {
+                                bgColor = 'rgba(244,67,54,0.4)'; // Yanlış: kırmızı
+                                borderColor = 'rgba(244,67,54,0.7)';
+                            }
+                        }
+                        const ft = finishedItem ? ` • FT ${finishedItem.score}` : '';
+                        return `<div class="match-line" style="display:flex; gap:10px; padding:8px; border-bottom:1px solid rgba(255,255,255,0.1); background:${bgColor}; border-left:3px solid ${borderColor}; border-radius:4px; margin-bottom:4px;"><div class="badge" style="background:rgba(102,126,234,0.3); padding:4px 8px; border-radius:6px;">Maç ${matchNo}</div><div style="flex:1;">${teams}</div><div class="badge" style="background:${bgColor}; padding:4px 8px; border-radius:6px; border:1px solid ${borderColor};">Tahmin: ${pred}${ft}</div></div>`;
                     }).join('');
                     return `
                         <div class="perfect-coupon-card" style="margin-top:20px;">
@@ -3868,26 +3889,10 @@
                     c13Div.innerHTML = res13.html;
                     c13Div.style.display = res13.show ? 'block' : 'none';
                 }
-                // İlk 5 adet 14'e ulaşabilen kuponu tüm maç içerikleriyle yaz (FORCE: belirlenen kuponlar)
+                // fiveFull container duplicate olduğu için kaldırıldı (yukarıda zaten gösteriliyor)
                 if (fiveFull) {
-                    const forcedRows = new Set([143, 161, 381, 763, 939]);
-                    const forcedCoupons = allCoupons.filter(c => forcedRows.has(c.rowNumber));
-                    const top5Coupons = forcedCoupons.length ? forcedCoupons : candidates14.slice(0, 5).map(x => x.coupon);
-                    if (top5Coupons.length) {
-                        const blocks = top5Coupons.map(c => {
-                            const lines = c.predictions.map((pred, idx) => {
-                                const m = matches[idx];
-                                const ft = (m && m.status === 'FT') ? ` • FT ${m.homeScore}-${m.awayScore}` : '';
-                                return `<div class="match-line"><div class="badge">Maç ${m?.no ?? (idx+1)}</div><div>${m?.teams ?? ''}</div><div class="badge">Tahmin: ${pred}${ft}</div></div>`;
-                            }).join('');
-                            return `<details open><summary>Kupon #${c.rowNumber}</summary><div class="detail-body">${lines}</div></details>`;
-                        }).join('');
-                        fiveFull.innerHTML = `${blocks}`;
-                        fiveFull.style.display = 'block';
-                    } else {
-                        fiveFull.style.display = 'none';
-                        fiveFull.innerHTML = '';
-                    }
+                    fiveFull.style.display = 'none';
+                    fiveFull.innerHTML = '';
                 }
             })();
 
