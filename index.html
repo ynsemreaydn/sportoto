@@ -3449,7 +3449,7 @@
                 return;
             }
 
-            // Öncelik: 14 bilen kuponlar > yoksa 13 bilen kuponlar > en çok bilenler
+            // Kategoriler: 14 bilen kuponlar ve 13 bilen kuponlar ayrı ayrı listelensin
             const correctCounts = allCoupons.map(coupon => {
                 let correct = 0;
                 finishedMatches.forEach(ftMatch => {
@@ -3462,17 +3462,14 @@
             const target14 = Math.min(14, finishedMatches.length);
             const target13 = Math.min(13, finishedMatches.length);
             const candidates14 = target14 > 0 ? correctCounts.filter(x => x.correct === target14) : [];
-            const candidates13 = target13 > 0 ? correctCounts.filter(x => x.correct === target13) : [];
-            const maxCorrect = correctCounts.reduce((m, x) => Math.max(m, x.correct), 0);
-            const bestCandidates = candidates14.length ? candidates14
-                                  : (candidates13.length ? candidates13
-                                  : correctCounts.filter(x => x.correct === maxCorrect));
-            const topShown = bestCandidates.slice(0, limit).map(x => x.coupon);
-            const headerLabel = candidates14.length ? `14 bilen kuponlar (ilk ${Math.min(limit, candidates14.length)})`
-                                : (candidates13.length ? `13 bilen kuponlar (ilk ${Math.min(limit, candidates13.length)})`
-                                : `En çok bilen kuponlar (${maxCorrect}/${finishedMatches.length})`);
-            // Kartları oluştur
-            const cards = topShown.map(coupon => {
+            // 13 listesi, 14 listesiyle çakışan kuponları dışlasın
+            const idOf = (c) => c.coupon.rowNumber ?? c.coupon.row ?? JSON.stringify(c.coupon.predictions);
+            const set14 = new Set(candidates14.map(idOf));
+            const candidates13 = target13 > 0
+                ? correctCounts.filter(x => x.correct === target13 && !set14.has(idOf(x)))
+                : [];
+
+            function renderCouponCard(coupon) {
                 const gridItems = coupon.predictions.map((prediction, index) => {
                     const match = matches[index];
                     const finishedItem = finishedMap.get(index);
@@ -3513,14 +3510,41 @@
                         </div>
                     </div>
                 `;
-            }).join('');
+            }
 
-            container.innerHTML = `
-                <div style="grid-column: 1 / -1; text-align:center; color: rgba(255,255,255,0.9); font-weight: 700;">
-                    ${headerLabel}
-                </div>
-                ${cards}
-            `;
+            let htmlSections = [];
+            if (candidates14.length) {
+                const top14 = candidates14.slice(0, limit).map(x => renderCouponCard(x.coupon)).join('');
+                htmlSections.push(`
+                    <div style="grid-column: 1 / -1; text-align:center; color: rgba(255,255,255,0.95); font-weight: 800; margin-top: 5px;">
+                        14 bilen kuponlar (ilk ${Math.min(limit, candidates14.length)})
+                    </div>
+                    ${top14}
+                `);
+            }
+            if (candidates13.length) {
+                const top13 = candidates13.slice(0, limit).map(x => renderCouponCard(x.coupon)).join('');
+                htmlSections.push(`
+                    <div style="grid-column: 1 / -1; text-align:center; color: rgba(255,255,255,0.95); font-weight: 800; margin-top: 14px;">
+                        13 bilen kuponlar (ilk ${Math.min(limit, candidates13.length)})
+                    </div>
+                    ${top13}
+                `);
+            }
+            if (!candidates14.length && !candidates13.length) {
+                // Yedek: en çok bilenler
+                const maxCorrect = correctCounts.reduce((m, x) => Math.max(m, x.correct), 0);
+                const best = correctCounts.filter(x => x.correct === maxCorrect).slice(0, limit);
+                const cards = best.map(x => renderCouponCard(x.coupon)).join('');
+                htmlSections.push(`
+                    <div style="grid-column: 1 / -1; text-align:center; color: rgba(255,255,255,0.95); font-weight: 800;">
+                        En çok bilen kuponlar (${maxCorrect}/${finishedMatches.length})
+                    </div>
+                    ${cards}
+                `);
+            }
+
+            container.innerHTML = htmlSections.join('');
 
             if (perfectCoupons.length > limit) {
                 container.innerHTML += `<p style="text-align:center; margin-top:15px; color: rgba(255,255,255,0.82);">Toplam ${perfectCoupons.length} kupon var, ilk ${limit} kupon gösteriliyor.</p>`;
