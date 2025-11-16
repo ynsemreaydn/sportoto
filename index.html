@@ -1977,6 +1977,7 @@
             <div class="coupon-details" id="couponDetails14" style="display:none;"></div>
             <div class="coupon-details" id="couponDetails13" style="display:none;"></div>
             <div id="roadTo14Container"></div>
+            <div class="coupon-details" id="fiveCouponFullDetails" style="display:none;"></div>
         </div>
 
         <!-- İkramiye hedefi bölümü kaldırıldı -->
@@ -3706,6 +3707,7 @@
             (function renderExternalDetails() {
                 const c14Div = document.getElementById('couponDetails14');
                 const c13Div = document.getElementById('couponDetails13');
+                const fiveFull = document.getElementById('fiveCouponFullDetails');
                 function buildAccordion(cands, title) {
                     if (!cands || !cands.length) return {html:'', show:false};
                     const items = cands.map(x => {
@@ -3746,6 +3748,26 @@
                     const res13 = buildAccordion(candidates13, "⭐ 13'e Giden Kuponlar ⭐");
                     c13Div.innerHTML = res13.html;
                     c13Div.style.display = res13.show ? 'block' : 'none';
+                }
+                // İlk 5 adet 14'e ulaşabilen kuponu tüm maç içerikleriyle yaz
+                if (fiveFull) {
+                    const top5 = candidates14.slice(0, 5);
+                    if (top5.length) {
+                        const blocks = top5.map(x => {
+                            const c = x.coupon;
+                            const lines = c.predictions.map((pred, idx) => {
+                                const m = matches[idx];
+                                const ft = (m && m.status === 'FT') ? ` • FT ${m.homeScore}-${m.awayScore}` : '';
+                                return `<div class="match-line"><div class="badge">Maç ${m?.no ?? (idx+1)}</div><div>${m?.teams ?? ''}</div><div class="badge">Tahmin: ${pred}${ft}</div></div>`;
+                            }).join('');
+                            return `<details open><summary>Kupon #${c.rowNumber}</summary><div class="detail-body">${lines}</div></details>`;
+                        }).join('');
+                        fiveFull.innerHTML = `<div style="text-align:center; font-weight:800; color: rgba(255,255,255,0.95); margin: 8px 0 6px 0;">⭐ 14'e Giden Kuponlar ⭐ — 5 Kuponun Tüm Maç İçerikleri</div>${blocks}`;
+                        fiveFull.style.display = 'block';
+                    } else {
+                        fiveFull.style.display = 'none';
+                        fiveFull.innerHTML = '';
+                    }
                 }
             })();
 
