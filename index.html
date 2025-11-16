@@ -1799,7 +1799,7 @@
         height: 100%;
         background: rgba(0, 0, 0, 0.9);
         backdrop-filter: blur(10px);
-        display: flex;
+        display: none;
         justify-content: center;
         align-items: center;
         z-index: 10000;
@@ -1976,6 +1976,7 @@
             <div class="detailed-candidates" id="detailedCandidatesContainer" style="display:none;"></div>
             <div class="coupon-details" id="couponDetails14" style="display:none;"></div>
             <div class="coupon-details" id="couponDetails13" style="display:none;"></div>
+            <div id="roadTo14Container"></div>
         </div>
 
         <!-- İkramiye hedefi bölümü kaldırıldı -->
@@ -3750,12 +3751,27 @@
 
             // 14'e giden 5 kupon için yol haritası (kalan maçlar kolonlar)
             (function renderFourteenPathFlow() {
-                const flowMountAfter = document.getElementById('couponDetails14');
-                if (!flowMountAfter) return;
-                const flowCoupons = candidates14.map(x => x.coupon);
+                const flowMount = document.getElementById('roadTo14Container') || document.getElementById('couponDetails14');
+                if (!flowMount) return;
+                // En iyi 14'e ulaşabilen 5 kupon (doğru sayısı çok olanlar önde)
+                const sorted14 = candidates14
+                    .slice()
+                    .sort((a,b) => b.correct - a.correct || (a.coupon.rowNumber - b.coupon.rowNumber));
+                const flowCoupons = sorted14.slice(0, Math.min(5, sorted14.length)).map(x => x.coupon);
                 const remainingIndexes = matches.map((_, idx) => idx).filter(idx => !finishedMap.has(idx));
-                if (flowCoupons.length !== 5 || remainingIndexes.length === 0) {
+                if (flowCoupons.length === 0 || remainingIndexes.length === 0) {
                     // Yalın not göster
+                    const note = `
+                        <div class="path-flow" id="fourteenPathFlow">
+                            <h3>Yol Haritası: 14'e giden kuponlar</h3>
+                            <div class="path-note">Kalan maç yok veya 14'e gidebilecek kupon bulunamadı.</div>
+                        </div>
+                    `;
+                    if (!document.getElementById('fourteenPathFlow')) {
+                        flowMount.insertAdjacentHTML('afterend', note);
+                    } else {
+                        document.getElementById('fourteenPathFlow').outerHTML = note;
+                    }
                     return;
                 }
                 function groupByOption(coupons, idx) {
@@ -3845,9 +3861,9 @@
                         <div class="path-note">Not: Her sütun, o maç için mevcut dalları ve her dalın kaç kuponla devam ettiğini gösterir. Bir sütunun içindeki her kutu, sol taraftaki seçimlerden gelen alt kümeyi temsil eder.</div>
                     </div>
                 `;
-                // Insert after couponDetails14
+                // Insert into dedicated container
                 if (!document.getElementById('fourteenPathFlow')) {
-                    flowMountAfter.insertAdjacentHTML('afterend', flowHtml);
+                    flowMount.insertAdjacentHTML('afterend', flowHtml);
                 } else {
                     document.getElementById('fourteenPathFlow').outerHTML = flowHtml;
                 }
@@ -6309,22 +6325,15 @@
         // Son güncelleme tarihi (push tarihi)
         const lastPushDate = "01.11.2025 14:47:00"; // Push edildiğinde güncellenecek
 
-        // Popup şifresini kontrol et
+        // Popup şifresi devre dışı: overlay'i gizle ve uygulamayı başlat
         function checkPassword() {
-            const answer = document.getElementById('passwordInput').value.toLowerCase().trim();
-            if (answer === 'ordu') {
-                document.getElementById('popupOverlay').style.display = 'none';
-                // Marquee animasyonunu hemen başlat
-                const marqueeContent = document.getElementById('marqueeContent');
-                if (marqueeContent) {
-                    marqueeContent.style.animation = 'scroll 66s linear infinite';
-                }
-                initializeApp();
-            } else {
-                alert('❌ Yanlış cevap! Lütfen tekrar deneyin.');
-                document.getElementById('passwordInput').value = '';
-                document.getElementById('passwordInput').focus();
+            const overlay = document.getElementById('popupOverlay');
+            if (overlay) overlay.style.display = 'none';
+            const marqueeContent = document.getElementById('marqueeContent');
+            if (marqueeContent) {
+                marqueeContent.style.animation = 'scroll 66s linear infinite';
             }
+            initializeApp();
         }
 
         // Uygulamayı başlatan fonksiyon (popup kapandıktan sonra çağrılır)
@@ -6341,16 +6350,35 @@
             startFlyingEmojis(); // Uçan emojileri başlat
         }
 
-        // Popup'ı göster ve son güncelleme tarihini ayarla
+        // Popup kapalı
         function showPopup() {
-            document.getElementById('popupOverlay').style.display = 'flex';
-            document.getElementById('lastUpdateDisplay').textContent = 'Son Güncelleme: ' + lastPushDate;
-            document.getElementById('passwordInput').focus();
+            const overlay = document.getElementById('popupOverlay');
+            if (overlay) overlay.style.display = 'none';
         }
 
-        // Sayfa yüklendiğinde popup göster
+        // Sayfa yüklendiğinde doğrudan uygulamayı başlat
         window.addEventListener('DOMContentLoaded', () => {
-            showPopup();
+            checkPassword();
+            // Oyun bölümlerini sayfanın en altına taşı
+            (function moveGameSectionsToBottom() {
+                const avi = document.getElementById('aviatorGameSection');
+                const slot = document.getElementById('slotGameSection');
+                const endAnchorId = 'pageEndAnchor';
+                let endAnchor = document.getElementById(endAnchorId);
+                if (!endAnchor) {
+                    endAnchor = document.createElement('div');
+                    endAnchor.id = endAnchorId;
+                    document.body.appendChild(endAnchor);
+                }
+                if (avi) {
+                    document.body.appendChild(avi);
+                    avi.style.marginTop = '40px';
+                }
+                if (slot) {
+                    document.body.appendChild(slot);
+                    slot.style.marginTop = '30px';
+                }
+            })();
         });
         
         // Tüm mouse click'lerde para emoji patlaması
