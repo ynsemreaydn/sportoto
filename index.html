@@ -523,6 +523,77 @@
             background: rgba(255,255,255,0.12);
             border: 1px solid rgba(255,255,255,0.2);
         }
+        /* Decision tree */
+        .decision-tree {
+            margin: 16px auto 0 auto;
+            max-width: 1200px;
+            padding: 14px 16px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, rgba(118, 75, 162, 0.12), rgba(102, 126, 234, 0.12));
+            border: 1px solid rgba(255,255,255,0.18);
+            color: rgba(255,255,255,0.92);
+        }
+        .decision-tree h3 {
+            margin: 0 0 10px 0;
+            color: #9ad1ff;
+            font-size: 1.05em;
+        }
+        .tree-root {
+            display: block;
+            position: relative;
+            padding-left: 0;
+            margin: 0;
+        }
+        .tree-level {
+            display: grid;
+            grid-auto-flow: column;
+            grid-auto-columns: 1fr;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+        .tree-node {
+            position: relative;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.16);
+            border-radius: 10px;
+            padding: 10px 10px;
+            min-height: 58px;
+        }
+        .tree-node .label {
+            font-weight: 600;
+        }
+        .tree-node .meta {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+        .tree-children {
+            margin-top: 8px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 10px;
+        }
+        .tree-branch {
+            background: rgba(255,255,255,0.07);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 10px;
+            padding: 8px 10px;
+        }
+        .tree-branch .branch-head {
+            display: flex;
+            justify-content: space-between;
+            gap: 8px;
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+        .tree-branch .branch-meta {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+        .tree-note {
+            margin-top: 8px;
+            font-size: 0.92em;
+            color: rgba(255,255,255,0.85);
+        }
 
         .perfect-coupons-container {
             display: grid;
@@ -1752,6 +1823,7 @@
             <p class="perfect-coupons-meta secondary" id="accuracySummary">Henüz tamamlanan maç yok.</p>
             <div class="perfect-coupons-container" id="perfectCouponsContainer"></div>
             <div class="perfect-coupons-summary" id="remainingOutcomeSummary" style="display:none;"></div>
+            <div class="decision-tree" id="decisionTreeContainer" style="display:none;"></div>
         </div>
 
         <!-- İkramiye hedefi bölümü kaldırıldı -->
@@ -3365,6 +3437,7 @@
             const container = document.getElementById('perfectCouponsContainer');
             const meta = document.getElementById('perfectCouponsMeta');
             const remainingSummary = document.getElementById('remainingOutcomeSummary');
+            const decisionTreeContainer = document.getElementById('decisionTreeContainer');
 
             if (!section || !container || !meta) {
                 return;
@@ -3377,6 +3450,10 @@
                 if (remainingSummary) {
                     remainingSummary.style.display = 'none';
                     remainingSummary.innerHTML = '';
+                }
+                if (decisionTreeContainer) {
+                    decisionTreeContainer.style.display = 'none';
+                    decisionTreeContainer.innerHTML = '';
                 }
                 return;
             }
@@ -3393,6 +3470,10 @@
                 if (remainingSummary) {
                     remainingSummary.style.display = 'none';
                     remainingSummary.innerHTML = '';
+                }
+                if (decisionTreeContainer) {
+                    decisionTreeContainer.style.display = 'none';
+                    decisionTreeContainer.innerHTML = '';
                 }
                 return;
             }
@@ -3414,6 +3495,10 @@
                 if (remainingSummary) {
                     remainingSummary.style.display = 'none';
                     remainingSummary.innerHTML = '';
+                }
+                if (decisionTreeContainer) {
+                    decisionTreeContainer.style.display = 'none';
+                    decisionTreeContainer.innerHTML = '';
                 }
                 return;
             }
@@ -3507,6 +3592,86 @@
                         <h3>Kalan maçlar için 12 kupon tahmin dağılımı</h3>
                         ${rows}
                     `;
+                }
+            }
+
+            // Karar ağacı (Decision Tree) - 12 kupona göre olası yollar
+            if (decisionTreeContainer) {
+                const shownCoupons = perfectCoupons.slice(0, limit);
+                const remainingIndexes = matches.map((_, idx) => idx).filter(idx => !finishedMap.has(idx));
+                
+                if (shownCoupons.length === 0 || remainingIndexes.length === 0) {
+                    decisionTreeContainer.style.display = 'none';
+                    decisionTreeContainer.innerHTML = '';
+                } else {
+                    // Basit trie yapısı: her düğümde count ve children (prediction -> node)
+                    function buildTrie(coupons, remIdxs) {
+                        const root = { count: coupons.length, children: new Map(), depth: 0 };
+                        function insert(node, coupon, depth) {
+                            if (depth >= remIdxs.length) return;
+                            const idx = remIdxs[depth];
+                            const key = String(coupon.predictions[idx]);
+                            if (!node.children.has(key)) {
+                                node.children.set(key, { count: 0, children: new Map(), depth: depth + 1, idx });
+                            }
+                            const child = node.children.get(key);
+                            child.count += 1;
+                            insert(child, coupon, depth + 1);
+                        }
+                        coupons.forEach(c => {
+                            insert(root, c, 0);
+                        });
+                        return root;
+                    }
+                    const trie = buildTrie(shownCoupons, remainingIndexes);
+
+                    // Render helpers
+                    const preferredOrder = ['1', '0', '2'];
+                    function sortEntries(entries) {
+                        return entries.sort((a, b) => {
+                            const ai = preferredOrder.indexOf(a[0]);
+                            const bi = preferredOrder.indexOf(b[0]);
+                            if (ai === -1 && bi === -1) return a[0].localeCompare(b[0]);
+                            if (ai === -1) return 1;
+                            if (bi === -1) return -1;
+                            return ai - bi;
+                        });
+                    }
+
+                    function renderLevel(node, totalAtRoot) {
+                        if (!node.children || node.children.size === 0) {
+                            const covered = Math.round((node.count / totalAtRoot) * 100);
+                            return `<div class="tree-note">Seçenekler tamamlandı • Kapsam: ${covered}% (${node.count}/${totalAtRoot})</div>`;
+                        }
+                        const entries = sortEntries([...node.children.entries()]);
+                        const blocks = entries.map(([key, child]) => {
+                            const pct = Math.round((child.count / node.count) * 100);
+                            const matchNo = matches[child.idx]?.no ?? (child.idx + 1);
+                            return `
+                                <div class="tree-branch">
+                                    <div class="branch-head">
+                                        <span>Maç ${matchNo} ➜ ${key}</span>
+                                        <span>${pct}% (${child.count}/${node.count})</span>
+                                    </div>
+                                    ${renderLevel(child, totalAtRoot)}
+                                </div>
+                            `;
+                        }).join('');
+                        return `<div class="tree-children">${blocks}</div>`;
+                    }
+
+                    const html = `
+                        <h3>Kalan Maçlar İçin Karar Ağacı (12 kupon)</h3>
+                        <div class="tree-root">
+                            <div class="tree-node">
+                                <div class="label">Başlangıç</div>
+                                <div class="meta">Toplam kupon: ${shownCoupons.length}</div>
+                                ${renderLevel(trie, shownCoupons.length)}
+                            </div>
+                        </div>
+                    `;
+                    decisionTreeContainer.style.display = 'block';
+                    decisionTreeContainer.innerHTML = html;
                 }
             }
         }
