@@ -483,6 +483,46 @@
             margin-top: -10px;
             font-size: 0.95em;
         }
+        .perfect-coupons-summary {
+            margin: 10px auto 0 auto;
+            max-width: 900px;
+            padding: 10px 12px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: 12px;
+            color: rgba(255,255,255,0.9);
+            font-size: 0.95em;
+        }
+        .perfect-coupons-summary h3 {
+            margin: 0 0 8px 0;
+            font-size: 1.05em;
+            color: #FFD700;
+        }
+        .perfect-coupons-summary .match-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            padding: 6px 0;
+            border-bottom: 1px dashed rgba(255,255,255,0.15);
+        }
+        .perfect-coupons-summary .match-row:last-child {
+            border-bottom: none;
+        }
+        .perfect-coupons-summary .match-label {
+            min-width: 90px;
+            color: rgba(255,255,255,0.85);
+        }
+        .perfect-coupons-summary .dist {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .perfect-coupons-summary .pill {
+            padding: 3px 8px;
+            border-radius: 999px;
+            background: rgba(255,255,255,0.12);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
 
         .perfect-coupons-container {
             display: grid;
@@ -1711,6 +1751,7 @@
             <p class="perfect-coupons-meta" id="perfectCouponsMeta">Sonuçlanan maçlara göre uygun kuponlar hesaplanıyor...</p>
             <p class="perfect-coupons-meta secondary" id="accuracySummary">Henüz tamamlanan maç yok.</p>
             <div class="perfect-coupons-container" id="perfectCouponsContainer"></div>
+            <div class="perfect-coupons-summary" id="remainingOutcomeSummary" style="display:none;"></div>
         </div>
 
         <!-- İkramiye hedefi bölümü kaldırıldı -->
@@ -3319,10 +3360,11 @@
             summary.innerHTML = `<strong>En çok bilen:</strong> ${maxCorrect}/${totalFinished} (${preview}${extraCount > 0 ? `, +${extraCount} kupon` : ''})<br><strong>Dağılım:</strong> ${distribution}`;
         }
 
-        function renderPerfectCoupons(limit = 24) {
+        function renderPerfectCoupons(limit = 12) {
             const section = document.getElementById('perfectCouponsSection');
             const container = document.getElementById('perfectCouponsContainer');
             const meta = document.getElementById('perfectCouponsMeta');
+            const remainingSummary = document.getElementById('remainingOutcomeSummary');
 
             if (!section || !container || !meta) {
                 return;
@@ -3332,6 +3374,10 @@
                 container.innerHTML = '';
                 meta.textContent = 'Kuponlar yükleniyor...';
                 updateAccuracySummary([]);
+                if (remainingSummary) {
+                    remainingSummary.style.display = 'none';
+                    remainingSummary.innerHTML = '';
+                }
                 return;
             }
 
@@ -3344,6 +3390,10 @@
                 container.innerHTML = '<p style="text-align:center; color: rgba(255,255,255,0.75);">Henüz sonuçlanan maç yok. İlk sonuç geldiğinde burada görüntülenecek.</p>';
                 meta.textContent = 'Henüz sonuçlanan maç yok. Kuponlar maç sonuçlarına göre otomatik güncellenecek.';
                 updateAccuracySummary(finishedMatches);
+                if (remainingSummary) {
+                    remainingSummary.style.display = 'none';
+                    remainingSummary.innerHTML = '';
+                }
                 return;
             }
 
@@ -3361,6 +3411,10 @@
 
             if (perfectCoupons.length === 0) {
                 container.innerHTML = '<p style="text-align:center; color: rgba(255,255,255,0.75);">Şu anda tüm tamamlanan maçları doğru tahmin eden kupon bulunamadı.</p>';
+                if (remainingSummary) {
+                    remainingSummary.style.display = 'none';
+                    remainingSummary.innerHTML = '';
+                }
                 return;
             }
 
@@ -3408,6 +3462,53 @@
             
             // Grafik çiz
             renderPrizeChart();
+
+            // 12 kupon için kalan maçlarda yüzde dağılımı
+            if (remainingSummary) {
+                const shownCoupons = perfectCoupons.slice(0, limit);
+                const remainingIndexes = matches.map((_, idx) => idx).filter(idx => !finishedMap.has(idx));
+
+                if (remainingIndexes.length === 0) {
+                    remainingSummary.style.display = 'none';
+                    remainingSummary.innerHTML = '';
+                } else {
+                    const rows = remainingIndexes.map(idx => {
+                        const total = shownCoupons.length || 1;
+                        const counts = new Map();
+                        shownCoupons.forEach(c => {
+                            const val = String(c.predictions[idx]);
+                            counts.set(val, (counts.get(val) || 0) + 1);
+                        });
+                        // En çok görülenleri öne çıkar, sabit sıralama 1,0,2 yoksa anahtar adına göre
+                        const preferredOrder = ['1', '0', '2'];
+                        const entries = [...counts.entries()].sort((a,b) => {
+                            const ai = preferredOrder.indexOf(a[0]);
+                            const bi = preferredOrder.indexOf(b[0]);
+                            if (ai === -1 && bi === -1) return a[0].localeCompare(b[0]);
+                            if (ai === -1) return 1;
+                            if (bi === -1) return -1;
+                            return ai - bi;
+                        });
+                        const pills = entries.map(([key, cnt]) => {
+                            const pct = Math.round((cnt / total) * 100);
+                            return `<span class="pill">${key}: ${pct}%</span>`;
+                        }).join('');
+                        const matchNo = matches[idx]?.no ?? (idx + 1);
+                        return `
+                            <div class="match-row">
+                                <div class="match-label">Maç ${matchNo}</div>
+                                <div class="dist">${pills}</div>
+                            </div>
+                        `;
+                    }).join('');
+
+                    remainingSummary.style.display = 'block';
+                    remainingSummary.innerHTML = `
+                        <h3>Kalan maçlar için 12 kupon tahmin dağılımı</h3>
+                        ${rows}
+                    `;
+                }
+            }
         }
 
         // Animasyonlu Yükselen Grafik
