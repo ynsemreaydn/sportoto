@@ -3418,19 +3418,10 @@
             const remainingMatches = 15 - finishedMatches.length;
 
             if (finishedMatches.length === 0) {
-                perfectCoupons = [];
-                container.innerHTML = '<p style="text-align:center; color: rgba(255,255,255,0.75);">Henüz sonuçlanan maç yok. İlk sonuç geldiğinde burada görüntülenecek.</p>';
-                meta.textContent = 'Henüz sonuçlanan maç yok. Kuponlar maç sonuçlarına göre otomatik güncellenecek.';
+                // Henüz sonuç yokken de 12 kuponu önizleme olarak listele
+                perfectCoupons = allCoupons;
+                meta.textContent = 'Henüz sonuçlanan maç yok. 12 kupon önizleme gösteriliyor.';
                 updateAccuracySummary(finishedMatches);
-                if (remainingSummary) {
-                    remainingSummary.style.display = 'none';
-                    remainingSummary.innerHTML = '';
-                }
-                if (decisionTreeContainer) {
-                    decisionTreeContainer.style.display = 'none';
-                    decisionTreeContainer.innerHTML = '';
-                }
-                return;
             }
 
             perfectCoupons = allCoupons.filter(coupon =>
@@ -3458,7 +3449,30 @@
                 return;
             }
 
-            const cards = perfectCoupons.slice(0, limit).map(coupon => {
+            // Öncelik: 14 bilen kuponlar > yoksa 13 bilen kuponlar > en çok bilenler
+            const correctCounts = allCoupons.map(coupon => {
+                let correct = 0;
+                finishedMatches.forEach(ftMatch => {
+                    if (coupon.predictions[ftMatch.matchIndex] === ftMatch.result) {
+                        correct++;
+                    }
+                });
+                return { coupon, correct };
+            });
+            const target14 = Math.min(14, finishedMatches.length);
+            const target13 = Math.min(13, finishedMatches.length);
+            const candidates14 = target14 > 0 ? correctCounts.filter(x => x.correct === target14) : [];
+            const candidates13 = target13 > 0 ? correctCounts.filter(x => x.correct === target13) : [];
+            const maxCorrect = correctCounts.reduce((m, x) => Math.max(m, x.correct), 0);
+            const bestCandidates = candidates14.length ? candidates14
+                                  : (candidates13.length ? candidates13
+                                  : correctCounts.filter(x => x.correct === maxCorrect));
+            const topShown = bestCandidates.slice(0, limit).map(x => x.coupon);
+            const headerLabel = candidates14.length ? `14 bilen kuponlar (ilk ${Math.min(limit, candidates14.length)})`
+                                : (candidates13.length ? `13 bilen kuponlar (ilk ${Math.min(limit, candidates13.length)})`
+                                : `En çok bilen kuponlar (${maxCorrect}/${finishedMatches.length})`);
+            // Kartları oluştur
+            const cards = topShown.map(coupon => {
                 const gridItems = coupon.predictions.map((prediction, index) => {
                     const match = matches[index];
                     const finishedItem = finishedMap.get(index);
@@ -3481,11 +3495,18 @@
                     `;
                 }).join('');
 
+                // Doğru sayısı etiketi
+                let correctCount = 0;
+                finishedMatches.forEach(ftMatch => {
+                    if (coupon.predictions[ftMatch.matchIndex] === ftMatch.result) {
+                        correctCount++;
+                    }
+                });
                 return `
                     <div class="perfect-coupon-card">
                         <div class="perfect-coupon-header">
                             <span class="perfect-coupon-label">Kupon #${coupon.rowNumber}</span>
-                            <span class="perfect-coupon-status">${remainingMatches} maç kaldı</span>
+                            <span class="perfect-coupon-status">${correctCount}/${finishedMatches.length}${remainingMatches > 0 ? ` • ${remainingMatches} maç kaldı` : ''}</span>
                         </div>
                         <div class="perfect-predictions-grid">
                             ${gridItems}
@@ -3494,7 +3515,12 @@
                 `;
             }).join('');
 
-            container.innerHTML = cards;
+            container.innerHTML = `
+                <div style="grid-column: 1 / -1; text-align:center; color: rgba(255,255,255,0.9); font-weight: 700;">
+                    ${headerLabel}
+                </div>
+                ${cards}
+            `;
 
             if (perfectCoupons.length > limit) {
                 container.innerHTML += `<p style="text-align:center; margin-top:15px; color: rgba(255,255,255,0.82);">Toplam ${perfectCoupons.length} kupon var, ilk ${limit} kupon gösteriliyor.</p>`;
