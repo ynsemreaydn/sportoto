@@ -708,6 +708,72 @@
             font-size: 0.92em;
             color: rgba(255,255,255,0.85);
         }
+        .path-grid-interactive {
+            display: grid;
+            grid-auto-flow: column;
+            grid-auto-columns: minmax(240px, 1fr);
+            gap: 12px;
+            overflow-x: auto;
+            padding-bottom: 6px;
+        }
+        .path-col-interactive {
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.14);
+            border-radius: 10px;
+            padding: 10px;
+            min-width: 240px;
+        }
+        .match-select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            background: rgba(255,255,255,0.1);
+            border: 2px solid rgba(102,126,234,0.5);
+            color: white;
+            font-size: 0.95em;
+            cursor: pointer;
+        }
+        .match-select option {
+            background: #667eea;
+            color: white;
+        }
+        .path-analysis {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(255,215,0,0.1);
+            border-radius: 10px;
+            border: 2px solid rgba(255,215,0,0.3);
+        }
+        .analysis-header {
+            font-weight: 800;
+            font-size: 1.1em;
+            margin-bottom: 12px;
+            color: #FFD700;
+        }
+        .analysis-stats {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .stat-label {
+            font-size: 0.9em;
+            color: rgba(255,255,255,0.8);
+        }
+        .stat-value {
+            font-weight: 700;
+            color: rgba(255,255,255,0.95);
+        }
+        .analysis-note {
+            text-align: center;
+            color: rgba(255,255,255,0.7);
+            font-style: italic;
+        }
         /* Detailed candidates list */
         .detailed-candidates {
             margin: 16px auto 0 auto;
@@ -3816,7 +3882,7 @@
                             }).join('');
                             return `<details open><summary>Kupon #${c.rowNumber}</summary><div class="detail-body">${lines}</div></details>`;
                         }).join('');
-                        fiveFull.innerHTML = `<div style="text-align:center; font-weight:800; color: rgba(255,255,255,0.95); margin: 8px 0 6px 0;">⭐ 14'e Giden Kuponlar ⭐ — 5 Kuponun Tüm Maç İçerikleri</div>${blocks}`;
+                        fiveFull.innerHTML = `${blocks}`;
                         fiveFull.style.display = 'block';
                     } else {
                         fiveFull.style.display = 'none';
@@ -3928,13 +3994,144 @@
                         </div>
                     `;
                 }).join('');
+                // İnteraktif seçim sistemi için state (global scope'a taşı)
+                if (!window.pathSelectionState) {
+                    window.pathSelectionState = new Map();
+                }
+                if (!window.pathFlowCoupons) {
+                    window.pathFlowCoupons = flowCoupons;
+                }
+                
+                // Global filter fonksiyonu
+                window.filterCouponsBySelections = function(coupons, selections) {
+                    return coupons.filter(c => {
+                        return selections.every(([matchIdx, selectedOpt]) => {
+                            return c.predictions[matchIdx] === parseInt(selectedOpt);
+                        });
+                    });
+                };
+                
+                function updateAnalysis() {
+                    const selections = Array.from(window.pathSelectionState.entries());
+                    const filtered = window.filterCouponsBySelections(window.pathFlowCoupons, selections);
+                    const analysisDiv = document.getElementById('pathAnalysis');
+                    if (!analysisDiv) return;
+                    
+                    if (selections.length === 0) {
+                        analysisDiv.innerHTML = '<div class="analysis-note">Seçim yaparak analiz başlatın</div>';
+                        return;
+                    }
+                    
+                    const pct = Math.round((filtered.length / window.pathFlowCoupons.length) * 100);
+                    const selectedMatches = selections.map(([idx, opt]) => {
+                        const m = matches[idx];
+                        return `Maç ${m.no} → ${opt}`;
+                    }).join(', ');
+                    
+                    const couponList = filtered.map(c => `#${c.rowNumber}`).join(', ');
+                    
+                    analysisDiv.innerHTML = `
+                        <div class="analysis-header">📊 Seçim Analizi</div>
+                        <div class="analysis-stats">
+                            <div class="stat-item">
+                                <span class="stat-label">Seçilen Maçlar:</span>
+                                <span class="stat-value">${selectedMatches}</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Kalan Kupon:</span>
+                                <span class="stat-value">${filtered.length} / ${window.pathFlowCoupons.length} (${pct}%)</span>
+                            </div>
+                            ${filtered.length > 0 ? `
+                                <div class="stat-item">
+                                    <span class="stat-label">Kupon Numaraları:</span>
+                                    <span class="stat-value">${couponList}</span>
+                                </div>
+                            ` : '<div class="stat-item"><span class="stat-value" style="color:#f44336;">Bu seçimlerle hiçbir kupon 14\'e ulaşamaz!</span></div>'}
+                        </div>
+                    `;
+                }
+                
+                // Her maç için select dropdown ve mevcut görselleştirmeyi ekle
+                const interactiveColumns = remainingIndexes.map((idx, colPos) => {
+                    const match = matches[idx];
+                    const colTitle = `Maç ${match.no} • ${match.teams}`;
+                    const selectId = `matchSelect_${idx}`;
+                    
+                    // Mevcut seçimi al
+                    const currentSelection = window.pathSelectionState.get(idx) || '';
+                    
+                    // Bu sütun için mevcut görselleştirme HTML'ini al
+                    const colHtmlMatch = columnsHtml.match(new RegExp(`<div class="path-col">[\\s\\S]*?<div class="col-head">${colTitle.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}[\\s\\S]*?</div>`));
+                    const existingColContent = colHtmlMatch ? colHtmlMatch[0].replace(/<div class="path-col">[\s\S]*?<div class="col-head">.*?<\/div>/, '') : '';
+                    
+                    return `
+                        <div class="path-col-interactive">
+                            <div class="col-head">${colTitle}</div>
+                            <select id="${selectId}" class="match-select" onchange="window.handlePathSelection(${idx}, this.value)">
+                                <option value="">-- Seçim Yap --</option>
+                                <option value="1" ${currentSelection === '1' ? 'selected' : ''}>1 (Ev Sahibi)</option>
+                                <option value="0" ${currentSelection === '0' ? 'selected' : ''}>0 (Beraberlik)</option>
+                                <option value="2" ${currentSelection === '2' ? 'selected' : ''}>2 (Deplasman)</option>
+                            </select>
+                            <div style="margin-top:10px; font-size:0.9em; opacity:0.8;">Mevcut dağılım görselleştirmesi aşağıda</div>
+                        </div>
+                    `;
+                }).join('');
+                
+                // Global handler fonksiyonu
+                window.handlePathSelection = function(matchIdx, value) {
+                    if (value === '') {
+                        window.pathSelectionState.delete(matchIdx);
+                    } else {
+                        window.pathSelectionState.set(matchIdx, value);
+                    }
+                    // updateAnalysis fonksiyonunu çağır
+                    const selections = Array.from(window.pathSelectionState.entries());
+                    const filtered = window.filterCouponsBySelections(window.pathFlowCoupons, selections);
+                    const analysisDiv = document.getElementById('pathAnalysis');
+                    if (analysisDiv) {
+                        if (selections.length === 0) {
+                            analysisDiv.innerHTML = '<div class="analysis-note">Seçim yaparak analiz başlatın</div>';
+                            return;
+                        }
+                        const pct = Math.round((filtered.length / window.pathFlowCoupons.length) * 100);
+                        const selectedMatches = selections.map(([idx, opt]) => {
+                            const m = matches[idx];
+                            return `Maç ${m.no} → ${opt}`;
+                        }).join(', ');
+                        const couponList = filtered.map(c => `#${c.rowNumber}`).join(', ');
+                        analysisDiv.innerHTML = `
+                            <div class="analysis-header">📊 Seçim Analizi</div>
+                            <div class="analysis-stats">
+                                <div class="stat-item">
+                                    <span class="stat-label">Seçilen Maçlar:</span>
+                                    <span class="stat-value">${selectedMatches}</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-label">Kalan Kupon:</span>
+                                    <span class="stat-value">${filtered.length} / ${window.pathFlowCoupons.length} (${pct}%)</span>
+                                </div>
+                                ${filtered.length > 0 ? `
+                                    <div class="stat-item">
+                                        <span class="stat-label">Kupon Numaraları:</span>
+                                        <span class="stat-value">${couponList}</span>
+                                    </div>
+                                ` : '<div class="stat-item"><span class="stat-value" style="color:#f44336;">Bu seçimlerle hiçbir kupon 14\'e ulaşamaz!</span></div>'}
+                            </div>
+                        `;
+                    }
+                };
+                
                 const flowHtml = `
                     <div class="path-flow" id="fourteenPathFlow">
-                        <h3>Yol Haritası: 14'e giden 5 kupon</h3>
-                        <div class="path-grid">
-                            ${columnsHtml}
+                        <h3>Yol Haritası: 14'e giden 5 kupon (İnteraktif Analiz)</h3>
+                        <div class="path-grid-interactive">
+                            ${interactiveColumns}
                         </div>
-                        <div class="path-note">Not: Her sütun, o maç için mevcut dalları ve her dalın kaç kuponla devam ettiğini gösterir. Bir sütunun içindeki her kutu, sol taraftaki seçimlerden gelen alt kümeyi temsil eder.</div>
+                        <div id="pathAnalysis" class="path-analysis">
+                            <div class="analysis-note">Seçim yaparak analiz başlatın</div>
+                        </div>
+                        <div class="path-note">Her maç için seçim yaparak, hangi kuponların 14'e ulaşabileceğini analiz edin.</div>
                     </div>
                 `;
                 // Insert into dedicated container
