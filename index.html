@@ -3602,7 +3602,7 @@
                 return;
             }
 
-            // Kategoriler: 14 bilen kuponlar ve 13 bilen kuponlar ayrı ayrı listelensin
+            // Kategoriler: "kalan maçlar da doğru olursa" 14/13'e ulaşabilecek kuponlar
             const correctCounts = allCoupons.map(coupon => {
                 let correct = 0;
                 finishedMatches.forEach(ftMatch => {
@@ -3610,17 +3610,15 @@
                         correct++;
                     }
                 });
-                return { coupon, correct };
+                const can15 = correct + remainingMatches >= 15;
+                const can14 = correct + remainingMatches >= 14;
+                const can13 = correct + remainingMatches >= 13;
+                return { coupon, correct, can15, can14, can13 };
             });
-            const target14 = Math.min(14, finishedMatches.length);
-            const target13 = Math.min(13, finishedMatches.length);
-            const candidates14 = target14 > 0 ? correctCounts.filter(x => x.correct === target14) : [];
-            // 13 listesi, 14 listesiyle çakışan kuponları dışlasın
-            const idOf = (c) => c.coupon.rowNumber ?? c.coupon.row ?? JSON.stringify(c.coupon.predictions);
-            const set14 = new Set(candidates14.map(idOf));
-            const candidates13 = target13 > 0
-                ? correctCounts.filter(x => x.correct === target13 && !set14.has(idOf(x)))
-                : [];
+            // 14'e ulaşabilecek tüm kuponlar
+            const candidates14 = correctCounts.filter(x => x.can14);
+            // 13'e ulaşabilecek ama 14'e ulaşamayacak kuponlar
+            const candidates13 = correctCounts.filter(x => !x.can14 && x.can13);
 
             function renderCouponCard(coupon) {
                 const gridItems = coupon.predictions.map((prediction, index) => {
