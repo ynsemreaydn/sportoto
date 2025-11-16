@@ -2192,10 +2192,10 @@
             {
                         "no": 9,
                         "date": "16.11.2025 17:00",
-                        "teams": "Macaristan-İrlanda",
-                        "status": "NS",
-                        "homeScore": null,
-                        "awayScore": null
+                        "teams": "Macaristan-İrlanda Cumhuriyeti",
+                        "status": "FT",
+                        "homeScore": 2,
+                        "awayScore": 3
             },
             {
                         "no": 10,
@@ -3611,16 +3611,17 @@
                 } else {
                     // Basit trie yapısı: her düğümde count ve children (prediction -> node)
                     function buildTrie(coupons, remIdxs) {
-                        const root = { count: coupons.length, children: new Map(), depth: 0 };
+                        const root = { count: coupons.length, children: new Map(), depth: 0, coupons: [...coupons] };
                         function insert(node, coupon, depth) {
                             if (depth >= remIdxs.length) return;
                             const idx = remIdxs[depth];
                             const key = String(coupon.predictions[idx]);
                             if (!node.children.has(key)) {
-                                node.children.set(key, { count: 0, children: new Map(), depth: depth + 1, idx });
+                                node.children.set(key, { count: 0, children: new Map(), depth: depth + 1, idx, coupons: [] });
                             }
                             const child = node.children.get(key);
                             child.count += 1;
+                            child.coupons.push(coupon);
                             insert(child, coupon, depth + 1);
                         }
                         coupons.forEach(c => {
@@ -3652,12 +3653,16 @@
                         const blocks = entries.map(([key, child]) => {
                             const pct = Math.round((child.count / node.count) * 100);
                             const matchNo = matches[child.idx]?.no ?? (child.idx + 1);
+                            // Bu dala uyan kuponların kısa listesi
+                            const couponNums = child.coupons.map(c => `#${c.rowNumber}`).slice(0, 50).join(', ');
+                            const more = child.coupons.length > 50 ? `, +${child.coupons.length - 50} kupon` : '';
                             return `
                                 <div class="tree-branch">
                                     <div class="branch-head">
                                         <span>Maç ${matchNo} ➜ ${key}</span>
                                         <span>${pct}% (${child.count}/${node.count})</span>
                                     </div>
+                                    <div class="branch-meta">Kuponlar: ${couponNums}${more}</div>
                                     ${renderLevel(child, totalAtRoot)}
                                 </div>
                             `;
