@@ -594,6 +594,51 @@
             font-size: 0.92em;
             color: rgba(255,255,255,0.85);
         }
+        /* Collapsible coupon details */
+        .coupon-details {
+            grid-column: 1 / -1;
+            margin-top: 8px;
+        }
+        .coupon-details details {
+            background: rgba(255,255,255,0.07);
+            border: 1px solid rgba(255,255,255,0.18);
+            border-radius: 10px;
+            margin: 6px 0;
+            overflow: hidden;
+        }
+        .coupon-details summary {
+            cursor: pointer;
+            padding: 10px 12px;
+            font-weight: 700;
+            color: rgba(255,255,255,0.95);
+            list-style: none;
+        }
+        .coupon-details summary::-webkit-details-marker { display: none; }
+        .coupon-details .detail-body {
+            padding: 8px 12px 12px 12px;
+            background: rgba(0,0,0,0.15);
+            border-top: 1px solid rgba(255,255,255,0.12);
+        }
+        .coupon-details .match-line {
+            display: grid;
+            grid-template-columns: 70px 1fr auto;
+            gap: 10px;
+            padding: 6px 0;
+            border-bottom: 1px dashed rgba(255,255,255,0.12);
+            font-size: 0.95em;
+            align-items: center;
+        }
+        .coupon-details .match-line:last-child {
+            border-bottom: none;
+        }
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 999px;
+            font-size: 0.85em;
+            border: 1px solid rgba(255,255,255,0.25);
+            background: rgba(255,255,255,0.12);
+        }
         /* Detailed candidates list */
         .detailed-candidates {
             margin: 16px auto 0 auto;
@@ -3558,20 +3603,88 @@
             let htmlSections = [];
             if (candidates14.length) {
                 const top14 = candidates14.slice(0, limit).map(x => renderCouponCard(x.coupon)).join('');
+                // Build collapsible details (all 14-candidate coupons)
+                function buildDetails(cands, title) {
+                    const items = cands.map(x => {
+                        const c = x.coupon;
+                        const rows = c.predictions.map((prediction, idx) => {
+                            const m = matches[idx];
+                            const status = (m && m.status === 'FT')
+                                ? `FT ${m.homeScore}-${m.awayScore}`
+                                : 'Beklemede';
+                            return `
+                                <div class="match-line">
+                                    <div class="badge">Maç ${m?.no ?? (idx+1)}</div>
+                                    <div>${m?.teams ?? ''}</div>
+                                    <div class="badge">Tahmin: ${prediction}</div>
+                                </div>
+                            `;
+                        }).join('');
+                        return `
+                            <details>
+                                <summary>Kupon #${c.rowNumber}</summary>
+                                <div class="detail-body">
+                                    ${rows}
+                                </div>
+                            </details>
+                        `;
+                    }).join('');
+                    return `
+                        <div class="coupon-details">
+                            <div style="text-align:center; font-weight:800; color: rgba(255,255,255,0.95); margin: 8px 0 6px 0;">${title} (toplam ${cands.length})</div>
+                            ${items}
+                        </div>
+                    `;
+                }
                 htmlSections.push(`
                     <div style="grid-column: 1 / -1; text-align:center; color: rgba(255,255,255,0.95); font-weight: 800; margin-top: 5px;">
                         14 bilen kuponlar (ilk ${Math.min(limit, candidates14.length)})
                     </div>
                     ${top14}
+                    ${buildDetails(candidates14, "⭐ 14'e Giden Kuponlar ⭐")}
                 `);
             }
             if (candidates13.length) {
                 const top13 = candidates13.slice(0, limit).map(x => renderCouponCard(x.coupon)).join('');
+                // Reuse details builder for 13
+                function buildDetails13(cands, title) {
+                    const items = cands.map(x => {
+                        const c = x.coupon;
+                        const rows = c.predictions.map((prediction, idx) => {
+                            const m = matches[idx];
+                            const status = (m && m.status === 'FT')
+                                ? `FT ${m.homeScore}-${m.awayScore}`
+                                : 'Beklemede';
+                            return `
+                                <div class="match-line">
+                                    <div class="badge">Maç ${m?.no ?? (idx+1)}</div>
+                                    <div>${m?.teams ?? ''}</div>
+                                    <div class="badge">Tahmin: ${prediction}</div>
+                                </div>
+                            `;
+                        }).join('');
+                        return `
+                            <details>
+                                <summary>Kupon #${c.rowNumber}</summary>
+                                <div class="detail-body">
+                                    ${rows}
+                                </div>
+                            </details>
+                        `;
+                    }).join('');
+                    return `
+                        <div class="coupon-details">
+                            <div style="text-align:center; font-weight:800; color: rgba(255,255,255,0.95); margin: 8px 0 6px 0;">${title} (toplam ${cands.length})</div>
+                            ${items}
+                        </div>
+                    `;
+                }
                 htmlSections.push(`
                     <div style="grid-column: 1 / -1; text-align:center; color: rgba(255,255,255,0.95); font-weight: 800; margin-top: 14px;">
                         13 bilen kuponlar (ilk ${Math.min(limit, candidates13.length)})
                     </div>
                     ${top13}
+                    ${buildDetails13(candidates13, "⭐ 13'e Giden Kuponlar ⭐")}
                 `);
             }
             if (!candidates14.length && !candidates13.length) {
