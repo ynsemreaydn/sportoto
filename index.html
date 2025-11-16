@@ -3765,12 +3765,13 @@
                     c13Div.innerHTML = res13.html;
                     c13Div.style.display = res13.show ? 'block' : 'none';
                 }
-                // İlk 5 adet 14'e ulaşabilen kuponu tüm maç içerikleriyle yaz
+                // İlk 5 adet 14'e ulaşabilen kuponu tüm maç içerikleriyle yaz (FORCE: belirlenen kuponlar)
                 if (fiveFull) {
-                    const top5 = candidates14.slice(0, 5);
-                    if (top5.length) {
-                        const blocks = top5.map(x => {
-                            const c = x.coupon;
+                    const forcedRows = new Set([143, 161, 381, 763, 939]);
+                    const forcedCoupons = allCoupons.filter(c => forcedRows.has(c.rowNumber));
+                    const top5Coupons = forcedCoupons.length ? forcedCoupons : candidates14.slice(0, 5).map(x => x.coupon);
+                    if (top5Coupons.length) {
+                        const blocks = top5Coupons.map(c => {
                             const lines = c.predictions.map((pred, idx) => {
                                 const m = matches[idx];
                                 const ft = (m && m.status === 'FT') ? ` • FT ${m.homeScore}-${m.awayScore}` : '';
