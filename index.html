@@ -3924,15 +3924,14 @@
                     `;
                     return {html, show:true};
                 }
+                // Duplicate başlıklar kaldırıldı (yukarıda zaten gösteriliyor)
                 if (c14Div) {
-                    const res14 = buildAccordion(candidates14, "⭐ 14'e Giden Kuponlar ⭐");
-                    c14Div.innerHTML = res14.html;
-                    c14Div.style.display = res14.show ? 'block' : 'none';
+                    c14Div.style.display = 'none';
+                    c14Div.innerHTML = '';
                 }
                 if (c13Div) {
-                    const res13 = buildAccordion(candidates13, "⭐ 13'e Giden Kuponlar ⭐");
-                    c13Div.innerHTML = res13.html;
-                    c13Div.style.display = res13.show ? 'block' : 'none';
+                    c13Div.style.display = 'none';
+                    c13Div.innerHTML = '';
                 }
                 // fiveFull container duplicate olduğu için kaldırıldı (yukarıda zaten gösteriliyor)
                 if (fiveFull) {
@@ -3941,15 +3940,20 @@
                 }
             })();
 
-            // 14'e giden 5 kupon için yol haritası (kalan maçlar kolonlar)
+            // 14'e giden 1 kupon + 13'e giden 3 kupon için yol haritası (kalan maçlar kolonlar)
             (function renderFourteenPathFlow() {
                 const flowMount = document.getElementById('roadTo14Container') || document.getElementById('couponDetails14');
                 if (!flowMount) return;
-                // En iyi 14'e ulaşabilen 5 kupon (doğru sayısı çok olanlar önde)
+                // 14'e giden 1 kupon + 13'e giden 3 kupon (toplam 4 kupon)
                 const sorted14 = candidates14
                     .slice()
                     .sort((a,b) => b.correct - a.correct || (a.coupon.rowNumber - b.coupon.rowNumber));
-                const flowCoupons = sorted14.slice(0, Math.min(5, sorted14.length)).map(x => x.coupon);
+                const sorted13 = candidates13
+                    .slice()
+                    .sort((a,b) => b.correct - a.correct || (a.coupon.rowNumber - b.coupon.rowNumber));
+                const flowCoupons14 = sorted14.slice(0, Math.min(1, sorted14.length)).map(x => x.coupon);
+                const flowCoupons13 = sorted13.slice(0, Math.min(3, sorted13.length)).map(x => x.coupon);
+                const flowCoupons = [...flowCoupons14, ...flowCoupons13]; // Toplam 4 kupon (1+3)
                 const remainingIndexes = matches.map((_, idx) => idx).filter(idx => !finishedMap.has(idx));
                 if (flowCoupons.length === 0 || remainingIndexes.length === 0) {
                     // Yalın not göster
@@ -4048,9 +4052,8 @@
                 if (!window.pathSelectionState) {
                     window.pathSelectionState = new Map();
                 }
-                if (!window.pathFlowCoupons) {
-                    window.pathFlowCoupons = flowCoupons;
-                }
+                // flowCoupons'u güncelle (14'ten 1 + 13'ten 3 = 4 kupon)
+                window.pathFlowCoupons = flowCoupons;
                 
                 // Global filter fonksiyonu
                 window.filterCouponsBySelections = function(coupons, selections) {
@@ -4096,7 +4099,7 @@
                                     <span class="stat-label">Kupon Numaraları:</span>
                                     <span class="stat-value">${couponList}</span>
                                 </div>
-                            ` : '<div class="stat-item"><span class="stat-value" style="color:#f44336;">Bu seçimlerle hiçbir kupon 14\'e ulaşamaz!</span></div>'}
+                            ` : '<div class="stat-item"><span class="stat-value" style="color:#f44336;">Bu seçimlerle hiçbir kupon 14 veya 13\'e ulaşamaz!</span></div>'}
                         </div>
                     `;
                 }
@@ -4166,7 +4169,7 @@
                                         <span class="stat-label">Kupon Numaraları:</span>
                                         <span class="stat-value">${couponList}</span>
                                     </div>
-                                ` : '<div class="stat-item"><span class="stat-value" style="color:#f44336;">Bu seçimlerle hiçbir kupon 14\'e ulaşamaz!</span></div>'}
+                                ` : '<div class="stat-item"><span class="stat-value" style="color:#f44336;">Bu seçimlerle hiçbir kupon 14 veya 13\'e ulaşamaz!</span></div>'}
                             </div>
                         `;
                     }
@@ -4174,7 +4177,7 @@
                 
                 const flowHtml = `
                     <div class="path-flow" id="fourteenPathFlow">
-                        <h3>Yol Haritası: 14'e giden 5 kupon (İnteraktif Analiz)</h3>
+                        <h3>Yol Haritası: 14'e giden 1 kupon + 13'e giden 3 kupon (İnteraktif Analiz)</h3>
                         <div class="path-grid-interactive">
                             ${interactiveColumns}
                         </div>
