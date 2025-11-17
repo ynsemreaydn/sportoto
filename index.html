@@ -2434,33 +2434,33 @@
                         "no": 10,
                         "date": "16.11.2025 20:00",
                         "teams": "Arnavutluk-İngiltere",
-                        "status": "NS",
-                        "homeScore": null,
-                        "awayScore": null
+                        "status": "FT",
+                        "homeScore": 0,
+                        "awayScore": 2
             },
             {
                         "no": 11,
                         "date": "16.11.2025 20:00",
                         "teams": "Azerbaycan-Fransa",
-                        "status": "NS",
-                        "homeScore": null,
-                        "awayScore": null
+                        "status": "FT",
+                        "homeScore": 1,
+                        "awayScore": 3
             },
             {
                         "no": 12,
                         "date": "16.11.2025 20:00",
                         "teams": "Sırbistan-Letonya",
-                        "status": "NS",
-                        "homeScore": null,
-                        "awayScore": null
+                        "status": "FT",
+                        "homeScore": 2,
+                        "awayScore": 1
             },
             {
                         "no": 13,
                         "date": "16.11.2025 22:45",
                         "teams": "İtalya-Norveç",
-                        "status": "NS",
-                        "homeScore": null,
-                        "awayScore": null
+                        "status": "FT",
+                        "homeScore": 1,
+                        "awayScore": 4
             },
             {
                         "no": 14,
@@ -3797,11 +3797,11 @@
                 container.innerHTML += `<p style="text-align:center; margin-top:15px; color: rgba(255,255,255,0.82);">Toplam ${perfectCoupons.length} kupon var, ilk ${limit} kupon gösteriliyor.</p>`;
             }
 
-            // FORCE: 5 kuponun detaylarını kesinlikle göster (renklendirmeli, duplicate yok)
-            const forcedRows = [143, 161, 381, 763, 939];
-            const forcedCoupons = allCoupons.filter(c => forcedRows.includes(c.rowNumber));
-            if (forcedCoupons.length > 0) {
-                const fiveDetailsHtml = forcedCoupons.map(c => {
+            // FORCE: 14'e giden kuponların detaylarını göster (renklendirmeli)
+            const forcedRows14 = [143, 161, 381, 763, 939];
+            const forcedCoupons14 = allCoupons.filter(c => forcedRows14.includes(c.rowNumber));
+            if (forcedCoupons14.length > 0) {
+                const fiveDetailsHtml14 = forcedCoupons14.map(c => {
                     const matchLines = c.predictions.map((pred, idx) => {
                         const m = matches[idx];
                         const matchNo = m ? m.no : (idx + 1);
@@ -3836,9 +3836,54 @@
                 container.innerHTML += `
                     <div style="grid-column: 1 / -1; margin-top:30px; padding:20px; background:rgba(255,215,0,0.1); border-radius:15px; border:2px solid rgba(255,215,0,0.3);">
                         <div style="text-align:center; font-weight:800; color: rgba(255,255,255,0.95); margin-bottom:20px; font-size:1.3em;">
-                            ⭐ Kalan maçlar da doğru olursa 14 bilen kuponlar (toplam ${forcedCoupons.length}) ⭐
+                            ⭐ Kalan maçlar da doğru olursa 14 bilen kuponlar (toplam ${forcedCoupons14.length}) ⭐
                         </div>
-                        ${fiveDetailsHtml}
+                        ${fiveDetailsHtml14}
+                    </div>
+                `;
+            }
+
+            // FORCE: 13'e giden kuponların detaylarını göster (14'e gidenler gibi)
+            if (candidates13.length > 0) {
+                const thirteenDetailsHtml = candidates13.map(x => {
+                    const c = x.coupon;
+                    const matchLines = c.predictions.map((pred, idx) => {
+                        const m = matches[idx];
+                        const matchNo = m ? m.no : (idx + 1);
+                        const teams = m ? m.teams : '';
+                        const finishedItem = finishedMap.get(idx);
+                        let bgColor = 'rgba(33,150,243,0.3)'; // Pending: mavi
+                        let borderColor = 'rgba(33,150,243,0.5)';
+                        if (finishedItem) {
+                            if (pred === finishedItem.result) {
+                                bgColor = 'rgba(76,175,80,0.4)'; // Doğru: yeşil
+                                borderColor = 'rgba(76,175,80,0.7)';
+                            } else {
+                                bgColor = 'rgba(244,67,54,0.4)'; // Yanlış: kırmızı
+                                borderColor = 'rgba(244,67,54,0.7)';
+                            }
+                        }
+                        const ft = finishedItem ? ` • FT ${finishedItem.score}` : '';
+                        return `<div class="match-line" style="display:flex; gap:10px; padding:8px; border-bottom:1px solid rgba(255,255,255,0.1); background:${bgColor}; border-left:3px solid ${borderColor}; border-radius:4px; margin-bottom:4px;"><div class="badge" style="background:rgba(102,126,234,0.3); padding:4px 8px; border-radius:6px;">Maç ${matchNo}</div><div style="flex:1;">${teams}</div><div class="badge" style="background:${bgColor}; padding:4px 8px; border-radius:6px; border:1px solid ${borderColor};">Tahmin: ${pred}${ft}</div></div>`;
+                    }).join('');
+                    return `
+                        <div class="perfect-coupon-card" style="margin-top:20px;">
+                            <div class="perfect-coupon-header">
+                                <span class="perfect-coupon-label">Kupon #${c.rowNumber}</span>
+                                <span class="perfect-coupon-status">Kalan maçlar da doğru olursa 13 bilen</span>
+                            </div>
+                            <div class="detail-body" style="padding:15px;">
+                                ${matchLines}
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+                container.innerHTML += `
+                    <div style="grid-column: 1 / -1; margin-top:30px; padding:20px; background:rgba(33,150,243,0.1); border-radius:15px; border:2px solid rgba(33,150,243,0.3);">
+                        <div style="text-align:center; font-weight:800; color: rgba(255,255,255,0.95); margin-bottom:20px; font-size:1.3em;">
+                            ⭐ Kalan maçlar da doğru olursa 13 bilen kuponlar (toplam ${candidates13.length}) ⭐
+                        </div>
+                        ${thirteenDetailsHtml}
                     </div>
                 `;
             }
