@@ -13,13 +13,17 @@
             box-sizing: border-box;
         }
 
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
             background-size: 400% 400%;
             animation: gradientShift 15s ease infinite;
             min-height: 100vh;
-            padding: 10px;
+            padding: 0;
             position: relative;
             overflow-x: hidden;
         }
@@ -145,6 +149,109 @@
         .container {
             position: relative;
             z-index: 1;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Sticky Navigation */
+        .sticky-nav {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            border-radius: 0 0 20px 20px;
+            margin-bottom: 30px;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .nav-link {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 10px 20px;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .nav-link:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .nav-link:active {
+            transform: translateY(0);
+        }
+
+        /* Scroll to top button */
+        .scroll-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 1.5em;
+            cursor: pointer;
+            display: none;
+            z-index: 999;
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .scroll-to-top:hover {
+            background: #764ba2;
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+        }
+
+        .scroll-to-top.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Section Cards */
+        .section-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .section-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.15);
+        }
+
+        .section-card h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 2em;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
         }
 
         .billboard-container {
@@ -1651,14 +1758,25 @@
 
         .sportoto-image {
             text-align: center;
-            margin: 20px 0;
+            margin: 30px 0;
+            position: relative;
+            overflow: hidden;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
         }
 
         .sportoto-image img {
             max-width: 100%;
             height: auto;
             border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease;
+        }
+
+        .sportoto-image:hover img {
+            transform: scale(1.02);
         }
 
         .all-matches-stats {
@@ -1970,6 +2088,17 @@
         <span class="shutdown-icon">🔥</span>
     </div>
 
+    <!-- Sticky Navigation -->
+    <nav class="sticky-nav">
+        <div style="font-size: 1.5em; font-weight: bold; color: #667eea;">🏆 Spor Toto Takip</div>
+        <div class="nav-links">
+            <a href="#matches" class="nav-link">📅 Maçlar</a>
+            <a href="#coupons" class="nav-link">🎫 Kupondar</a>
+            <a href="#stats" class="nav-link">📊 İstatistikler</a>
+            <a href="#slot" class="nav-link">🎰 Slot</a>
+        </div>
+    </nav>
+
     <div class="container">
         <!-- Kazanmayı Beklediğimiz Kupon - henüz erken, comment out edildi
         <div class="winning-coupon-section">
@@ -1986,7 +2115,7 @@
         </div>
 
         <!-- Hedef 13 Kuponlar - henüz erken, comment out edildi
-        <div class="winning-coupon-section" id="target13Section">
+        <div class="winning-coupon-section section-card" id="target13Section">
             <h2>🎯 Hedef 13 Kuponlar 🎯</h2>
             <div class="target13-coupons-container" id="target13CouponsContainer">
                 <!-- JavaScript ile eklenecek -->
@@ -2044,7 +2173,7 @@
             </div>
         </div>
 
-        <div class="perfect-coupons-section" id="perfectCouponsSection">
+        <div class="perfect-coupons-section section-card" id="coupons">
             <h2 id="perfectCouponsTitle">⭐ 14'e Giden Kuponlar ⭐</h2>
             <p class="perfect-coupons-meta" id="perfectCouponsMeta">Sonuçlanan maçlara göre uygun kuponlar hesaplanıyor...</p>
             <p class="perfect-coupons-meta secondary" id="accuracySummary">Henüz tamamlanan maç yok.</p>
@@ -2135,7 +2264,7 @@
         </div>
 
         <!-- Slot Oyunu -->
-        <div class="slot-game-section" id="slotGameSection" style="margin-top: 30px; padding: 25px; background: linear-gradient(135deg, rgba(255,20,147,0.25) 0%, rgba(255,105,180,0.25) 50%, rgba(255,182,193,0.25) 100%); border-radius: 20px; border: 3px solid rgba(255,20,147,0.6); box-shadow: 0 10px 40px rgba(255,20,147,0.3);">
+        <div class="slot-game-section section-card" id="slot" style="margin-top: 30px; padding: 25px; background: linear-gradient(135deg, rgba(255,20,147,0.25) 0%, rgba(255,105,180,0.25) 50%, rgba(255,182,193,0.25) 100%); border-radius: 20px; border: 3px solid rgba(255,20,147,0.6); box-shadow: 0 10px 40px rgba(255,20,147,0.3);">
             <h2 style="margin: 0 0 20px 0; color: #FF1493; text-shadow: 3px 3px 6px rgba(0,0,0,0.5); font-size: 2em; text-align: center;">🎰 SLOT OYUNU 🎰</h2>
             
             <div style="background: rgba(255,255,255,0.95); padding: 20px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.2);">
@@ -2217,15 +2346,15 @@
 
         <!-- (OCI F1 Oyunu ve Rebel İnşaat bölümü kaldırıldı) -->
 
-        <div class="matches-section">
+        <div class="matches-section section-card" id="matches">
             <h2>📅 Maç Listesi</h2>
             <div class="sportoto-image">
-                <img src="https://webapi.sportoto.gov.tr/image/sportoto15-gdnhkzrk.jpeg" alt="Spor Toto Liste - 15. Hafta">
+                <img src="https://webapi.sportoto.gov.tr/image/screenshot-2025-11-15-at-141929-jgebxyls.png" alt="Spor Toto Liste">
             </div>
             <div class="matches-list" id="matchesList">
                 <!-- Maçlar JavaScript ile eklenecek -->
             </div>
-            <div class="all-matches-stats" id="allMatchesStats">
+            <div class="all-matches-stats section-card" id="stats">
                 <h3>📊 Tüm Maçlar İçin Tahmin Dağılımı</h3>
                 <div class="stats-table-container">
                     <table class="stats-table" id="statsTable">
@@ -6769,7 +6898,40 @@
         // Sayfa yüklendiğinde GIF carousel'i başlat
         document.addEventListener('DOMContentLoaded', () => {
             initGifCarousel();
+            
+            // Scroll to top button
+            const scrollToTopBtn = document.createElement('button');
+            scrollToTopBtn.className = 'scroll-to-top';
+            scrollToTopBtn.innerHTML = '↑';
+            scrollToTopBtn.onclick = () => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            };
+            document.body.appendChild(scrollToTopBtn);
+            
+            // Show/hide scroll to top button
+            window.addEventListener('scroll', () => {
+                if (window.pageYOffset > 300) {
+                    scrollToTopBtn.classList.add('show');
+                } else {
+                    scrollToTopBtn.classList.remove('show');
+                }
+            });
+            
+            // Smooth scroll for navigation links
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const targetId = link.getAttribute('href').substring(1);
+                    const targetElement = document.getElementById(targetId);
+                    if (targetElement) {
+                        targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                });
+            });
         });
     </script>
+    
+    <!-- Scroll to Top Button -->
+    <button class="scroll-to-top" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" style="display: none;">↑</button>
 </body>
 </html>
