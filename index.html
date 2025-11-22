@@ -2198,7 +2198,7 @@
         <div class="matches-section section-card" id="matches">
             <h2>📅 Maç Listesi</h2>
             <div class="sportoto-image">
-                <img src="https://webapi.sportoto.gov.tr/image/screenshot-2025-11-21-at-141929-jgebxyls.png" alt="Spor Toto Liste - 16. Hafta">
+                <img src="https://webapi.sportoto.gov.tr/image/screenshot-2025-11-15-at-141929-jgebxyls.png" alt="Spor Toto Liste - 16. Hafta">
             </div>
             <div class="matches-list" id="matchesList">
                 <!-- Maçlar JavaScript ile eklenecek -->
@@ -2243,8 +2243,8 @@
                 <div class="stat-item">
                     <span id="totalCoupons">Toplam: 0</span>
                 </div>
-                <div class="stat-item">
-                    <span id="activeCoupons">Gösterilen: 0</span>
+                <div class="stat-item" style="background: linear-gradient(135deg, rgba(255,215,0,0.3) 0%, rgba(255,165,0,0.3) 100%); border: 2px solid rgba(255,215,0,0.6); font-weight: bold;">
+                    <span id="activeCoupons">Filtrelenen: 0</span>
                 </div>
                 <div class="stat-item">
                     <span id="currentPageInfo">Sayfa: 1</span>
@@ -5867,7 +5867,7 @@
         function updateStats() {
             const totalPages = Math.ceil(filteredCoupons.length / itemsPerPage);
             document.getElementById('totalCoupons').textContent = `Toplam: ${allCoupons.length}`;
-            document.getElementById('activeCoupons').textContent = `Gösterilen: ${filteredCoupons.length}`;
+            document.getElementById('activeCoupons').textContent = `Filtrelenen: ${filteredCoupons.length}`;
             document.getElementById('currentPageInfo').textContent = `Sayfa: ${currentPage}/${totalPages || 1}`;
             
             // Potansiyel doğru tahmin istatistiklerini hesapla
