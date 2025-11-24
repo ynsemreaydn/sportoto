@@ -2250,26 +2250,6 @@
                     <span id="currentPageInfo">Sayfa: 1</span>
                 </div>
             </div>
-            <div class="current-stats" id="currentStats" style="margin-top: 15px; padding: 15px; background: linear-gradient(135deg, rgba(102,126,234,0.2) 0%, rgba(118,75,162,0.2) 100%); border-radius: 12px; border: 2px solid rgba(102,126,234,0.5);">
-                <h3 style="margin: 0 0 12px 0; color: #667eea; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">📊 Şu Anki Durum (Bitmiş Maçlara Göre)</h3>
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px;">
-                    <div class="current-stat-item" style="background: rgba(255,255,255,0.9); padding: 10px; border-radius: 8px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-                        <div style="font-weight: bold; color: #667eea; font-size: 1.2em;" id="current14">14: 0</div>
-                    </div>
-                    <div class="current-stat-item" style="background: rgba(255,255,255,0.9); padding: 10px; border-radius: 8px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-                        <div style="font-weight: bold; color: #667eea; font-size: 1.2em;" id="current13">13: 0</div>
-                    </div>
-                    <div class="current-stat-item" style="background: rgba(255,255,255,0.9); padding: 10px; border-radius: 8px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-                        <div style="font-weight: bold; color: #667eea; font-size: 1.2em;" id="current12">12: 0</div>
-                    </div>
-                    <div class="current-stat-item" style="background: rgba(255,255,255,0.9); padding: 10px; border-radius: 8px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-                        <div style="font-weight: bold; color: #667eea; font-size: 1.2em;" id="current11">11: 0</div>
-                    </div>
-                    <div class="current-stat-item" style="background: rgba(255,255,255,0.9); padding: 10px; border-radius: 8px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-                        <div style="font-weight: bold; color: #667eea; font-size: 1.2em;" id="current10">10: 0</div>
-                    </div>
-                </div>
-            </div>
             <div class="potential-stats" id="potentialStats" style="margin-top: 15px; padding: 15px; background: linear-gradient(135deg, rgba(255,215,0,0.2) 0%, rgba(255,165,0,0.2) 100%); border-radius: 12px; border: 2px solid rgba(255,215,0,0.5);">
                 <h3 style="margin: 0 0 12px 0; color: #FFD700; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">💰 Potansiyel (Kalan Maçlar da Doğru Gelirse)</h3>
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px;">
@@ -2514,7 +2494,8 @@
         // Maç listesi (canlı skor bilgileri ile)
         const matches = [
 
-                        {
+
+                                    {
                         "no": 1,
                         "date": "22.11.2025 14:30",
                         "teams": "Kayserispor-Gaziantep F.K. A.Ş.",
@@ -2522,15 +2503,15 @@
                         "homeScore": 0,
                         "awayScore": 3
             },
-                        {
+                                    {
                         "no": 2,
                         "date": "22.11.2025 17:00",
                         "teams": "Eyüpspor-Fatih Karagümrük",
-                        "status": "NS",
-                        "homeScore": null,
-                        "awayScore": null
+                        "status": "FT",
+                        "homeScore": 1,
+                        "awayScore": 0
             },
-                        {
+                                    {
                         "no": 3,
                         "date": "22.11.2025 20:00",
                         "teams": "Galatasaray A.Ş.-Gençlerbirliği",
@@ -2538,23 +2519,23 @@
                         "homeScore": 3,
                         "awayScore": 2
             },
-                        {
+                                    {
                         "no": 4,
                         "date": "23.11.2025 14:30",
                         "teams": "Göztepe A.Ş.-Kocaelispor",
-                        "status": "NS",
-                        "homeScore": null,
-                        "awayScore": null
+                        "status": "FT",
+                        "homeScore": 1,
+                        "awayScore": 0
             },
-                        {
+                                    {
                         "no": 5,
                         "date": "23.11.2025 17:00",
                         "teams": "Alanyaspor-Kasımpaşa A.Ş.",
-                        "status": "NS",
-                        "homeScore": null,
-                        "awayScore": null
+                        "status": "FT",
+                        "homeScore": 1,
+                        "awayScore": 0
             },
-                        {
+                                    {
                         "no": 6,
                         "date": "23.11.2025 17:00",
                         "teams": "Beşiktaş A.Ş.-Samsunspor A.Ş.",
@@ -2562,7 +2543,7 @@
                         "homeScore": 1,
                         "awayScore": 1
             },
-                        {
+                                    {
                         "no": 7,
                         "date": "23.11.2025 20:00",
                         "teams": "Çaykur Rizespor A.Ş.-Fenerbahçe A.Ş.",
@@ -2570,7 +2551,7 @@
                         "homeScore": 0,
                         "awayScore": 1
             },
-                        {
+                                    {
                         "no": 8,
                         "date": "24.11.2025 20:00",
                         "teams": "Başakşehir FK-Trabzonspor A.Ş.",
@@ -2578,7 +2559,7 @@
                         "homeScore": null,
                         "awayScore": null
             },
-                        {
+                                    {
                         "no": 9,
                         "date": "24.11.2025 20:00",
                         "teams": "Konyaspor-Antalyaspor",
@@ -2586,23 +2567,23 @@
                         "homeScore": null,
                         "awayScore": null
             },
-                        {
+                                    {
                         "no": 10,
                         "date": "22.11.2025 17:30",
                         "teams": "B. Dortmund-Stuttgart",
-                        "status": "NS",
-                        "homeScore": null,
-                        "awayScore": null
+                        "status": "FT",
+                        "homeScore": 1,
+                        "awayScore": 0
             },
-                        {
+                                    {
                         "no": 11,
                         "date": "22.11.2025 20:30",
                         "teams": "Köln-Eintracht Frankfurt",
-                        "status": "NS",
-                        "homeScore": null,
-                        "awayScore": null
+                        "status": "FT",
+                        "homeScore": 1,
+                        "awayScore": 0
             },
-                        {
+                                    {
                         "no": 12,
                         "date": "23.11.2025 19:30",
                         "teams": "Arsenal-Tottenham",
@@ -2610,7 +2591,7 @@
                         "homeScore": 4,
                         "awayScore": 1
             },
-                        {
+                                    {
                         "no": 13,
                         "date": "22.11.2025 18:15",
                         "teams": "Barcelona-Athletic Bilbao",
@@ -2618,15 +2599,15 @@
                         "homeScore": 1,
                         "awayScore": 0
             },
-                        {
+                                    {
                         "no": 14,
                         "date": "22.11.2025 22:45",
                         "teams": "Napoli-Atalanta",
-                        "status": "NS",
-                        "homeScore": null,
-                        "awayScore": null
+                        "status": "FT",
+                        "homeScore": 1,
+                        "awayScore": 0
             },
-                        {
+                                    {
                         "no": 15,
                         "date": "23.11.2025 22:45",
                         "teams": "Inter-AC Milan",
@@ -2634,6 +2615,7 @@
                         "homeScore": 0,
                         "awayScore": 1
             },
+        
         
         ];
         function getFinishedMatchResults() {
@@ -5898,7 +5880,6 @@
 
         // Potansiyel doğru tahmin istatistiklerini hesapla (Hedef 15 kalma mantığı)
         function calculatePotentialStats() {
-            const currentCounts = { 14: 0, 13: 0, 12: 0, 11: 0, 10: 0 };
             const potentialCounts = { 15: 0, 14: 0, 13: 0, 12: 0, 11: 0 };
             const potentialLists = { 15: [], 14: [], 13: [], 12: [], 11: [] };
 
@@ -5913,13 +5894,6 @@
                         correctSoFar++;
                     }
                 });
-
-                // Şu anki durum (bitmiş maçlara göre)
-                if (correctSoFar === 14) currentCounts[14]++;
-                if (correctSoFar === 13) currentCounts[13]++;
-                if (correctSoFar === 12) currentCounts[12]++;
-                if (correctSoFar === 11) currentCounts[11]++;
-                if (correctSoFar === 10) currentCounts[10]++;
 
                 // Potansiyel (kalan maçlar da doğru gelirse)
                 const maxPossible = correctSoFar + remainingMatches;
@@ -5939,13 +5913,6 @@
                     });
                 }
             });
-
-            // Şu anki durumu göster
-            document.getElementById('current14').textContent = `14: ${currentCounts[14]}`;
-            document.getElementById('current13').textContent = `13: ${currentCounts[13]}`;
-            document.getElementById('current12').textContent = `12: ${currentCounts[12]}`;
-            document.getElementById('current11').textContent = `11: ${currentCounts[11]}`;
-            document.getElementById('current10').textContent = `10: ${currentCounts[10]}`;
 
             // Potansiyeli göster
             document.getElementById('potential15').textContent = `15: ${potentialCounts[15]}`;
