@@ -4700,24 +4700,27 @@
             const statsTableBody = document.getElementById('statsTableBody');
             const total = allCoupons.length;
             
-            // Statistics from misli_combinations.csv (500 coupons)
-            const matchStats = [
-                {matchIndex: 0, count1: 273, count0: 104, count2: 123, pct1: 54.60, pct0: 20.80, pct2: 24.60},
-                {matchIndex: 1, count1: 117, count0: 6, count2: 377, pct1: 23.40, pct0: 1.20, pct2: 75.40},
-                {matchIndex: 2, count1: 386, count0: 114, count2: 0, pct1: 77.20, pct0: 22.80, pct2: 0.00},
-                {matchIndex: 3, count1: 391, count0: 109, count2: 0, pct1: 78.20, pct0: 21.80, pct2: 0.00},
-                {matchIndex: 4, count1: 418, count0: 78, count2: 4, pct1: 83.60, pct0: 15.60, pct2: 0.80},
-                {matchIndex: 5, count1: 144, count0: 155, count2: 201, pct1: 28.80, pct0: 31.00, pct2: 40.20},
-                {matchIndex: 6, count1: 0, count0: 0, count2: 500, pct1: 0.00, pct0: 0.00, pct2: 100.00},
-                {matchIndex: 7, count1: 98, count0: 5, count2: 397, pct1: 19.60, pct0: 1.00, pct2: 79.40},
-                {matchIndex: 8, count1: 241, count0: 132, count2: 127, pct1: 48.20, pct0: 26.40, pct2: 25.40},
-                {matchIndex: 9, count1: 250, count0: 102, count2: 148, pct1: 50.00, pct0: 20.40, pct2: 29.60},
-                {matchIndex: 10, count1: 173, count0: 204, count2: 123, pct1: 34.60, pct0: 40.80, pct2: 24.60},
-                {matchIndex: 11, count1: 340, count0: 57, count2: 103, pct1: 68.00, pct0: 11.40, pct2: 20.60},
-                {matchIndex: 12, count1: 500, count0: 0, count2: 0, pct1: 100.00, pct0: 0.00, pct2: 0.00},
-                {matchIndex: 13, count1: 122, count0: 252, count2: 126, pct1: 24.40, pct0: 50.40, pct2: 25.20},
-                {matchIndex: 14, count1: 123, count0: 248, count2: 129, pct1: 24.60, pct0: 49.60, pct2: 25.80},
-            ];
+            // Dinamik olarak tüm kuponlardan istatistik hesapla
+            const matchStats = matches.map((match, matchIndex) => {
+                let count1 = 0, count0 = 0, count2 = 0;
+                
+                allCoupons.forEach(coupon => {
+                    const prediction = coupon.predictions[matchIndex];
+                    if (prediction === 1) count1++;
+                    else if (prediction === 0) count0++;
+                    else if (prediction === 2) count2++;
+                });
+                
+                return {
+                    matchIndex,
+                    count1,
+                    count0,
+                    count2,
+                    pct1: (count1 / total) * 100,
+                    pct0: (count0 / total) * 100,
+                    pct2: (count2 / total) * 100
+                };
+            });
             
             statsTableBody.innerHTML = matches.map((match, matchIndex) => {
                 const stat = matchStats[matchIndex] || {count1: 0, count0: 0, count2: 0, pct1: 0, pct0: 0, pct2: 0};
