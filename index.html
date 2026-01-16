@@ -1787,6 +1787,131 @@
             margin-top: 20px;
         }
 
+        .duplicate-coupons-section {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+
+        .duplicate-coupons-section h2 {
+            color: white;
+            margin-bottom: 15px;
+            text-align: center;
+            font-size: 1.8em;
+        }
+
+        .duplicate-coupons-meta {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 1.1em;
+            opacity: 0.95;
+        }
+
+        .duplicate-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .duplicate-tab {
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s;
+        }
+
+        .duplicate-tab:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .duplicate-tab.active {
+            background: rgba(255, 255, 255, 0.9);
+            color: #ff6b6b;
+            font-weight: bold;
+        }
+
+        .duplicate-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 15px;
+        }
+
+        .duplicate-coupon-card {
+            background: rgba(255, 255, 255, 0.95);
+            color: #333;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .duplicate-coupon-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #ff6b6b;
+        }
+
+        .duplicate-coupon-label {
+            font-weight: bold;
+            font-size: 1.1em;
+            color: #ff6b6b;
+        }
+
+        .duplicate-coupon-badge {
+            background: #ff6b6b;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: bold;
+        }
+
+        .duplicate-coupon-rows {
+            margin-top: 10px;
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .duplicate-coupon-predictions {
+            display: grid;
+            grid-template-columns: repeat(15, 1fr);
+            gap: 5px;
+            margin-top: 10px;
+        }
+
+        .duplicate-prediction-item {
+            text-align: center;
+            padding: 8px;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+
+        .duplicate-prediction-item.prediction-1 {
+            background: #4caf50;
+            color: white;
+        }
+
+        .duplicate-prediction-item.prediction-0 {
+            background: #ff9800;
+            color: white;
+        }
+
+        .duplicate-prediction-item.prediction-2 {
+            background: #2196f3;
+            color: white;
+        }
+
         .all-matches-stats h3 {
             margin-bottom: 15px;
             text-align: center;
@@ -2222,6 +2347,26 @@
                     </table>
                 </div>
             </div>
+        </div>
+
+        <div class="duplicate-coupons-section section-card" id="duplicateCoupons">
+            <h2>🔄 Tekrarlanan Kuponlar</h2>
+            <p class="duplicate-coupons-meta" id="duplicateCouponsMeta">
+                <strong>3 kez tekrarlanan:</strong> <span id="tripleCount">0</span> kombinasyon, 
+                <strong>2 kez tekrarlanan:</strong> <span id="doubleCount">0</span> kombinasyon
+            </p>
+            
+            <div class="duplicate-tabs">
+                <button class="duplicate-tab active" onclick="showDuplicateTab('triple')">
+                    3 Kez Tekrarlanan (<span id="tripleTabCount">0</span>)
+                </button>
+                <button class="duplicate-tab" onclick="showDuplicateTab('double')">
+                    2 Kez Tekrarlanan (<span id="doubleTabCount">0</span>)
+                </button>
+            </div>
+            
+            <div id="tripleDuplicatesContainer" class="duplicate-container"></div>
+            <div id="doubleDuplicatesContainer" class="duplicate-container" style="display:none;"></div>
         </div>
 
         <div class="header">
@@ -7189,6 +7334,2774 @@
             }, 2000);
         }
 
+                // Duplicate coupons data
+        const duplicateCouponsData = {
+        "triple": [
+                {
+                        "combination": [
+                                1,
+                                1,
+                                0,
+                                0,
+                                2,
+                                2,
+                                1,
+                                0,
+                                1,
+                                2,
+                                2,
+                                1,
+                                2,
+                                0,
+                                2
+                        ],
+                        "rows": [
+                                187,
+                                674,
+                                1262
+                        ],
+                        "count": 3
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                0,
+                                1,
+                                1,
+                                2,
+                                0,
+                                1,
+                                0,
+                                2,
+                                2,
+                                1,
+                                0,
+                                1,
+                                2
+                        ],
+                        "rows": [
+                                189,
+                                1225,
+                                1388
+                        ],
+                        "count": 3
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                0,
+                                1,
+                                0,
+                                2,
+                                1,
+                                2,
+                                1,
+                                1,
+                                2,
+                                0,
+                                2,
+                                1,
+                                2
+                        ],
+                        "rows": [
+                                198,
+                                637,
+                                1783
+                        ],
+                        "count": 3
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                1,
+                                0,
+                                1,
+                                2,
+                                1,
+                                1,
+                                2,
+                                2,
+                                0,
+                                1,
+                                0,
+                                1,
+                                2
+                        ],
+                        "rows": [
+                                545,
+                                743,
+                                1713
+                        ],
+                        "count": 3
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                0,
+                                2,
+                                1,
+                                2,
+                                0,
+                                1,
+                                2,
+                                2,
+                                2,
+                                1,
+                                0,
+                                1,
+                                2
+                        ],
+                        "rows": [
+                                600,
+                                656,
+                                1209
+                        ],
+                        "count": 3
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                0,
+                                0,
+                                1,
+                                2,
+                                1,
+                                1,
+                                1,
+                                2,
+                                2,
+                                0,
+                                0,
+                                1,
+                                2
+                        ],
+                        "rows": [
+                                800,
+                                1328,
+                                1912
+                        ],
+                        "count": 3
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                1,
+                                2,
+                                2,
+                                2,
+                                1,
+                                1,
+                                0,
+                                2,
+                                2,
+                                0,
+                                0,
+                                1,
+                                2
+                        ],
+                        "rows": [
+                                1295,
+                                1352,
+                                1552
+                        ],
+                        "count": 3
+                }
+        ],
+        "double": [
+                {
+                        "combination": [
+                                1,
+                                1,
+                                0,
+                                1,
+                                2,
+                                2,
+                                1,
+                                1,
+                                0,
+                                0,
+                                2,
+                                0,
+                                2,
+                                1,
+                                2
+                        ],
+                        "rows": [
+                                8,
+                                1274
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                0,
+                                1,
+                                2,
+                                2,
+                                1,
+                                1,
+                                2,
+                                0,
+                                0,
+                                1,
+                                2,
+                                1,
+                                2
+                        ],
+                        "rows": [
+                                14,
+                                777
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                0,
+                                0,
+                                0,
+                                2,
+                                1,
+                                2,
+                                1,
+                                2,
+                                2,
+                                1,
+                                0,
+                                1,
+                                2
+                        ],
+                        "rows": [
+                                19,
+                                1666
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                1,
+                                1,
+                                2,
+                                2,
+                                1,
+                                1,
+                                2,
+                                1,
+                                0,
+                                0,
+                                0,
+                                1,
+                                2
+                        ],
+                        "rows": [
+                                22,
+                                1391
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                0,
+                                0,
+                                1,
+                                2,
+                                1,
+                                1,
+                                0,
+                                2,
+                                2,
+                                1,
+                                1,
+                                0,
+                                2
+                        ],
+                        "rows": [
+                                50,
+                                1545
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                0,
+                                1,
+                                1,
+                                2,
+                                1,
+                                2,
+                                1,
+                                2,
+                                2,
+                                1,
+                                1,
+                                0,
+                                2
+                        ],
+                        "rows": [
+                                55,
+                                414
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                1,
+                                1,
+                                1,
+                                2,
+                                1,
+                                2,
+                                1,
+                                2,
+                                2,
+                                1,
+                                0,
+                                0,
+                                2
+                        ],
+                        "rows": [
+                                71,
+                                296
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                1,
+                                0,
+                                2,
+                                2,
+                                0,
+                                1,
+                                1,
+                                2,
+                                2,
+                                1,
+                                0,
+                                1,
+                                1
+                        ],
+                        "rows": [
+                                74,
+                                1742
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                1,
+                                1,
+                                0,
+                                2,
+                                1,
+                                2,
+                                2,
+                                0,
+                                2,
+                                1,
+                                1,
+                                1,
+                                2
+                        ],
+                        "rows": [
+                                78,
+                                1413
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                1,
+                                1,
+                                1,
+                                2,
+                                0,
+                                0,
+                                1,
+                                1,
+                                2,
+                                0,
+                                1,
+                                0,
+                                2
+                        ],
+                        "rows": [
+                                98,
+                                300
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                0,
+                                1,
+                                1,
+                                2,
+                                1,
+                                2,
+                                2,
+                                0,
+                                2,
+                                1,
+                                0,
+                                1,
+                                2
+                        ],
+                        "rows": [
+                                103,
+                                1805
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                0,
+                                0,
+                                1,
+                                2,
+                                1,
+                                1,
+                                2,
+                                0,
+                                2,
+                                1,
+                                2,
+                                2,
+                                0
+                        ],
+                        "rows": [
+                                107,
+                                576
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                0,
+                                1,
+                                2,
+                                2,
+                                1,
+                                1,
+                                1,
+                                2,
+                                2,
+                                1,
+                                1,
+                                2,
+                                0
+                        ],
+                        "rows": [
+                                120,
+                                1416
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                1,
+                                0,
+                                2,
+                                2,
+                                0,
+                                2,
+                                0,
+                                1,
+                                2,
+                                1,
+                                2,
+                                1,
+                                0
+                        ],
+                        "rows": [
+                                123,
+                                981
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                0,
+                                1,
+                                2,
+                                2,
+                                1,
+                                2,
+                                1,
+                                2,
+                                2,
+                                1,
+                                0,
+                                1,
+                                0
+                        ],
+                        "rows": [
+                                124,
+                                1841
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                0,
+                                1,
+                                1,
+                                2,
+                                1,
+                                0,
+                                1,
+                                2,
+                                2,
+                                1,
+                                0,
+                                1,
+                                2
+                        ],
+                        "rows": [
+                                128,
+                                976
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                1,
+                                0,
+                                1,
+                                2,
+                                0,
+                                1,
+                                2,
+                                0,
+                                2,
+                                1,
+                                1,
+                                2,
+                                2
+                        ],
+                        "rows": [
+                                130,
+                                388
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                0,
+                                1,
+                                2,
+                                2,
+                                1,
+                                1,
+                                0,
+                                1,
+                                2,
+                                1,
+                                2,
+                                0,
+                                0
+                        ],
+                        "rows": [
+                                136,
+                                1709
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                0,
+                                1,
+                                2,
+                                2,
+                                1,
+                                0,
+                                1,
+                                1,
+                                2,
+                                1,
+                                2,
+                                2,
+                                2
+                        ],
+                        "rows": [
+                                139,
+                                141
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                1,
+                                1,
+                                1,
+                                2,
+                                0,
+                                1,
+                                1,
+                                2,
+                                2,
+                                1,
+                                0,
+                                0,
+                                2
+                        ],
+                        "rows": [
+                                145,
+                                247
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                0,
+                                1,
+                                1,
+                                2,
+                                1,
+                                1,
+                                0,
+                                2,
+                                2,
+                                0,
+                                0,
+                                2,
+                                2
+                        ],
+                        "rows": [
+                                159,
+                                1718
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                0,
+                                1,
+                                1,
+                                2,
+                                1,
+                                0,
+                                2,
+                                2,
+                                2,
+                                1,
+                                0,
+                                0,
+                                2
+                        ],
+                        "rows": [
+                                196,
+                                397
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                0,
+                                1,
+                                0,
+                                2,
+                                1,
+                                0,
+                                1,
+                                2,
+                                2,
+                                1,
+                                0,
+                                1,
+                                2
+                        ],
+                        "rows": [
+                                221,
+                                1286
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                1,
+                                1,
+                                1,
+                                2,
+                                0,
+                                1,
+                                1,
+                                1,
+                                0,
+                                1,
+                                0,
+                                2,
+                                2
+                        ],
+                        "rows": [
+                                227,
+                                360
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                0,
+                                1,
+                                2,
+                                2,
+                                1,
+                                2,
+                                1,
+                                0,
+                                0,
+                                1,
+                                0,
+                                1,
+                                2
+                        ],
+                        "rows": [
+                                232,
+                                393
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                0,
+                                1,
+                                1,
+                                2,
+                                1,
+                                1,
+                                0,
+                                2,
+                                2,
+                                1,
+                                1,
+                                0,
+                                2
+                        ],
+                        "rows": [
+                                242,
+                                1913
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                0,
+                                1,
+                                2,
+                                2,
+                                0,
+                                1,
+                                2,
+                                0,
+                                0,
+                                1,
+                                2,
+                                1,
+                                2
+                        ],
+                        "rows": [
+                                255,
+                                1791
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                1,
+                                0,
+                                2,
+                                2,
+                                0,
+                                2,
+                                0,
+                                1,
+                                2,
+                                1,
+                                2,
+                                1,
+                                2
+                        ],
+                        "rows": [
+                                256,
+                                1016
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                0,
+                                0,
+                                1,
+                                2,
+                                0,
+                                1,
+                                1,
+                                2,
+                                0,
+                                1,
+                                2,
+                                1,
+                                2
+                        ],
+                        "rows": [
+                                262,
+                                1497
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                0,
+                                0,
+                                2,
+                                2,
+                                1,
+                                1,
+                                1,
+                                0,
+                                2,
+                                1,
+                                2,
+                                2,
+                                1
+                        ],
+                        "rows": [
+                                268,
+                                525
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                0,
+                                1,
+                                1,
+                                2,
+                                0,
+                                1,
+                                1,
+                                2,
+                                2,
+                                1,
+                                2,
+                                0,
+                                2
+                        ],
+                        "rows": [
+                                273,
+                                589
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                0,
+                                1,
+                                1,
+                                2,
+                                0,
+                                1,
+                                1,
+                                2,
+                                2,
+                                1,
+                                2,
+                                2,
+                                2
+                        ],
+                        "rows": [
+                                280,
+                                823
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                1,
+                                0,
+                                1,
+                                2,
+                                1,
+                                2,
+                                0,
+                                0,
+                                2,
+                                1,
+                                0,
+                                0,
+                                2
+                        ],
+                        "rows": [
+                                301,
+                                763
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                0,
+                                1,
+                                1,
+                                2,
+                                1,
+                                1,
+                                2,
+                                0,
+                                0,
+                                1,
+                                2,
+                                1,
+                                2
+                        ],
+                        "rows": [
+                                308,
+                                361
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                1,
+                                1,
+                                2,
+                                2,
+                                1,
+                                0,
+                                0,
+                                2,
+                                2,
+                                1,
+                                2,
+                                0,
+                                2
+                        ],
+                        "rows": [
+                                309,
+                                1397
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                1,
+                                1,
+                                1,
+                                2,
+                                0,
+                                1,
+                                1,
+                                0,
+                                2,
+                                0,
+                                2,
+                                1,
+                                2
+                        ],
+                        "rows": [
+                                313,
+                                1185
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                0,
+                                1,
+                                1,
+                                2,
+                                0,
+                                0,
+                                0,
+                                2,
+                                2,
+                                1,
+                                1,
+                                1,
+                                2
+                        ],
+                        "rows": [
+                                333,
+                                1642
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                1,
+                                0,
+                                1,
+                                2,
+                                1,
+                                1,
+                                1,
+                                0,
+                                2,
+                                1,
+                                0,
+                                2,
+                                2
+                        ],
+                        "rows": [
+                                381,
+                                1761
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                1,
+                                1,
+                                2,
+                                2,
+                                0,
+                                1,
+                                1,
+                                2,
+                                0,
+                                1,
+                                0,
+                                1,
+                                2
+                        ],
+                        "rows": [
+                                384,
+                                444
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                0,
+                                1,
+                                0,
+                                2,
+                                1,
+                                1,
+                                2,
+                                2,
+                                0,
+                                1,
+                                0,
+                                1,
+                                2
+                        ],
+                        "rows": [
+                                386,
+                                1393
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                0,
+                                0,
+                                2,
+                                2,
+                                1,
+                                1,
+                                1,
+                                0,
+                                2,
+                                1,
+                                1,
+                                2,
+                                2
+                        ],
+                        "rows": [
+                                394,
+                                433
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                0,
+                                1,
+                                0,
+                                2,
+                                1,
+                                1,
+                                0,
+                                2,
+                                2,
+                                1,
+                                2,
+                                0,
+                                2
+                        ],
+                        "rows": [
+                                402,
+                                1595
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                1,
+                                1,
+                                0,
+                                2,
+                                1,
+                                0,
+                                0,
+                                2,
+                                2,
+                                1,
+                                1,
+                                2,
+                                2
+                        ],
+                        "rows": [
+                                403,
+                                1989
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                0,
+                                1,
+                                1,
+                                2,
+                                1,
+                                1,
+                                2,
+                                0,
+                                2,
+                                1,
+                                2,
+                                2,
+                                2
+                        ],
+                        "rows": [
+                                419,
+                                1345
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                0,
+                                1,
+                                2,
+                                2,
+                                0,
+                                1,
+                                1,
+                                2,
+                                2,
+                                0,
+                                2,
+                                1,
+                                2
+                        ],
+                        "rows": [
+                                424,
+                                1206
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                0,
+                                1,
+                                1,
+                                2,
+                                0,
+                                1,
+                                1,
+                                2,
+                                0,
+                                1,
+                                0,
+                                2,
+                                2
+                        ],
+                        "rows": [
+                                427,
+                                1824
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                0,
+                                1,
+                                2,
+                                2,
+                                0,
+                                1,
+                                1,
+                                1,
+                                0,
+                                1,
+                                2,
+                                2,
+                                2
+                        ],
+                        "rows": [
+                                432,
+                                492
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                1,
+                                1,
+                                2,
+                                2,
+                                1,
+                                0,
+                                2,
+                                0,
+                                2,
+                                1,
+                                1,
+                                0,
+                                2
+                        ],
+                        "rows": [
+                                435,
+                                1853
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                0,
+                                1,
+                                1,
+                                2,
+                                1,
+                                1,
+                                2,
+                                2,
+                                0,
+                                1,
+                                0,
+                                1,
+                                2
+                        ],
+                        "rows": [
+                                445,
+                                843
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                0,
+                                0,
+                                2,
+                                2,
+                                1,
+                                2,
+                                1,
+                                1,
+                                2,
+                                1,
+                                0,
+                                1,
+                                2
+                        ],
+                        "rows": [
+                                451,
+                                1334
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                0,
+                                0,
+                                2,
+                                2,
+                                1,
+                                0,
+                                1,
+                                2,
+                                2,
+                                1,
+                                0,
+                                1,
+                                2
+                        ],
+                        "rows": [
+                                462,
+                                1210
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                0,
+                                2,
+                                1,
+                                2,
+                                1,
+                                2,
+                                0,
+                                0,
+                                2,
+                                1,
+                                2,
+                                1,
+                                2
+                        ],
+                        "rows": [
+                                479,
+                                799
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                0,
+                                0,
+                                1,
+                                2,
+                                0,
+                                1,
+                                1,
+                                2,
+                                0,
+                                0,
+                                2,
+                                1,
+                                2
+                        ],
+                        "rows": [
+                                481,
+                                1522
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                1,
+                                2,
+                                2,
+                                2,
+                                1,
+                                1,
+                                2,
+                                0,
+                                2,
+                                1,
+                                0,
+                                1,
+                                1
+                        ],
+                        "rows": [
+                                510,
+                                1452
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                0,
+                                1,
+                                2,
+                                2,
+                                1,
+                                0,
+                                1,
+                                0,
+                                2,
+                                1,
+                                0,
+                                2,
+                                2
+                        ],
+                        "rows": [
+                                543,
+                                587
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                0,
+                                0,
+                                1,
+                                2,
+                                1,
+                                2,
+                                1,
+                                2,
+                                0,
+                                1,
+                                2,
+                                0,
+                                2
+                        ],
+                        "rows": [
+                                559,
+                                1575
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                1,
+                                2,
+                                1,
+                                2,
+                                0,
+                                1,
+                                1,
+                                2,
+                                2,
+                                1,
+                                0,
+                                1,
+                                0
+                        ],
+                        "rows": [
+                                565,
+                                806
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                0,
+                                2,
+                                1,
+                                2,
+                                0,
+                                1,
+                                2,
+                                2,
+                                2,
+                                1,
+                                1,
+                                1,
+                                2
+                        ],
+                        "rows": [
+                                592,
+                                985
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                1,
+                                0,
+                                2,
+                                2,
+                                1,
+                                2,
+                                0,
+                                0,
+                                2,
+                                1,
+                                2,
+                                1,
+                                2
+                        ],
+                        "rows": [
+                                601,
+                                907
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                0,
+                                0,
+                                2,
+                                2,
+                                1,
+                                1,
+                                1,
+                                2,
+                                2,
+                                1,
+                                0,
+                                0,
+                                2
+                        ],
+                        "rows": [
+                                603,
+                                1361
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                1,
+                                0,
+                                1,
+                                2,
+                                1,
+                                2,
+                                2,
+                                0,
+                                0,
+                                1,
+                                2,
+                                1,
+                                2
+                        ],
+                        "rows": [
+                                628,
+                                1040
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                0,
+                                2,
+                                0,
+                                2,
+                                1,
+                                1,
+                                1,
+                                2,
+                                2,
+                                0,
+                                1,
+                                1,
+                                2
+                        ],
+                        "rows": [
+                                678,
+                                1044
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                1,
+                                2,
+                                2,
+                                2,
+                                1,
+                                0,
+                                0,
+                                0,
+                                2,
+                                1,
+                                0,
+                                1,
+                                2
+                        ],
+                        "rows": [
+                                724,
+                                1852
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                1,
+                                2,
+                                2,
+                                2,
+                                0,
+                                0,
+                                1,
+                                2,
+                                2,
+                                1,
+                                0,
+                                1,
+                                2
+                        ],
+                        "rows": [
+                                740,
+                                794
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                0,
+                                2,
+                                0,
+                                2,
+                                1,
+                                1,
+                                0,
+                                2,
+                                2,
+                                1,
+                                1,
+                                2,
+                                2
+                        ],
+                        "rows": [
+                                747,
+                                1727
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                0,
+                                2,
+                                1,
+                                2,
+                                1,
+                                2,
+                                0,
+                                1,
+                                2,
+                                1,
+                                1,
+                                0,
+                                2
+                        ],
+                        "rows": [
+                                753,
+                                1350
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                1,
+                                0,
+                                0,
+                                2,
+                                0,
+                                1,
+                                2,
+                                1,
+                                2,
+                                1,
+                                1,
+                                1,
+                                2
+                        ],
+                        "rows": [
+                                760,
+                                1027
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                1,
+                                1,
+                                1,
+                                2,
+                                0,
+                                0,
+                                1,
+                                2,
+                                2,
+                                1,
+                                0,
+                                2,
+                                2
+                        ],
+                        "rows": [
+                                771,
+                                1218
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                0,
+                                1,
+                                1,
+                                2,
+                                1,
+                                1,
+                                0,
+                                0,
+                                2,
+                                1,
+                                2,
+                                2,
+                                2
+                        ],
+                        "rows": [
+                                774,
+                                1110
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                0,
+                                1,
+                                2,
+                                2,
+                                1,
+                                1,
+                                2,
+                                2,
+                                2,
+                                1,
+                                0,
+                                0,
+                                2
+                        ],
+                        "rows": [
+                                776,
+                                1169
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                0,
+                                1,
+                                0,
+                                2,
+                                0,
+                                1,
+                                0,
+                                1,
+                                2,
+                                0,
+                                2,
+                                1,
+                                2
+                        ],
+                        "rows": [
+                                783,
+                                1684
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                0,
+                                1,
+                                1,
+                                2,
+                                1,
+                                1,
+                                1,
+                                2,
+                                0,
+                                1,
+                                2,
+                                2,
+                                2
+                        ],
+                        "rows": [
+                                787,
+                                999
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                1,
+                                2,
+                                2,
+                                2,
+                                0,
+                                0,
+                                1,
+                                2,
+                                2,
+                                1,
+                                1,
+                                1,
+                                2
+                        ],
+                        "rows": [
+                                813,
+                                1411
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                0,
+                                1,
+                                2,
+                                2,
+                                0,
+                                1,
+                                0,
+                                1,
+                                2,
+                                1,
+                                0,
+                                1,
+                                2
+                        ],
+                        "rows": [
+                                821,
+                                1192
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                0,
+                                0,
+                                1,
+                                2,
+                                0,
+                                1,
+                                2,
+                                1,
+                                2,
+                                1,
+                                1,
+                                1,
+                                2
+                        ],
+                        "rows": [
+                                827,
+                                1737
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                0,
+                                2,
+                                1,
+                                2,
+                                0,
+                                1,
+                                2,
+                                0,
+                                2,
+                                1,
+                                1,
+                                0,
+                                2
+                        ],
+                        "rows": [
+                                835,
+                                1793
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                0,
+                                0,
+                                2,
+                                2,
+                                1,
+                                1,
+                                2,
+                                2,
+                                2,
+                                1,
+                                1,
+                                0,
+                                2
+                        ],
+                        "rows": [
+                                845,
+                                1600
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                0,
+                                2,
+                                0,
+                                2,
+                                1,
+                                2,
+                                2,
+                                0,
+                                2,
+                                1,
+                                0,
+                                1,
+                                2
+                        ],
+                        "rows": [
+                                850,
+                                1990
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                0,
+                                2,
+                                1,
+                                2,
+                                1,
+                                1,
+                                0,
+                                2,
+                                0,
+                                1,
+                                0,
+                                1,
+                                2
+                        ],
+                        "rows": [
+                                866,
+                                1850
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                0,
+                                0,
+                                1,
+                                2,
+                                0,
+                                2,
+                                1,
+                                2,
+                                2,
+                                1,
+                                2,
+                                1,
+                                2
+                        ],
+                        "rows": [
+                                888,
+                                1002
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                0,
+                                0,
+                                2,
+                                2,
+                                0,
+                                1,
+                                1,
+                                2,
+                                2,
+                                1,
+                                0,
+                                1,
+                                2
+                        ],
+                        "rows": [
+                                901,
+                                1446
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                1,
+                                0,
+                                2,
+                                2,
+                                1,
+                                1,
+                                2,
+                                1,
+                                0,
+                                1,
+                                0,
+                                1,
+                                2
+                        ],
+                        "rows": [
+                                938,
+                                1551
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                0,
+                                1,
+                                0,
+                                2,
+                                1,
+                                1,
+                                2,
+                                2,
+                                0,
+                                1,
+                                2,
+                                1,
+                                2
+                        ],
+                        "rows": [
+                                969,
+                                1827
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                0,
+                                1,
+                                0,
+                                2,
+                                1,
+                                1,
+                                2,
+                                2,
+                                2,
+                                1,
+                                0,
+                                1,
+                                2
+                        ],
+                        "rows": [
+                                993,
+                                1323
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                0,
+                                2,
+                                0,
+                                2,
+                                1,
+                                2,
+                                1,
+                                2,
+                                2,
+                                1,
+                                0,
+                                1,
+                                2
+                        ],
+                        "rows": [
+                                1020,
+                                1142
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                0,
+                                0,
+                                2,
+                                2,
+                                1,
+                                2,
+                                1,
+                                2,
+                                2,
+                                1,
+                                0,
+                                1,
+                                0
+                        ],
+                        "rows": [
+                                1037,
+                                1553
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                0,
+                                2,
+                                0,
+                                2,
+                                1,
+                                1,
+                                2,
+                                0,
+                                0,
+                                1,
+                                0,
+                                1,
+                                2
+                        ],
+                        "rows": [
+                                1069,
+                                1484
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                0,
+                                2,
+                                1,
+                                2,
+                                1,
+                                1,
+                                2,
+                                0,
+                                0,
+                                1,
+                                1,
+                                1,
+                                2
+                        ],
+                        "rows": [
+                                1076,
+                                1313
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                0,
+                                0,
+                                1,
+                                2,
+                                1,
+                                1,
+                                2,
+                                2,
+                                2,
+                                1,
+                                0,
+                                2,
+                                2
+                        ],
+                        "rows": [
+                                1137,
+                                1981
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                1,
+                                2,
+                                2,
+                                2,
+                                1,
+                                2,
+                                0,
+                                0,
+                                2,
+                                1,
+                                1,
+                                0,
+                                2
+                        ],
+                        "rows": [
+                                1180,
+                                1504
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                1,
+                                0,
+                                2,
+                                2,
+                                1,
+                                2,
+                                0,
+                                0,
+                                0,
+                                1,
+                                2,
+                                1,
+                                2
+                        ],
+                        "rows": [
+                                1306,
+                                1969
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                1,
+                                0,
+                                2,
+                                2,
+                                1,
+                                2,
+                                0,
+                                2,
+                                2,
+                                1,
+                                0,
+                                0,
+                                2
+                        ],
+                        "rows": [
+                                1333,
+                                1902
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                0,
+                                1,
+                                2,
+                                2,
+                                1,
+                                1,
+                                0,
+                                1,
+                                2,
+                                1,
+                                0,
+                                2,
+                                2
+                        ],
+                        "rows": [
+                                1336,
+                                1820
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                0,
+                                0,
+                                2,
+                                2,
+                                1,
+                                1,
+                                0,
+                                1,
+                                2,
+                                0,
+                                1,
+                                2,
+                                2
+                        ],
+                        "rows": [
+                                1436,
+                                1554
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                0,
+                                0,
+                                2,
+                                2,
+                                0,
+                                1,
+                                2,
+                                0,
+                                2,
+                                1,
+                                2,
+                                1,
+                                2
+                        ],
+                        "rows": [
+                                1482,
+                                1593
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                0,
+                                1,
+                                1,
+                                2,
+                                0,
+                                2,
+                                1,
+                                1,
+                                0,
+                                1,
+                                2,
+                                1,
+                                2
+                        ],
+                        "rows": [
+                                1489,
+                                1577
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                0,
+                                2,
+                                2,
+                                2,
+                                0,
+                                1,
+                                2,
+                                0,
+                                2,
+                                1,
+                                1,
+                                1,
+                                2
+                        ],
+                        "rows": [
+                                1492,
+                                1529
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                0,
+                                2,
+                                1,
+                                2,
+                                1,
+                                2,
+                                2,
+                                1,
+                                0,
+                                1,
+                                0,
+                                1,
+                                2
+                        ],
+                        "rows": [
+                                1543,
+                                1677
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                1,
+                                0,
+                                1,
+                                2,
+                                1,
+                                0,
+                                1,
+                                2,
+                                2,
+                                0,
+                                2,
+                                1,
+                                2
+                        ],
+                        "rows": [
+                                1569,
+                                1693
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                1,
+                                2,
+                                2,
+                                2,
+                                1,
+                                0,
+                                1,
+                                2,
+                                2,
+                                1,
+                                1,
+                                0,
+                                2
+                        ],
+                        "rows": [
+                                1582,
+                                1650
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                0,
+                                0,
+                                2,
+                                2,
+                                1,
+                                1,
+                                0,
+                                2,
+                                2,
+                                0,
+                                2,
+                                1,
+                                2
+                        ],
+                        "rows": [
+                                1603,
+                                1641
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                0,
+                                2,
+                                2,
+                                2,
+                                1,
+                                0,
+                                1,
+                                1,
+                                2,
+                                1,
+                                1,
+                                0,
+                                2
+                        ],
+                        "rows": [
+                                1694,
+                                1781
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                0,
+                                0,
+                                2,
+                                2,
+                                1,
+                                1,
+                                0,
+                                2,
+                                2,
+                                1,
+                                0,
+                                2,
+                                2
+                        ],
+                        "rows": [
+                                1730,
+                                1867
+                        ],
+                        "count": 2
+                },
+                {
+                        "combination": [
+                                1,
+                                1,
+                                1,
+                                0,
+                                2,
+                                2,
+                                1,
+                                2,
+                                1,
+                                2,
+                                0,
+                                1,
+                                2,
+                                0,
+                                2
+                        ],
+                        "rows": [
+                                1810,
+                                1839
+                        ],
+                        "count": 2
+                }
+        ]
+};
+
+        // Show duplicate tab
+        function showDuplicateTab(type) {
+            // Hide all containers
+            document.getElementById('tripleDuplicatesContainer').style.display = 'none';
+            document.getElementById('doubleDuplicatesContainer').style.display = 'none';
+            
+            // Remove active class from all tabs
+            document.querySelectorAll('.duplicate-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected container
+            if (type === 'triple') {
+                document.getElementById('tripleDuplicatesContainer').style.display = 'grid';
+                document.querySelectorAll('.duplicate-tab')[0].classList.add('active');
+            } else {
+                document.getElementById('doubleDuplicatesContainer').style.display = 'grid';
+                document.querySelectorAll('.duplicate-tab')[1].classList.add('active');
+            }
+        }
+
+        // Render duplicate coupons
+        function renderDuplicateCoupons() {
+            const tripleContainer = document.getElementById('tripleDuplicatesContainer');
+            const doubleContainer = document.getElementById('doubleDuplicatesContainer');
+            
+            if (!tripleContainer || !doubleContainer) return;
+            
+            // Update counts
+            document.getElementById('tripleCount').textContent = duplicateCouponsData.triple.length;
+            document.getElementById('doubleCount').textContent = duplicateCouponsData.double.length;
+            document.getElementById('tripleTabCount').textContent = duplicateCouponsData.triple.length;
+            document.getElementById('doubleTabCount').textContent = duplicateCouponsData.double.length;
+            
+            // Render triple duplicates
+            tripleContainer.innerHTML = duplicateCouponsData.triple.map((item, idx) => {
+                const predictions = item.combination.map((pred, matchIdx) => {
+                    const predClass = pred === 1 ? 'prediction-1' : (pred === 0 ? 'prediction-0' : 'prediction-2');
+                    return `<div class="duplicate-prediction-item ${predClass}">${pred}</div>`;
+                }).join('');
+                
+                return `
+                    <div class="duplicate-coupon-card">
+                        <div class="duplicate-coupon-header">
+                            <span class="duplicate-coupon-label">Kupon #${idx + 1}</span>
+                            <span class="duplicate-coupon-badge">3 Kez</span>
+                        </div>
+                        <div class="duplicate-coupon-rows">
+                            Satır Numaraları: ${item.rows.join(', ')}
+                        </div>
+                        <div class="duplicate-coupon-predictions">
+                            ${predictions}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            // Render double duplicates (first 50 for performance)
+            const doubleToShow = duplicateCouponsData.double.slice(0, 50);
+            doubleContainer.innerHTML = doubleToShow.map((item, idx) => {
+                const predictions = item.combination.map((pred, matchIdx) => {
+                    const predClass = pred === 1 ? 'prediction-1' : (pred === 0 ? 'prediction-0' : 'prediction-2');
+                    return `<div class="duplicate-prediction-item ${predClass}">${pred}</div>`;
+                }).join('');
+                
+                return `
+                    <div class="duplicate-coupon-card">
+                        <div class="duplicate-coupon-header">
+                            <span class="duplicate-coupon-label">Kupon #${idx + 1}</span>
+                            <span class="duplicate-coupon-badge">2 Kez</span>
+                        </div>
+                        <div class="duplicate-coupon-rows">
+                            Satır Numaraları: ${item.rows.join(', ')}
+                        </div>
+                        <div class="duplicate-coupon-predictions">
+                            ${predictions}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            if (duplicateCouponsData.double.length > 50) {
+                doubleContainer.innerHTML += `<div style="grid-column: 1/-1; text-align: center; padding: 20px; color: white; font-size: 1.1em;">
+                    ... ve ${duplicateCouponsData.double.length - 50} adet daha (toplam ${duplicateCouponsData.double.length} adet 2 kez tekrarlanan kupon)
+                </div>`;
+            }
+        }
+
+
         // CSV dosyasını yükle (inline data)
         function loadCoupons() {
             try {
@@ -7833,6 +10746,7 @@
         function initializeApp() {
             renderMatches(); // Maç listesini render et
             loadCoupons();
+            renderDuplicateCoupons(); // Render duplicate (tekrarlanan) kuponları göster
             // renderWinningCoupon(); // Kazanmayı beklediğimiz kuponu render et - henüz erken, comment out edildi
             // renderTarget13Coupons(); // Hedef 13 kuponlarını render et - henüz erken, comment out edildi
             // Marquee ve emoji animasyonlarını hemen başlat (popup kapandığı gibi)
