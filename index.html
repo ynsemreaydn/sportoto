@@ -1912,6 +1912,93 @@
             color: white;
         }
 
+        .coupon-targets-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+
+        .coupon-targets-section h2 {
+            color: white;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 1.8em;
+        }
+
+        .targets-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .target-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s;
+        }
+
+        .target-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .target-card.target-14 {
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            color: #333;
+        }
+
+        .target-card.target-13 {
+            background: linear-gradient(135deg, #C0C0C0 0%, #808080 100%);
+            color: white;
+        }
+
+        .target-card.target-12 {
+            background: linear-gradient(135deg, #CD7F32 0%, #8B4513 100%);
+            color: white;
+        }
+
+        .target-icon {
+            font-size: 3em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .target-label {
+            font-size: 1.1em;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .target-count {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .target-subtitle {
+            font-size: 0.9em;
+            opacity: 0.8;
+        }
+
+        .targets-info {
+            text-align: center;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.3);
+            font-size: 1.1em;
+        }
+
+        .targets-info p {
+            margin: 5px 0;
+        }
+
         .all-matches-stats h3 {
             margin-bottom: 15px;
             text-align: center;
@@ -2369,6 +2456,34 @@
             <div id="doubleDuplicatesContainer" class="duplicate-container" style="display:none;"></div>
         </div>
 
+        <div class="coupon-targets-section section-card" id="couponTargets">
+            <h2>🎯 Hedef Kupon Sayıları</h2>
+            <div class="targets-grid">
+                <div class="target-card target-14">
+                    <div class="target-icon">14</div>
+                    <div class="target-label">14'e Giden Kupon</div>
+                    <div class="target-count" id="target14Count">0</div>
+                    <div class="target-subtitle">Kupon sayısı</div>
+                </div>
+                <div class="target-card target-13">
+                    <div class="target-icon">13</div>
+                    <div class="target-label">13'e Giden Kupon</div>
+                    <div class="target-count" id="target13Count">0</div>
+                    <div class="target-subtitle">Kupon sayısı</div>
+                </div>
+                <div class="target-card target-12">
+                    <div class="target-icon">12</div>
+                    <div class="target-label">12'ye Giden Kupon</div>
+                    <div class="target-count" id="target12Count">0</div>
+                    <div class="target-subtitle">Kupon sayısı</div>
+                </div>
+            </div>
+            <div class="targets-info" id="targetsInfo">
+                <p>Biten maçlar: <span id="finishedMatchesCount">0</span> / 15</p>
+                <p>Kalan maçlar: <span id="remainingMatchesCount">0</span> / 15</p>
+            </div>
+        </div>
+
         <div class="header">
             <h1>⚽ Spor Toto Kupon Takibi</h1>
             <div class="filter-section" id="matchFilters">
@@ -2638,53 +2753,54 @@
 
         // Maç listesi (canlı skor bilgileri ile)
         const matches = [
+
             {
                 "no": 1,
                 "date": "17.01.2026 17:00",
                 "teams": "Başakşehir FK-Fatih Karagümrük",
-                "status": "NS",
-                "homeScore": null,
-                "awayScore": null
+                "status": "FT",
+                "homeScore": 2,
+                "awayScore": 1
             },
             {
                 "no": 2,
                 "date": "17.01.2026 20:00",
                 "teams": "Galatasaray A.Ş.-Gaziantep F.K. A.Ş.",
-                "status": "NS",
-                "homeScore": null,
-                "awayScore": null
+                "status": "FT",
+                "homeScore": 1,
+                "awayScore": 1
             },
             {
                 "no": 3,
                 "date": "18.01.2026 14:30",
                 "teams": "Kasımpaşa A.Ş.-Antalyaspor",
-                "status": "NS",
-                "homeScore": null,
-                "awayScore": null
+                "status": "FT",
+                "homeScore": 0,
+                "awayScore": 0
             },
             {
                 "no": 4,
                 "date": "18.01.2026 17:00",
                 "teams": "Gençlerbirliği-Samsunspor A.Ş.",
-                "status": "NS",
-                "homeScore": null,
-                "awayScore": null
+                "status": "FT",
+                "homeScore": 1,
+                "awayScore": 1
             },
             {
                 "no": 5,
                 "date": "18.01.2026 17:00",
                 "teams": "Kocaelispor-Trabzonspor A.Ş.",
-                "status": "NS",
-                "homeScore": null,
-                "awayScore": null
+                "status": "FT",
+                "homeScore": 1,
+                "awayScore": 2
             },
             {
                 "no": 6,
                 "date": "18.01.2026 20:00",
                 "teams": "Alanyaspor-Fenerbahçe A.Ş.",
-                "status": "NS",
-                "homeScore": null,
-                "awayScore": null
+                "status": "FT",
+                "homeScore": 2,
+                "awayScore": 3
             },
             {
                 "no": 7,
@@ -2714,50 +2830,51 @@
                 "no": 10,
                 "date": "17.01.2026 17:30",
                 "teams": "Hoffenheim-B.Leverkusen",
-                "status": "NS",
-                "homeScore": null,
-                "awayScore": null
+                "status": "FT",
+                "homeScore": 1,
+                "awayScore": 0
             },
             {
                 "no": 11,
                 "date": "17.01.2026 20:30",
                 "teams": "Leipzig-Bayern Münih",
-                "status": "NS",
-                "homeScore": null,
-                "awayScore": null
+                "status": "FT",
+                "homeScore": 1,
+                "awayScore": 5
             },
             {
                 "no": 12,
                 "date": "16.01.2026 23:00",
                 "teams": "PSG-Lille",
-                "status": "NS",
-                "homeScore": null,
-                "awayScore": null
+                "status": "FT",
+                "homeScore": 3,
+                "awayScore": 0
             },
             {
                 "no": 13,
                 "date": "17.01.2026 15:30",
                 "teams": "Manchester United-Manchester City",
-                "status": "NS",
-                "homeScore": null,
-                "awayScore": null
+                "status": "FT",
+                "homeScore": 2,
+                "awayScore": 0
             },
             {
                 "no": 14,
                 "date": "18.01.2026 19:30",
                 "teams": "Aston Villa-Everton",
-                "status": "NS",
-                "homeScore": null,
-                "awayScore": null
+                "status": "FT",
+                "homeScore": 0,
+                "awayScore": 1
             },
             {
                 "no": 15,
                 "date": "18.01.2026 23:00",
                 "teams": "Real Sociedad-Barcelona",
-                "status": "NS",
-                "homeScore": null,
-                "awayScore": null
+                "status": "FT",
+                "homeScore": 2,
+                "awayScore": 1
             }
+        ];
         ];
         function getFinishedMatchResults() {
             return matches
@@ -10101,6 +10218,70 @@
             }
         }
 
+        // Calculate coupon targets (14, 13, 12)
+        function calculateCouponTargets() {
+            if (allCoupons.length === 0) return;
+            
+            // Get finished matches
+            const finishedMatches = matches.filter(m => m.status === 'FT');
+            const remainingMatches = matches.filter(m => m.status === 'NS');
+            
+            // Calculate actual results for finished matches
+            const matchResults = {};
+            finishedMatches.forEach(match => {
+                let result = null;
+                if (match.homeScore !== null && match.awayScore !== null) {
+                    if (match.homeScore > match.awayScore) result = 1;
+                    else if (match.homeScore < match.awayScore) result = 2;
+                    else result = 0;
+                }
+                matchResults[match.no] = result;
+            });
+            
+            // Count coupons that can reach each target
+            let canReach14 = 0;
+            let canReach13 = 0;
+            let canReach12 = 0;
+            
+            allCoupons.forEach(coupon => {
+                let correct = 0;
+                let incorrect = 0;
+                
+                // Check finished matches
+                finishedMatches.forEach(match => {
+                    const matchIndex = match.no - 1; // 0-based index
+                    const predicted = coupon.predictions[matchIndex];
+                    const actual = matchResults[match.no];
+                    
+                    if (predicted === actual) {
+                        correct++;
+                    } else {
+                        incorrect++;
+                    }
+                });
+                
+                // Calculate max possible
+                const maxPossible = correct + remainingMatches.length;
+                
+                if (maxPossible >= 14) canReach14++;
+                if (maxPossible >= 13) canReach13++;
+                if (maxPossible >= 12) canReach12++;
+            });
+            
+            // Update UI
+            const target14El = document.getElementById('target14Count');
+            const target13El = document.getElementById('target13Count');
+            const target12El = document.getElementById('target12Count');
+            const finishedCountEl = document.getElementById('finishedMatchesCount');
+            const remainingCountEl = document.getElementById('remainingMatchesCount');
+            
+            if (target14El) target14El.textContent = canReach14;
+            if (target13El) target13El.textContent = canReach13;
+            if (target12El) target12El.textContent = canReach12;
+            if (finishedCountEl) finishedCountEl.textContent = finishedMatches.length;
+            if (remainingCountEl) remainingCountEl.textContent = remainingMatches.length;
+        }
+
 
         // CSV dosyasını yükle (inline data)
         function loadCoupons() {
@@ -10747,6 +10928,7 @@
             renderMatches(); // Maç listesini render et
             loadCoupons();
             renderDuplicateCoupons(); // Render duplicate (tekrarlanan) kuponları göster
+            calculateCouponTargets(); // Hedef kupon sayılarını hesapla ve göster
             // renderWinningCoupon(); // Kazanmayı beklediğimiz kuponu render et - henüz erken, comment out edildi
             // renderTarget13Coupons(); // Hedef 13 kuponlarını render et - henüz erken, comment out edildi
             // Marquee ve emoji animasyonlarını hemen başlat (popup kapandığı gibi)
