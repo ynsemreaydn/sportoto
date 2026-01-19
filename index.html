@@ -3162,8 +3162,7 @@
             window.matches = matches;
         }
         function getFinishedMatchResults() {
-            const matchesArray = window.matches || matches;
-            return matchesArray
+            return matches
                 .map((match, index) => {
                     if (match.status === 'FT' && match.homeScore !== null && match.homeScore !== undefined && match.awayScore !== null && match.awayScore !== undefined) {
                         let result;
@@ -5190,13 +5189,12 @@
                 console.error('matchesList element not found');
                 return;
             }
-            const matchesArray = window.matches || matches;
-            if (!matchesArray || matchesArray.length === 0) {
+            if (!matches || matches.length === 0) {
                 console.error('matches array is empty or undefined');
                 matchesList.innerHTML = '<div class="no-matches">Maç bilgileri yüklenemedi.</div>';
                 return;
             }
-            matchesList.innerHTML = matchesArray.map(match => {
+            matchesList.innerHTML = matches.map(match => {
                 let liveScoreHTML = '';
                 let itemClass = 'match-item';
                 
@@ -5228,12 +5226,11 @@
         // Maç filtrelerini render et
         function renderMatchFilters() {
             const matchFiltersGrid = document.getElementById('matchFiltersGrid');
-            const matchesArray = window.matches || matches;
-            if (!matchesArray || matchesArray.length === 0) {
+            if (!matches || matches.length === 0) {
                 console.error('matches array is empty in renderMatchFilters');
                 return;
             }
-            matchFiltersGrid.innerHTML = matchesArray.map((match, index) => {
+            matchFiltersGrid.innerHTML = matches.map((match, index) => {
                 // FT (Fulltime) olan maçlar için disabled - sonuçlanan maçlar değiştirilemez
                 const isDisabled = (match.status === 'FT' || match.status === 'FT ') ? 'disabled' : '';
                 // FT olan maçlar için seçili değeri otomatik ayarla
@@ -5262,8 +5259,7 @@
             const statsTableBody = document.getElementById('statsTableBody');
             if (!statsTableBody) return;
             
-            const matchesArray = window.matches || matches;
-            if (!matchesArray || matchesArray.length === 0) {
+            if (!matches || matches.length === 0) {
                 console.error('matches array is empty in calculateAllMatchesStats');
                 statsTableBody.innerHTML = '<tr><td colspan="5">Maç bilgileri yüklenemedi.</td></tr>';
                 return;
@@ -5271,7 +5267,7 @@
             
             if (allCoupons.length === 0) {
                 // Kuponlar yüklenmediyse sadece maç listesini göster
-                statsTableBody.innerHTML = matchesArray.map((match, matchIndex) => {
+            statsTableBody.innerHTML = matches.map((match, matchIndex) => {
                     return `
                         <tr>
                             <td class="match-no">${match.no}</td>
@@ -5288,7 +5284,7 @@
             const total = allCoupons.length;
             
             // Dinamik olarak tüm kuponlardan istatistik hesapla
-            const matchStats = matchesArray.map((match, matchIndex) => {
+            const matchStats = matches.map((match, matchIndex) => {
                 let count1 = 0, count0 = 0, count2 = 0;
                 
                 allCoupons.forEach(coupon => {
@@ -5309,7 +5305,7 @@
                 };
             });
             
-            statsTableBody.innerHTML = matchesArray.map((match, matchIndex) => {
+            statsTableBody.innerHTML = matches.map((match, matchIndex) => {
                 const stat = matchStats[matchIndex] || {count1: 0, count0: 0, count2: 0, pct1: 0, pct0: 0, pct2: 0};
                 
                 return `
@@ -10550,14 +10546,13 @@
 
         // Calculate coupon targets (14, 13, 12)
         function calculateCouponTargets() {
-            const matchesArray = window.matches || matches;
-            if (!matchesArray || matchesArray.length === 0) {
+            if (!matches || matches.length === 0) {
                 console.error('matches array is empty in calculateCouponTargets');
                 return;
             }
             // Get finished matches
-            const finishedMatches = matchesArray.filter(m => m.status === 'FT');
-            const remainingMatches = matchesArray.filter(m => m.status === 'NS');
+            const finishedMatches = matches.filter(m => m.status === 'FT');
+            const remainingMatches = matches.filter(m => m.status === 'NS');
             
             if (allCoupons.length === 0) {
                 // Kuponlar yüklenmediyse sadece 0 göster
@@ -10636,14 +10631,13 @@
             const tbody = document.getElementById('matchStatusTableBody');
             if (!tbody) return;
             
-            const matchesArray = window.matches || matches;
-            if (!matchesArray || matchesArray.length === 0) {
+            if (!matches || matches.length === 0) {
                 console.error('matches array is empty in renderMatchStatusTable');
                 tbody.innerHTML = '<tr><td colspan="6">Maç bilgileri yüklenemedi.</td></tr>';
                 return;
             }
 
-            tbody.innerHTML = matchesArray.map(match => {
+            tbody.innerHTML = matches.map(match => {
                 let scoreHTML = '-';
                 let resultHTML = '-';
                 let resultClass = '';
@@ -10728,12 +10722,11 @@
             filteredCoupons = allCoupons;
             
             // Tüm maçlar için filtreleri uygula
-            const matchesArray = window.matches || matches;
-            if (!matchesArray || matchesArray.length === 0) {
+            if (!matches || matches.length === 0) {
                 console.error('matches array is empty in filterCoupons');
                 return;
             }
-            matchesArray.forEach((match, matchIndex) => {
+            matches.forEach((match, matchIndex) => {
                 const filterElement = document.getElementById(`matchFilter${matchIndex}`);
                 let result = null;
                 
@@ -11422,10 +11415,8 @@
         // Uygulamayı başlatan fonksiyon (popup kapandıktan sonra çağrılır)
         async function initializeApp() {
             try {
-                // matches array'ini kontrol et
-                const matchesArray = window.matches || matches;
-                console.log('initializeApp started, matches count:', matchesArray ? matchesArray.length : 0);
-                if (!matchesArray || matchesArray.length === 0) {
+                console.log('initializeApp started, matches count:', matches ? matches.length : 0);
+                if (!matches || matches.length === 0) {
                     console.error('matches array is empty or undefined!');
                     return;
                 }
