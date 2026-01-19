@@ -945,6 +945,17 @@
             font-weight: bold;
         }
 
+        .match-status-table .status-live {
+            color: #F44336;
+            font-weight: bold;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
         @media (max-width: 768px) {
             .match-status-table {
                 font-size: 0.85em;
@@ -3104,9 +3115,9 @@
                 "no": 9,
                 "date": "19.01.2026 20:00",
                 "teams": "Göztepe A.Ş.-Çaykur Rizespor A.Ş.",
-                "status": "LIVE",
-                "homeScore": 0,
-                "awayScore": 0
+                "status": "FT",
+                "homeScore": 3,
+                "awayScore": 1
             },
             {
                 "no": 10,
@@ -10629,13 +10640,18 @@
         // Güncel maç durumu tablosunu render et
         function renderMatchStatusTable() {
             const tbody = document.getElementById('matchStatusTableBody');
-            if (!tbody) return;
+            if (!tbody) {
+                console.error('matchStatusTableBody element not found!');
+                return;
+            }
             
             if (!matches || matches.length === 0) {
                 console.error('matches array is empty in renderMatchStatusTable');
                 tbody.innerHTML = '<tr><td colspan="6">Maç bilgileri yüklenemedi.</td></tr>';
                 return;
             }
+
+            console.log('renderMatchStatusTable: Rendering', matches.length, 'matches');
 
             tbody.innerHTML = matches.map(match => {
                 let scoreHTML = '-';
@@ -10644,6 +10660,7 @@
                 let statusHTML = '';
                 let statusClass = '';
 
+                // FT (Bitti) durumu
                 if (match.status === 'FT' && match.homeScore !== null && match.homeScore !== undefined && match.awayScore !== null && match.awayScore !== undefined) {
                     scoreHTML = `${match.homeScore} - ${match.awayScore}`;
                     
@@ -10656,7 +10673,17 @@
                     resultClass = `result-${result}`;
                     statusHTML = 'Bitti';
                     statusClass = 'status-ft';
-                } else {
+                } 
+                // LIVE (Canlı) durumu
+                else if (match.status === 'LIVE' && match.homeScore !== null && match.homeScore !== undefined && match.awayScore !== null && match.awayScore !== undefined) {
+                    scoreHTML = `${match.homeScore} - ${match.awayScore}`;
+                    resultHTML = '-';
+                    resultClass = '';
+                    statusHTML = 'Canlı';
+                    statusClass = 'status-live';
+                }
+                // NS (Oynanmadı) durumu
+                else {
                     statusHTML = 'Oynanmadı';
                     statusClass = 'status-ns';
                 }
@@ -10672,6 +10699,8 @@
                     </tr>
                 `;
             }).join('');
+            
+            console.log('renderMatchStatusTable: Completed');
         }
 
 
@@ -11536,6 +11565,11 @@
             document.getElementById('rowEnd').addEventListener('keypress', (e) => {
                 if (e.key === 'Enter') filterByRows();
             });
+            
+            // Güncel maç durumu tablosunu hemen render et
+            if (matches && matches.length > 0) {
+                renderMatchStatusTable();
+            }
         });
 
         // GIF Carousel - Hızlı döngüsel geçiş
