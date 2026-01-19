@@ -4,6 +4,9 @@
 # But allow index.html
 !index.html
 
+# Allow misli_combinations.csv
+!misli_combinations.csv
+
 # Allow .gitignore itself
 !.gitignore
 
