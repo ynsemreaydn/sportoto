@@ -5181,6 +5181,15 @@
         // Maç listesini render et
         function renderMatches() {
             const matchesList = document.getElementById('matchesList');
+            if (!matchesList) {
+                console.error('matchesList element not found');
+                return;
+            }
+            if (!matches || matches.length === 0) {
+                console.error('matches array is empty or undefined');
+                matchesList.innerHTML = '<div class="no-matches">Maç bilgileri yüklenemedi.</div>';
+                return;
+            }
             matchesList.innerHTML = matches.map(match => {
                 let liveScoreHTML = '';
                 let itemClass = 'match-item';
@@ -11371,14 +11380,22 @@
 
         // Uygulamayı başlatan fonksiyon (popup kapandıktan sonra çağrılır)
         async function initializeApp() {
+            try {
+                console.log('initializeApp started, matches count:', matches ? matches.length : 0);
             renderMatches(); // Maç listesini render et
-            await loadCoupons(); // Kuponları yükle (async)
-            // renderDuplicateCoupons(); // Render duplicate (tekrarlanan) kuponları göster - Comment Out Edildi
-            calculateCouponTargets(); // Hedef kupon sayılarını hesapla ve göster
-            renderMatchStatusTable(); // Güncel maç durumu tablosunu render et
-            renderTarget13Table(); // 13'e giden 7 kupon tablosunu render et
+                calculateAllMatchesStats(); // Tüm maçlar için istatistikleri hesapla (kuponlar yüklenmeden önce)
+                renderMatchStatusTable(); // Güncel maç durumu tablosunu render et
+                await loadCoupons(); // Kuponları yükle (async)
+                // renderDuplicateCoupons(); // Render duplicate (tekrarlanan) kuponları göster - Comment Out Edildi
+                calculateCouponTargets(); // Hedef kupon sayılarını hesapla ve göster
+                calculateAllMatchesStats(); // Tüm maçlar için istatistikleri tekrar hesapla (kuponlar yüklendikten sonra)
+                renderTarget13Table(); // 13'e giden 7 kupon tablosunu render et
             // renderWinningCoupon(); // Kazanmayı beklediğimiz kuponu render et - henüz erken, comment out edildi
-            renderTarget13Coupons(); // Hedef 13 kuponlarını render et
+                renderTarget13Coupons(); // Hedef 13 kuponlarını render et
+                console.log('initializeApp completed');
+            } catch (error) {
+                console.error('Error in initializeApp:', error);
+            }
             // Marquee ve emoji animasyonlarını hemen başlat (popup kapandığı gibi)
             const marqueeContent = document.getElementById('marqueeContent');
             if (marqueeContent) {
