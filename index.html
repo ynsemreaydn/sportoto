@@ -2702,7 +2702,7 @@
             <a href="#matches" class="nav-link">📅 Maçlar</a>
             <a href="#coupons" class="nav-link">🎫 Kupondar</a>
             <a href="#stats" class="nav-link">📊 İstatistikler</a>
-            <a href="#slot" class="nav-link">🎰 Slot</a>
+            <!-- <a href="#slot" class="nav-link">🎰 Slot</a> -->
         </div>
     </nav>
 
@@ -2853,6 +2853,7 @@
             </div>
         </div>
 
+        <!-- Tekrarlanan Kuponlar Bölümü - Comment Out Edildi
         <div class="duplicate-coupons-section section-card" id="duplicateCoupons">
             <h2>🔄 Tekrarlanan Kuponlar</h2>
             <p class="duplicate-coupons-meta" id="duplicateCouponsMeta">
@@ -2872,6 +2873,7 @@
             <div id="tripleDuplicatesContainer" class="duplicate-container"></div>
             <div id="doubleDuplicatesContainer" class="duplicate-container" style="display:none;"></div>
         </div>
+        -->
 
         <div class="coupon-targets-section section-card" id="couponTargets">
             <h2>🎯 Hedef Kupon Sayıları</h2>
@@ -2998,7 +3000,7 @@
 
         
 
-<!-- Aviator Oyunu -->
+<!-- Aviator Oyunu - Comment Out Edildi
         <div class="aviator-game-section" id="aviatorGameSection" style="margin-top: 30px; padding: 25px; background: linear-gradient(135deg, rgba(30,144,255,0.25) 0%, rgba(0,191,255,0.25) 50%, rgba(135,206,250,0.25) 100%); border-radius: 20px; border: 3px solid rgba(30,144,255,0.6); box-shadow: 0 10px 40px rgba(30,144,255,0.3);">
             <h2 style="margin: 0 0 20px 0; color: #1E90FF; text-shadow: 3px 3px 6px rgba(0,0,0,0.5); font-size: 2em; text-align: center;">✈️ AVIATOR OYUNU ✈️</h2>
             
@@ -3071,8 +3073,9 @@
                 </div>
             </div>
         </div>
+        -->
 
-        <!-- Slot Oyunu -->
+        <!-- Slot Oyunu - Comment Out Edildi
         <div class="slot-game-section section-card" id="slot" style="margin-top: 30px; padding: 25px; background: linear-gradient(135deg, rgba(255,20,147,0.25) 0%, rgba(255,105,180,0.25) 50%, rgba(255,182,193,0.25) 100%); border-radius: 20px; border: 3px solid rgba(255,20,147,0.6); box-shadow: 0 10px 40px rgba(255,20,147,0.3);">
             <h2 style="margin: 0 0 20px 0; color: #FF1493; text-shadow: 3px 3px 6px rgba(0,0,0,0.5); font-size: 2em; text-align: center;">🎰 SLOT OYUNU 🎰</h2>
             
@@ -3152,6 +3155,7 @@
                 </div>
             </div>
         </div>
+        -->
     </div>
 
     <script>
@@ -6531,8 +6535,8 @@
             prizeAnimationId = requestAnimationFrame(animatePrizeChart);
         }
 
-        // Aviator Oyunu JavaScript
-        let aviatorGameState = {
+        // Aviator Oyunu JavaScript - Comment Out Edildi
+        /*let aviatorGameState = {
             isRunning: false,
             multiplier: 1.00,
             currentBet: 0,
@@ -6984,9 +6988,10 @@
             }
         `;
         document.head.appendChild(style);
+        */
 
-        // Slot Oyunu JavaScript
-        let slotGameState = {
+        // Slot Oyunu JavaScript - Comment Out Edildi
+        /*let slotGameState = {
             balance: 1000,
             totalWin: 0,
             totalLoss: 0,
@@ -7345,6 +7350,7 @@
             }
         `;
         document.head.appendChild(slotStyle);
+        */
 
         // OCI'ye Özel F1 Yarış Oyunu JavaScript
         let f1GameState = {
@@ -10565,9 +10571,10 @@
                 }
         ]
 };
+        */
 
-        // Show duplicate tab
-        function showDuplicateTab(type) {
+        // Show duplicate tab - Comment Out Edildi
+        /*function showDuplicateTab(type) {
             // Hide all containers
             document.getElementById('tripleDuplicatesContainer').style.display = 'none';
             document.getElementById('doubleDuplicatesContainer').style.display = 'none';
@@ -10587,8 +10594,8 @@
             }
         }
 
-        // Render duplicate coupons
-        function renderDuplicateCoupons() {
+        // Render duplicate coupons - Comment Out Edildi
+        /*function renderDuplicateCoupons() {
             const tripleContainer = document.getElementById('tripleDuplicatesContainer');
             const doubleContainer = document.getElementById('doubleDuplicatesContainer');
             
@@ -10653,6 +10660,7 @@
                 </div>`;
             }
         }
+        */
 
         // Calculate coupon targets (14, 13, 12)
         function calculateCouponTargets() {
@@ -11543,7 +11551,7 @@
         function initializeApp() {
             renderMatches(); // Maç listesini render et
             loadCoupons();
-            renderDuplicateCoupons(); // Render duplicate (tekrarlanan) kuponları göster
+            // renderDuplicateCoupons(); // Render duplicate (tekrarlanan) kuponları göster - Comment Out Edildi
             calculateCouponTargets(); // Hedef kupon sayılarını hesapla ve göster
             renderMatchStatusTable(); // Güncel maç durumu tablosunu render et
             renderTarget13Table(); // 13'e giden 7 kupon tablosunu render et
