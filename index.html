@@ -3088,25 +3088,25 @@
                 "no": 7,
                 "date": "19.01.2026 17:00",
                 "teams": "Konyaspor-Eyüpspor",
-                "status": "NS",
-                "homeScore": null,
-                "awayScore": null
+                "status": "FT",
+                "homeScore": 1,
+                "awayScore": 1
             },
             {
                 "no": 8,
                 "date": "19.01.2026 20:00",
                 "teams": "Beşiktaş A.Ş.-Kayserispor",
-                "status": "NS",
-                "homeScore": null,
-                "awayScore": null
+                "status": "LIVE",
+                "homeScore": 0,
+                "awayScore": 0
             },
             {
                 "no": 9,
                 "date": "19.01.2026 20:00",
                 "teams": "Göztepe A.Ş.-Çaykur Rizespor A.Ş.",
-                "status": "NS",
-                "homeScore": null,
-                "awayScore": null
+                "status": "LIVE",
+                "homeScore": 0,
+                "awayScore": 0
             },
             {
                 "no": 10,
@@ -10678,16 +10678,23 @@
         // CSV dosyasını yükle (misli_combinations.csv'den dinamik olarak)
         async function loadCoupons() {
             try {
+                console.log('loadCoupons başladı...');
                 // misli_combinations.csv'yi fetch ile yükle
                 // GitHub Pages için path'i düzelt
                 const csvPath = './misli_combinations.csv';
+                console.log('CSV path:', csvPath);
                 const response = await fetch(csvPath);
                 if (!response.ok) {
                     console.error('CSV yükleme hatası:', response.status, response.statusText);
                     throw new Error(`CSV yüklenemedi: ${response.status}`);
                 }
                 const text = await response.text();
+                console.log('CSV yüklendi, toplam karakter:', text.length);
                 const lines = text.split('\n').filter(line => line.trim());
+                console.log('Toplam satır sayısı:', lines.length);
+                
+                // allCoupons dizisini temizle
+                allCoupons = [];
                 
                 // Header'ı atla ve verileri parse et
                 for (let i = 1; i < lines.length; i++) {
@@ -10695,11 +10702,13 @@
                     if (predictions.length === 15) {
                         allCoupons.push({
                             id: i,
-                            rowNumber: i, // CSV'deki satır numarası (1'den başlar)
+                            rowNumber: i + 1, // CSV'deki gerçek satır numarası (header dahil, 2'den başlar)
                             predictions: predictions.map(p => parseInt(p))
                         });
                     }
                 }
+                
+                console.log('Yüklenen kupon sayısı:', allCoupons.length);
                 
                 // İlk yüklemede tüm kuponları göster
                 filteredCoupons = allCoupons;
@@ -10710,10 +10719,15 @@
                 updateStats();
                 renderCoupons();
                 renderPerfectCoupons();
+                renderTarget13Table(); // 13'e giden kupon tablosunu güncelle
+                console.log('loadCoupons tamamlandı');
             } catch (error) {
                 console.error('CSV yükleme hatası:', error);
-                document.getElementById('couponsContainer').innerHTML = 
-                    '<div class="no-coupons"><h2>⚠️ Hata</h2><p>CSV verileri yüklenemedi.</p></div>';
+                const container = document.getElementById('couponsContainer');
+                if (container) {
+                    container.innerHTML = 
+                        '<div class="no-coupons"><h2>⚠️ Hata</h2><p>CSV verileri yüklenemedi: ' + error.message + '</p></div>';
+                }
             }
         }
 
@@ -11021,7 +11035,12 @@
         // 13'e giden 7 kupon tablosunu render et
         function renderTarget13Table() {
             const tbody = document.getElementById('target13TableBody');
-            if (!tbody) return;
+            if (!tbody) {
+                console.error('target13TableBody bulunamadı');
+                return;
+            }
+
+            console.log('renderTarget13Table çağrıldı, allCoupons sayısı:', allCoupons.length);
 
             // 13'e giden 7 kuponun row numaraları
             const target13RowNumbers = [782, 1000, 1170, 1184, 1222, 1322, 1470];
@@ -11031,13 +11050,21 @@
                 const coupon = allCoupons.find(c => c.rowNumber === rowNum);
                 if (coupon) {
                     return { row: rowNum, predictions: coupon.predictions };
+                } else {
+                    console.warn('Row', rowNum, 'bulunamadı');
                 }
                 return null;
             }).filter(c => c !== null);
             
+            console.log('Bulunan kupon sayısı:', target13Coupons.length);
+            
             // Eğer kuponlar bulunamadıysa, boş tablo göster
             if (target13Coupons.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; padding: 20px;">Kuponlar yükleniyor...</td></tr>';
+                if (allCoupons.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; padding: 20px;">Kuponlar yükleniyor...</td></tr>';
+                } else {
+                    tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; padding: 20px;">13\'e giden kuponlar bulunamadı. (allCoupons: ' + allCoupons.length + ' kupon yüklendi)</td></tr>';
+                }
                 return;
             }
 
