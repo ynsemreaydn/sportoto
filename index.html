@@ -2356,6 +2356,12 @@
             border-color: rgba(255, 255, 255, 0.5);
         }
 
+        .target-card.target-15 {
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            border: 3px solid #FFD700;
+            box-shadow: 0 8px 25px rgba(255, 215, 0, 0.4);
+        }
+
         .target-card.target-14 {
             background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
             color: #333;
@@ -2838,7 +2844,7 @@
         <div class="matches-section section-card" id="matches">
             <h2>📅 Maç Listesi</h2>
             <div class="sportoto-image">
-                <img src="https://webapi.sportoto.gov.tr/image/sportoto24-v3lzkrjc.jpg" alt="Spor Toto Liste">
+                <img src="https://webapi.sportoto.gov.tr/image/1000954112-b35gecax.jpg" alt="Spor Toto Liste">
             </div>
             <div class="matches-list" id="matchesList">
                 <!-- Maçlar JavaScript ile eklenecek -->
@@ -2889,6 +2895,12 @@
         <div class="coupon-targets-section section-card" id="couponTargets">
             <h2>🎯 Hedef Kupon Sayıları</h2>
             <div class="targets-grid">
+                <div class="target-card target-15">
+                    <div class="target-icon">15</div>
+                    <div class="target-label">15'e Giden Kupon</div>
+                    <div class="target-count" id="target15Count">0</div>
+                    <div class="target-subtitle">Kupon sayısı</div>
+                </div>
                 <div class="target-card target-14">
                     <div class="target-icon">14</div>
                     <div class="target-label">14'e Giden Kupon</div>
@@ -3046,126 +3058,125 @@
 
         // Maç listesi (canlı skor bilgileri ile)
         const matches = [
-
             {
                 "no": 1,
-                "date": "17.01.2026 17:00",
-                "teams": "Başakşehir FK-Fatih Karagümrük",
-                "status": "FT",
-                "homeScore": 2,
-                "awayScore": 1
+                "date": "23.01.2026 20:00",
+                "teams": "Trabzonspor A.Ş.-Kasımpaşa A.Ş.",
+                "status": "NS",
+                "homeScore": null,
+                "awayScore": null
             },
             {
                 "no": 2,
-                "date": "17.01.2026 20:00",
-                "teams": "Galatasaray A.Ş.-Gaziantep F.K. A.Ş.",
-                "status": "FT",
-                "homeScore": 1,
-                "awayScore": 1
+                "date": "24.01.2026 14:30",
+                "teams": "Kayserispor-Başakşehir FK",
+                "status": "NS",
+                "homeScore": null,
+                "awayScore": null
             },
             {
                 "no": 3,
-                "date": "18.01.2026 14:30",
-                "teams": "Kasımpaşa A.Ş.-Antalyaspor",
-                "status": "FT",
-                "homeScore": 0,
-                "awayScore": 0
+                "date": "24.01.2026 17:00",
+                "teams": "Samsunspor A.Ş.-Kocaelispor",
+                "status": "NS",
+                "homeScore": null,
+                "awayScore": null
             },
             {
                 "no": 4,
-                "date": "18.01.2026 17:00",
-                "teams": "Gençlerbirliği-Samsunspor A.Ş.",
-                "status": "FT",
-                "homeScore": 1,
-                "awayScore": 1
+                "date": "24.01.2026 20:00",
+                "teams": "Fatih Karagümrük-Galatasaray A.Ş.",
+                "status": "NS",
+                "homeScore": null,
+                "awayScore": null
             },
             {
                 "no": 5,
-                "date": "18.01.2026 17:00",
-                "teams": "Kocaelispor-Trabzonspor A.Ş.",
-                "status": "FT",
-                "homeScore": 1,
-                "awayScore": 2
+                "date": "25.01.2026 14:30",
+                "teams": "Gaziantep F.K. A.Ş.-Konyaspor",
+                "status": "NS",
+                "homeScore": null,
+                "awayScore": null
             },
             {
                 "no": 6,
-                "date": "18.01.2026 20:00",
-                "teams": "Alanyaspor-Fenerbahçe A.Ş.",
-                "status": "FT",
-                "homeScore": 2,
-                "awayScore": 3
+                "date": "25.01.2026 17:00",
+                "teams": "Antalyaspor-Gençlerbirliği",
+                "status": "NS",
+                "homeScore": null,
+                "awayScore": null
             },
             {
                 "no": 7,
-                "date": "19.01.2026 17:00",
-                "teams": "Konyaspor-Eyüpspor",
-                "status": "FT",
-                "homeScore": 1,
-                "awayScore": 1
+                "date": "25.01.2026 17:00",
+                "teams": "Çaykur Rizespor A.Ş.-Alanyaspor",
+                "status": "NS",
+                "homeScore": null,
+                "awayScore": null
             },
             {
                 "no": 8,
-                "date": "19.01.2026 20:00",
-                "teams": "Beşiktaş A.Ş.-Kayserispor",
-                "status": "LIVE",
-                "homeScore": 0,
-                "awayScore": 0
+                "date": "25.01.2026 20:00",
+                "teams": "Fenerbahçe A.Ş.-Göztepe A.Ş.",
+                "status": "NS",
+                "homeScore": null,
+                "awayScore": null
             },
             {
                 "no": 9,
-                "date": "19.01.2026 20:00",
-                "teams": "Göztepe A.Ş.-Çaykur Rizespor A.Ş.",
-                "status": "FT",
-                "homeScore": 3,
-                "awayScore": 1
+                "date": "26.01.2026 20:00",
+                "teams": "Eyüpspor-Beşiktaş A.Ş.",
+                "status": "NS",
+                "homeScore": null,
+                "awayScore": null
             },
             {
                 "no": 10,
-                "date": "17.01.2026 17:30",
-                "teams": "Hoffenheim-B.Leverkusen",
-                "status": "FT",
-                "homeScore": 1,
-                "awayScore": 0
+                "date": "24.01.2026 20:30",
+                "teams": "Union Berlin-B. Dortmund",
+                "status": "NS",
+                "homeScore": null,
+                "awayScore": null
             },
             {
                 "no": 11,
-                "date": "17.01.2026 20:30",
-                "teams": "Leipzig-Bayern Münih",
-                "status": "FT",
-                "homeScore": 1,
-                "awayScore": 5
+                "date": "24.01.2026 23:05",
+                "teams": "Marsilya-RC Lens",
+                "status": "NS",
+                "homeScore": null,
+                "awayScore": null
             },
             {
                 "no": 12,
-                "date": "16.01.2026 23:00",
-                "teams": "PSG-Lille",
-                "status": "FT",
-                "homeScore": 3,
-                "awayScore": 0
+                "date": "25.01.2026 19:30",
+                "teams": "Arsenal-Manchester United",
+                "status": "NS",
+                "homeScore": null,
+                "awayScore": null
             },
             {
                 "no": 13,
-                "date": "17.01.2026 15:30",
-                "teams": "Manchester United-Manchester City",
-                "status": "FT",
-                "homeScore": 2,
-                "awayScore": 0
+                "date": "24.01.2026 23:00",
+                "teams": "Villarreal-Real Madrid",
+                "status": "NS",
+                "homeScore": null,
+                "awayScore": null
             },
             {
                 "no": 14,
-                "date": "18.01.2026 19:30",
-                "teams": "Aston Villa-Everton",
-                "status": "FT",
-                "homeScore": 0,
-                "awayScore": 1
+                "date": "25.01.2026 20:00",
+                "teams": "Juventus-Napoli",
+                "status": "NS",
+                "homeScore": null,
+                "awayScore": null
             },
             {
                 "no": 15,
-                "date": "18.01.2026 23:00",
-                "teams": "Real Sociedad-Barcelona",
-                "status": "FT",
-                "homeScore": 2,
-                "awayScore": 1
+                "date": "25.01.2026 22:45",
+                "teams": "AS Roma-AC Milan",
+                "status": "NS",
+                "homeScore": null,
+                "awayScore": null
             }
         ];
         // matches array'ini window'a da ata ki tüm fonksiyonlar erişebilsin
@@ -10566,12 +10577,14 @@
             
             if (allCoupons.length === 0) {
                 // Kuponlar yüklenmediyse sadece 0 göster
+                const target15El = document.getElementById('target15Count');
                 const target14El = document.getElementById('target14Count');
                 const target13El = document.getElementById('target13Count');
                 const target12El = document.getElementById('target12Count');
                 const finishedCountEl = document.getElementById('finishedMatchesCount');
                 const remainingCountEl = document.getElementById('remainingMatchesCount');
                 
+                if (target15El) target15El.textContent = '0';
                 if (target14El) target14El.textContent = '0';
                 if (target13El) target13El.textContent = '0';
                 if (target12El) target12El.textContent = '0';
@@ -10593,6 +10606,7 @@
             });
             
             // Count coupons that can reach each target
+            let canReach15 = 0;
             let canReach14 = 0;
             let canReach13 = 0;
             let canReach12 = 0;
@@ -10617,18 +10631,21 @@
                 // Calculate max possible
                 const maxPossible = correct + remainingMatches.length;
                 
+                if (maxPossible >= 15) canReach15++;
                 if (maxPossible >= 14) canReach14++;
                 if (maxPossible >= 13) canReach13++;
                 if (maxPossible >= 12) canReach12++;
             });
             
             // Update UI
+            const target15El = document.getElementById('target15Count');
             const target14El = document.getElementById('target14Count');
             const target13El = document.getElementById('target13Count');
             const target12El = document.getElementById('target12Count');
             const finishedCountEl = document.getElementById('finishedMatchesCount');
             const remainingCountEl = document.getElementById('remainingMatchesCount');
             
+            if (target15El) target15El.textContent = canReach15;
             if (target14El) target14El.textContent = canReach14;
             if (target13El) target13El.textContent = canReach13;
             if (target12El) target12El.textContent = canReach12;
@@ -10703,13 +10720,13 @@
         }
 
 
-        // CSV dosyasını yükle (misli_combinations.csv'den dinamik olarak)
+        // CSV dosyasını yükle (coupon_results_20260123_195402.csv'den dinamik olarak)
         async function loadCoupons() {
             try {
                 console.log('loadCoupons başladı...');
-                // misli_combinations.csv'yi fetch ile yükle
+                // coupon_results_20260123_195402.csv'yi fetch ile yükle
                 // GitHub Pages için path'i düzelt
-                const csvPath = './misli_combinations.csv';
+                const csvPath = './coupon_results_20260123_195402.csv';
                 console.log('CSV path:', csvPath);
                 const response = await fetch(csvPath);
                 if (!response.ok) {
@@ -10724,13 +10741,13 @@
                 // allCoupons dizisini temizle
                 allCoupons = [];
                 
-                // Header'ı atla ve verileri parse et
-                for (let i = 1; i < lines.length; i++) {
-                    const predictions = lines[i].split(';').map(p => p.trim()).filter(p => p);
+                // Header yok, direkt verileri parse et (virgülle ayrılmış)
+                for (let i = 0; i < lines.length; i++) {
+                    const predictions = lines[i].split(',').map(p => p.trim()).filter(p => p);
                     if (predictions.length === 15) {
                         allCoupons.push({
-                            id: i,
-                            rowNumber: i + 1, // CSV'deki gerçek satır numarası (header dahil, 2'den başlar)
+                            id: i + 1,
+                            rowNumber: i + 1, // CSV'deki gerçek satır numarası
                             predictions: predictions.map(p => parseInt(p))
                         });
                     }
