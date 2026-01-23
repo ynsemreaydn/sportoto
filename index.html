@@ -2672,37 +2672,37 @@
     <!-- GIF Carousel -->
     <div class="gif-carousel" id="gifCarousel">
         <div class="gif-carousel-item active">
-            <img src="https://media1.tenor.com/m/Kf7h5nieOP8AAAAC/koksal-baba-hey-yavrum-hey.gif" alt="GIF 1">
+            <img src="https://media.tenor.com/Kf7h5nieOP8AAAAC/koksal-baba-hey-yavrum-hey.gif" alt="GIF 1" loading="eager">
         </div>
         <div class="gif-carousel-item">
-            <img src="https://media.tenor.com/Cab0Yy15IwsAAAAM/koksal-baba-burkanov.gif" alt="GIF 2">
+            <img src="https://media.tenor.com/Cab0Yy15IwsAAAAM/koksal-baba-burkanov.gif" alt="GIF 2" loading="lazy">
         </div>
         <div class="gif-carousel-item">
-            <img src="https://media.tenor.com/ga1H-DvV8TMAAAAM/koksal-koksal-baba.gif" alt="GIF 3">
+            <img src="https://media.tenor.com/ga1H-DvV8TMAAAAM/koksal-koksal-baba.gif" alt="GIF 3" loading="lazy">
         </div>
         <div class="gif-carousel-item">
-            <img src="https://media.tenor.com/ypZPUYPiWzQAAAAM/koksal-koksalbaba.gif" alt="GIF 4">
+            <img src="https://media.tenor.com/ypZPUYPiWzQAAAAM/koksal-koksalbaba.gif" alt="GIF 4" loading="lazy">
         </div>
         <div class="gif-carousel-item">
-            <img src="https://media.tenor.com/9mxNxGg85_oAAAAM/koksal-babish.gif" alt="GIF 5">
+            <img src="https://media.tenor.com/9mxNxGg85_oAAAAM/koksal-babish.gif" alt="GIF 5" loading="lazy">
         </div>
         <div class="gif-carousel-item">
-            <img src="https://media.tenor.com/EvZTjMeKB7AAAAAM/good-day.gif" alt="GIF 6">
+            <img src="https://media.tenor.com/EvZTjMeKB7AAAAAM/good-day.gif" alt="GIF 6" loading="lazy">
         </div>
         <div class="gif-carousel-item">
-            <img src="https://media.tenor.com/a_8sW_BRVh8AAAAM/doge-dogecoin.gif" alt="GIF 7">
+            <img src="https://media.tenor.com/a_8sW_BRVh8AAAAM/doge-dogecoin.gif" alt="GIF 7" loading="lazy">
         </div>
         <div class="gif-carousel-item">
-            <img src="https://media.tenor.com/_G3e306GFoAAAAAM/koksal-koksal-baba.gif" alt="GIF 8">
+            <img src="https://media.tenor.com/_G3e306GFoAAAAAM/koksal-koksal-baba.gif" alt="GIF 8" loading="lazy">
         </div>
         <div class="gif-carousel-item">
-            <img src="https://media.tenor.com/gxp8vwijW6kAAAAM/working-cat.gif" alt="GIF 9">
+            <img src="https://media.tenor.com/gxp8vwijW6kAAAAM/working-cat.gif" alt="GIF 9" loading="lazy">
         </div>
         <div class="gif-carousel-item">
-            <img src="https://media.tenor.com/hd2TnWZSlHMAAAAM/koksal-koksalbaba.gif" alt="GIF 10">
+            <img src="https://media.tenor.com/hd2TnWZSlHMAAAAM/koksal-koksalbaba.gif" alt="GIF 10" loading="lazy">
         </div>
         <div class="gif-carousel-item">
-            <img src="https://media.tenor.com/GD16I3XR7joAAAA1/komik-fotolar.webp" alt="GIF 11">
+            <img src="https://media.tenor.com/GD16I3XR7joAAAA1/komik-fotolar.webp" alt="GIF 11" loading="lazy">
         </div>
     </div>
 
@@ -11512,6 +11512,7 @@
                 marqueeContent.style.animation = 'scroll 66s linear infinite'; // %10 daha yavaş ve devamlı
             }
             startFlyingEmojis(); // Uçan emojileri başlat
+            initGifCarousel(); // GIF carousel'i başlat
         }
 
         // Popup kapalı
@@ -11589,15 +11590,41 @@
         });
 
         // GIF Carousel - Hızlı döngüsel geçiş
+        let gifCarouselInterval = null;
+        
         function initGifCarousel() {
             const carousel = document.getElementById('gifCarousel');
-            if (!carousel) return;
+            if (!carousel) {
+                console.error('GIF Carousel element not found');
+                return;
+            }
+            
+            // Önceki interval'i temizle
+            if (gifCarouselInterval) {
+                clearInterval(gifCarouselInterval);
+                gifCarouselInterval = null;
+            }
             
             const items = carousel.querySelectorAll('.gif-carousel-item');
+            if (items.length === 0) {
+                console.error('No GIF items found in carousel');
+                return;
+            }
+            
+            // Tüm item'ları sıfırla
+            items.forEach((item, index) => {
+                item.classList.remove('active');
+                if (index === 0) {
+                    item.classList.add('active');
+                }
+            });
+            
             let currentIndex = 0;
             
-            // İlk 2 saniyede bir geçiş yap (hızlı)
-            const changeInterval = setInterval(() => {
+            // 2 saniyede bir geçiş yap
+            gifCarouselInterval = setInterval(() => {
+                if (items.length === 0) return;
+                
                 // Mevcut aktif öğeyi kaldır
                 items[currentIndex].classList.remove('active');
                 
@@ -11607,6 +11634,8 @@
                 // Yeni öğeyi aktif yap
                 items[currentIndex].classList.add('active');
             }, 2000); // 2 saniyede bir geçiş
+            
+            console.log('GIF Carousel initialized with', items.length, 'items');
         }
 
         // Sayfa yüklendiğinde GIF carousel'i başlat
